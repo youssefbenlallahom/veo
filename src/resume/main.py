@@ -213,8 +213,7 @@ def display_comparison_table(results_data, placeholder):
         df = pd.DataFrame([{
             "Rank": idx + 1,
             "Candidate": r["filename"],
-            "Score": f"{r['score']:.1f}/10",  # Format as X.X/10
-            "Status": "✅ Highest" if r["score"] == max_score else "✅ Valid" if r["valid"] else "❌ Failed"
+            "Score": f"{r['score']:.1f}/10"  # Format as X.X/10
         } for idx, r in enumerate(sorted_results)])
 
         # Use placeholder to display the table
