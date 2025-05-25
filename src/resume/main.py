@@ -8,27 +8,7 @@ import tempfile
 import re
 from datetime import datetime
 from dotenv import load_dotenv
-
-# Configure ChromaDB for Streamlit Cloud - must be set before any imports
-os.environ["CHROMA_SERVER_AUTHN_PROVIDER"] = ""
-os.environ["CHROMA_SERVER_AUTHN_CREDENTIALS"] = ""
-os.environ["ANONYMIZED_TELEMETRY"] = "False"
-os.environ["CHROMA_SERVER_HOST"] = "localhost"
-os.environ["CHROMA_SERVER_HTTP_PORT"] = "8000"
-os.environ["IS_PERSISTENT"] = "TRUE"
-
-# Import ChromaDB with error handling - don't configure it directly
-try:
-    # Don't import chromadb directly here, let CrewAI handle it
-    pass
-except Exception as e:
-    st.error(f"ChromaDB configuration error: {e}")
-
-try:
-    from crew import Resume
-except ImportError as e:
-    st.error(f"Failed to import Resume crew: {e}")
-    st.stop()
+from crew import Resume
 
 load_dotenv()
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
@@ -233,7 +213,8 @@ def display_comparison_table(results_data, placeholder):
         df = pd.DataFrame([{
             "Rank": idx + 1,
             "Candidate": r["filename"],
-            "Score": f"{r['score']:.1f}/10"  # Format as X.X/10
+            "Score": f"{r['score']:.1f}/10",  # Format as X.X/10
+            "Status": "✅ Highest" if r["score"] == max_score else "✅ Valid" if r["valid"] else "❌ Failed"
         } for idx, r in enumerate(sorted_results)])
 
         # Use placeholder to display the table

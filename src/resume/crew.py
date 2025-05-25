@@ -1,14 +1,7 @@
-# Configure ChromaDB settings before any imports
-import os
-os.environ.setdefault("CHROMA_SERVER_AUTHN_PROVIDER", "")
-os.environ.setdefault("CHROMA_SERVER_AUTHN_CREDENTIALS", "")
-os.environ.setdefault("ANONYMIZED_TELEMETRY", "False")
-
 try:
     from crewai import Agent, Crew, Process, Task
 except ImportError as e:
     print("Import Error:", e)
-    raise
 from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from typing import List
