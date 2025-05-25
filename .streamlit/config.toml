@@ -1,6 +1,8 @@
 [server]
 enableCORS = false
 enableXsrfProtection = false
+maxUploadSize = 200
+headless = true
 
 [theme]
 primaryColor = "#4CAF50"
@@ -10,3 +12,6 @@ textColor = "#262730"
 
 [browser]
 gatherUsageStats = false
+
+[global]
+developmentMode = false

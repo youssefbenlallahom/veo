@@ -9,12 +9,23 @@ import re
 from datetime import datetime
 from dotenv import load_dotenv
 
-# Configure ChromaDB for Streamlit Cloud
+# Configure ChromaDB for Streamlit Cloud - must be set before any imports
 os.environ["CHROMA_SERVER_AUTHN_PROVIDER"] = ""
 os.environ["CHROMA_SERVER_AUTHN_CREDENTIALS"] = ""
 os.environ["ANONYMIZED_TELEMETRY"] = "False"
+os.environ["CHROMA_SERVER_HOST"] = "localhost"
+os.environ["CHROMA_SERVER_HTTP_PORT"] = "8000"
+os.environ["IS_PERSISTENT"] = "TRUE"
 
-from crew import Resume
+# Disable ChromaDB telemetry
+import chromadb
+chromadb.config.Settings(anonymized_telemetry=False)
+
+try:
+    from crew import Resume
+except ImportError as e:
+    st.error(f"Failed to import Resume crew: {e}")
+    st.stop()
 
 load_dotenv()
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
