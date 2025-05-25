@@ -83,3 +83,5 @@ logs/
 
 # UV (Python package manager)
 .uv/
+
+.json/
