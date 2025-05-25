@@ -17,9 +17,12 @@ os.environ["CHROMA_SERVER_HOST"] = "localhost"
 os.environ["CHROMA_SERVER_HTTP_PORT"] = "8000"
 os.environ["IS_PERSISTENT"] = "TRUE"
 
-# Disable ChromaDB telemetry
-import chromadb
-chromadb.config.Settings(anonymized_telemetry=False)
+# Import ChromaDB with error handling - don't configure it directly
+try:
+    # Don't import chromadb directly here, let CrewAI handle it
+    pass
+except Exception as e:
+    st.error(f"ChromaDB configuration error: {e}")
 
 try:
     from crew import Resume
