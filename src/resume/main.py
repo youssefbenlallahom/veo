@@ -8,6 +8,12 @@ import tempfile
 import re
 from datetime import datetime
 from dotenv import load_dotenv
+
+# Configure ChromaDB for Streamlit Cloud
+os.environ["CHROMA_SERVER_AUTHN_PROVIDER"] = ""
+os.environ["CHROMA_SERVER_AUTHN_CREDENTIALS"] = ""
+os.environ["ANONYMIZED_TELEMETRY"] = "False"
+
 from crew import Resume
 
 load_dotenv()

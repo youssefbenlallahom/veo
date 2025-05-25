@@ -84,4 +84,14 @@ logs/
 # UV (Python package manager)
 .uv/
 
+# ChromaDB
+chroma.sqlite3
+chroma.sqlite3-*
+.chroma/
+
+# Generated reports and extractions
+report_*.md
+extracted_*.txt
+barem_gemini.json
+
 .json/

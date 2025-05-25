@@ -3,4 +3,7 @@ crewai-tools
 python-dotenv
 streamlit
 PyPDF2
-google-genai
+google-generativeai
+chromadb>=0.4.0
+pdfplumber
+litellm
