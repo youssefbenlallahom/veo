@@ -1,0 +1,84 @@
+{
+  "rubric": [
+    {
+      "section": "Business Analysis & Consulting Experience",
+      "weight": 20,
+      "scoring": {
+        "full_points": "Demonstrates 3+ years of direct experience in business analysis and consulting, with specific examples of projects and quantifiable results (e.g., cost savings, efficiency improvements).",
+        "partial_points": "Demonstrates 2-3 years of experience, or experience in closely related fields with some demonstrable business analysis skills. Lacks specific project examples or quantifiable results.",
+        "zero_points": "No demonstrable experience in business analysis or consulting."
+      },
+      "explanation": "This section is crucial as the role requires understanding business needs and translating them into data-driven solutions. Consulting experience highlights problem-solving and communication skills."
+    },
+    {
+      "section": "HR Process Audit & Improvement Experience",
+      "weight": 15,
+      "scoring": {
+        "full_points": "Demonstrates significant experience (3+ years) in conducting HR process audits, identifying inefficiencies, and implementing improvements. Provides specific examples and metrics.",
+        "partial_points": "Demonstrates some experience in HR processes and audits, perhaps as part of a larger role. Vague descriptions or lacks specific examples.",
+        "zero_points": "No demonstrable experience in HR process audits or improvement initiatives."
+      },
+      "explanation": "This assesses the candidate's ability to identify bottlenecks and optimize HR processes, leading to greater efficiency and effectiveness."
+    },
+    {
+      "section": "Recruitment & HR Development Experience",
+      "weight": 15,
+      "scoring": {
+        "full_points": "Significant (3+ years) experience in recruitment environments and HR development initiatives. Demonstrates understanding of recruitment metrics and learning & development strategies. Mentions specific HR development programs they've been involved in.",
+        "partial_points": "Some experience in recruitment or HR development, but lacks depth or specific examples. May be more focused on administrative tasks than strategic initiatives.",
+        "zero_points": "No demonstrable experience in recruitment or HR development."
+      },
+      "explanation": "This assesses the candidate's familiarity with key HR functions and their ability to contribute to talent acquisition and employee development efforts."
+    },
+    {
+      "section": "HR Strategy & Solutions Experience",
+      "weight": 15,
+      "scoring": {
+        "full_points": "Demonstrates experience contributing to HR strategy development and implementing HR solutions to address business challenges. Provides examples of how they have used data to inform strategic decisions.",
+        "partial_points": "Limited experience in HR strategy. Mentions involvement in HR solutions but lacks depth or impact.",
+        "zero_points": "No demonstrable experience in HR strategy or solutions."
+      },
+      "explanation": "This assesses the candidate's ability to think strategically and contribute to the overall direction of the HR function."
+    },
+    {
+      "section": "Technical Assessment Expertise",
+      "weight": 10,
+      "scoring": {
+        "full_points": "Clearly demonstrates experience in technical assessments, including methodology, tools, and interpretation of results. Gives relevant examples of assessing HR technology or related systems.",
+        "partial_points": "Mentions involvement in technical assessments, but lacks depth or specific examples. Understanding of technical assessment principles is unclear.",
+        "zero_points": "No demonstrable experience or knowledge of technical assessments."
+      },
+      "explanation": "Demonstrated ability to assess technical systems will contribute to evaluating existing and new HR tech."
+    },
+    {
+      "section": "ATS, HRIS, EPMS & Cognos Proficiency",
+      "weight": 15,
+      "scoring": {
+        "full_points": "Demonstrates hands-on experience and a strong understanding of ATS, HRIS, EPMS, and Cognos. Provides specific examples of how they have used these systems for data analysis and reporting. Can explain how each system integrates with others.",
+        "partial_points": "Familiarity with some of the listed systems (e.g., ATS and HRIS), but lacks expertise in all. May describe using the systems without demonstrating data analysis skills.",
+        "zero_points": "No demonstrable experience with ATS, HRIS, EPMS, or Cognos."
+      },
+      "explanation": "This assesses the candidate's ability to work with the essential tools used for HR data management and analysis."
+    },
+    {
+      "section": "Language Proficiency (French & English)",
+      "weight": 10,
+      "scoring": {
+        "full_points": "Clearly states professional proficiency in both French and English. Provides evidence of bilingual communication skills (e.g., previous roles requiring bilingualism).",
+        "partial_points": "States proficiency in both languages, but lacks specific evidence. May only mention one language or provide a vague description.",
+        "zero_points": "Does not mention proficiency in both French and English, or language skills are inadequate."
+      },
+      "explanation": "This is a must-have skill for effective communication within a potentially international or multilingual team and organization."
+    },
+    {
+      "section": "Bonus",
+      "weight": 5,
+      "scoring": {
+        "full_points": "Possesses relevant certifications (e.g., HR analytics, business analysis), experience with advanced data visualization tools (e.g., Tableau, Power BI), knowledge of statistical modeling, or familiarity with specific HR industry trends. Can be industry knowledge that supports the HR function or technical skills not explicitly mentioned.",
+        "partial_points": "Some relevant certifications or experience with data visualization tools, but not directly related to HR or lacking depth.",
+        "zero_points": "No extras."
+      },
+      "explanation": "Bonus for outstanding or additional relevant experience that enhances their suitability for the role."
+    }
+  ]
+}

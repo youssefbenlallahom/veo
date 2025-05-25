@@ -1,0 +1,142 @@
+document_analysis_task:
+  description: >
+    Use PDF tool with query="extract_all". Extract structured data:
+    Personal info, education, work experience, skills, certifications, projects.
+    Calculate experience years and identify gaps.
+  expected_output: >
+    # Resume Analysis
+    
+    ## Status
+    - **Processing:** [Success/Fail]
+    - **Content:** [Character count]
+    
+    ## Contact
+    - **Name:** [Name or "Not found"]
+    - **Email:** [Email or "Not found"] 
+    - **Phone:** [Phone or "Not found"]
+    - **LinkedIn:** [URL or "Not found"]
+    
+    ## Education
+    - **Degree:** [Degree and field]
+    - **School:** [Institution]
+    - **Year:** [Graduation date]
+    
+    ## Experience
+    [Per role:]
+    - **Title:** [Job title]
+    - **Company:** [Company name]  
+    - **Period:** [Start-End dates]
+    - **Key Points:** [Main achievements]
+    
+    ## Skills
+    - **Programming:** [Languages]
+    - **Frameworks:** [Frameworks/libraries]
+    - **Tools:** [Software/tools]
+    - **Databases:** [Database systems]
+    - **Cloud:** [Cloud platforms]
+    
+    ## Certifications
+    - **Name:** [Cert name]
+    - **Issuer:** [Organization]
+    - **Date:** [Date obtained]
+    
+    ## Projects  
+    - **Name:** [Project name]
+    - **Tech:** [Technologies used]
+    
+    ## Summary
+    - **Total Experience:** [Years]
+    - **Key Strengths:** [Top 3 strengths]
+    - **Gaps:** [Employment gaps if any]
+  agent: document_analyzer
+
+candidate_matching_task:
+  description: >
+    Compare the candidate's resume with job requirements using the provided barem (scoring rubric) passed as input. The agent MUST use the exact rubric structure from input (with 'section', 'weight', 'scoring') for all evaluations. For each rubric section, assign a section score (full, partial, or zero) based on the candidate's evidence. Calculate a weighted sum of section scores (using the provided weights), divide by 100, and normalize to a score out of 10. Output must include a detailed breakdown per section and the overall score out of 10. The agent must NOT generate or modify the criteria or weights themselves. All scoring and recommendations must be based solely on the provided rubric.
+  expected_output: |
+    # Match Analysis: {job_title}
+    
+    ## Job Description
+    ```
+    {job_description}
+    ```
+    
+    ## Requirements Analysis
+    - **User-Provided Requirements:** [Exact requirements from job description, with emphasis on specific skills, experience (including years and domain experience), and qualifications mentioned. DO NOT use web search or industry standards.]
+    
+    ## Comprehensive Job Requirements
+    - **Critical Skills:** [Essential skills from user description. If missing, candidate must be NOT RECOMMENDED regardless of score.]
+    - **Experience:** [Years/type needed, exactly as specified in user description]
+    - **Education:** [Degree requirements, if specified in user description]
+    - **Preferred:** [Nice-to-have skills, noting which were explicitly mentioned by user]
+    # NOTE: Only use the user-provided job description for all requirements and scoring. Do NOT use web search or industry standards.
+    
+    ## Match Results
+    - **Skills Match:** [X/Y] ([%])
+    - **Experience:** [Candidate vs Required]
+    - **Education:** [Match level]
+    
+    ## Scoring Weights (Prioritizing User Requirements)
+    - **[User-Specified Requirement 1]:** [X%] (Source: User Description - HIGHEST PRIORITY)
+    - **[User-Specified Requirement 2]:** [Y%] (Source: User Description - HIGHEST PRIORITY)
+    - **[Additional Criterion 1]:** [Z%] (Source: User Description)
+    - **[Additional Criterion 2]:** [W%] (Source: User Description)
+    - **[Additional Criterion 3]:** [V%] (Source: User Description)
+    # IMPORTANT: Always validate that the sum of all weights equals 100%.
+    
+    ## Detailed Scoring
+    - **[Job-Specific Criterion 1]:** [Raw Score: X/10] × [Weight: Y%] = [Weighted: Z points] (Raw score must be assigned as objectively and explainably as possible, e.g., using keyword matching, explicit years, or degree names)
+    - **[Job-Specific Criterion 2]:** [Raw Score: X/10] × [Weight: Y%] = [Weighted: Z points]
+    - **[Job-Specific Criterion 3]:** [Raw Score: X/10] × [Weight: Y%] = [Weighted: Z points]
+    - **[Job-Specific Criterion 4]:** [Raw Score: X/10] × [Weight: Y%] = [Weighted: Z points]
+    - **[Job-Specific Criterion 5]:** [Raw Score: X/10] × [Weight: Y%] = [Weighted: Z points]
+    - **TOTAL WEIGHTED SCORE:** Total/10
+    
+    ## Missing
+    [Critical missing requirements]
+    
+    ## Strengths  
+    [Where candidate excels]
+    
+    ## Decision
+    **Status:** [RECOMMENDED/NOT RECOMMENDED]
+    **Reason:** [Brief justification based on weighted scores and critical requirements]
+  agent: matching_specialist
+
+report_generation_task:
+  description: "Generate a comprehensive hiring report"
+  expected_output: |
+    # Full Analysis
+    ## Hiring Report: {job_title}
+    
+    ## Job Description (User-Provided)
+    {job_description}
+    
+    ## Candidate
+    - **Name:** [Name]
+    - **Experience:** [Years] 
+    - **Background:** [Current role]
+    
+    ## Job Analysis
+    - **Requirements Analysis:** [Key points from job description only]
+    
+    ## Alignment
+    ### ✅ Strengths
+    [Strong matches against requirements]
+    
+    ### ❌ Gaps  
+    [Critical missing skills based on requirements analysis]
+    
+    ## Weighted Score Analysis
+    - **Overall Score:** [Total weighted score/10]
+    - **Key Contributors:**
+      - [Job-Specific Criterion 1]: [Raw score/10] × [Weight %] = [Weighted points] (Source: Job Description)
+      - [Job-Specific Criterion 2]: [Raw score/10] × [Weight %] = [Weighted points] (Source: Job Description)
+      - [Job-Specific Criterion 3]: [Raw score/10] × [Weight %] = [Weighted points] (Source: Job Description)
+    
+    ## Decision: [RECOMMENDED/NOT RECOMMENDED]
+    
+    **Rationale:** [Key reasoning based on weighted analysis]
+    **Risk:** [Main concerns and their impact on performance]
+    **Next Steps:** [If hired: development areas prioritized by weight]
+  agent: report_generator
