@@ -4,3 +4,7 @@ python-dotenv
 streamlit
 PyPDF2
 google-genai
+pysqlite3-binary
+crewai
+streamlit
+python-dotenv
