@@ -88,7 +88,7 @@ def extract_pdf_text(file_path):
 def get_barem_from_gemini(job_title, job_description, api_key):
     """Generate evaluation criteria using Gemini."""
     try:
-        import google.generativeai as genai
+        import google.genai as genai
         
         genai.configure(api_key=api_key)
         model = genai.GenerativeModel('gemini-pro')
@@ -139,7 +139,7 @@ Job Description:
 def analyze_resume_with_gemini(resume_text, job_title, job_description, barem, candidate_name):
     """Analyze resume using Gemini API."""
     try:
-        import google.generativeai as genai
+        import google.genai as genai
         
         api_key = os.environ.get("GEMINI_API_KEY")
         if not api_key:
