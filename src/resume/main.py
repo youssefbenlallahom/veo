@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+
+# CRITICAL: Import SQLite fix BEFORE any other imports
+import sqlite_fix  # This must be the very first import
+
 import sys
 import warnings
 import os
@@ -8,12 +12,14 @@ import tempfile
 import re
 from datetime import datetime
 from dotenv import load_dotenv
+
+# Now it's safe to import crew
 from crew import Resume
 
 load_dotenv()
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 
-
+# Rest of your code remains the same...
 def sanitize_text(text):
     """Sanitize text to remove problematic characters for display."""
     if not text:

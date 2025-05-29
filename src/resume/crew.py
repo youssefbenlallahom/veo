@@ -1,4 +1,3 @@
-
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
@@ -13,35 +12,7 @@ from report_schema import ReportModel  # Enforce standardized report structure
 import sys
 import os
 
-# CRITICAL: Fix SQLite3 issue before importing anything else
-def fix_sqlite():
-    """Fix SQLite3 compatibility issue for ChromaDB on Streamlit Cloud"""
-    try:
-        # Try to import pysqlite3 and replace sqlite3
-        import pysqlite3
-        sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
-        print("✅ Successfully replaced sqlite3 with pysqlite3")
-    except ImportError:
-        print("⚠️ pysqlite3 not available, trying alternative approach...")
-        
-        # Alternative: Set environment variables to disable problematic features
-        os.environ["CHROMA_DB_IMPL"] = "duckdb+parquet"
-        os.environ["ANONYMIZED_TELEMETRY"] = "False"
-        os.environ["ALLOW_RESET"] = "True"
-        
-        # Try to mock sqlite3 if needed
-        try:
-            import sqlite3
-            version = sqlite3.sqlite_version_info
-            if version < (3, 35, 0):
-                print(f"⚠️ SQLite version {sqlite3.sqlite_version} is too old")
-        except Exception as e:
-            print(f"SQLite check failed: {e}")
-
-# Apply the fix immediately
-fix_sqlite()
-
-# Set additional environment variables for CrewAI
+# Set environment variables for CrewAI (moved SQLite fix to sqlite_fix.py)
 os.environ["CREWAI_DISABLE_TELEMETRY"] = "true"
 os.environ["CREWAI_STORAGE_DIR"] = ""
 load_dotenv()
@@ -63,6 +34,7 @@ llm4 = LLM(
     model="groq/gemma2-9b-it",
     temperature=0.1  # Reduced from 0.3 for more consistency
 )
+
 @CrewBase
 class Resume():
     """Resume crew"""
