@@ -1,28 +1,16 @@
 [project]
 name = "resume"
 version = "0.1.0"
-description = "resume using crewAI"
+description = "VEO Resume Analyzer - Streamlit Cloud Compatible"
 authors = [{ name = "Your Name", email = "you@example.com" }]
 requires-python = ">=3.10,<3.13"
 dependencies = [
-    "crewai[tools]>=0.119.0,<1.0.0",
-    "dotenv>=0.9.9",
-    "google-genai>=1.16.1",
-    "litellm>=1.68.0",
-    "pypdf2>=3.0.1",
     "streamlit>=1.45.1",
+    "PyPDF2>=3.0.1",
+    "google-genai>=1.16.1",
+    "python-dotenv>=0.19.0",
 ]
-
-[project.scripts]
-resume = "resume.main:run"
-run_crew = "resume.main:run"
-train = "resume.main:train"
-replay = "resume.main:replay"
-test = "resume.main:test"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
-
-[tool.crewai]
-type = "crew"

@@ -1,9 +1,6 @@
 streamlit
-crewai
-crewai-tools
 python-dotenv
 PyPDF2
 google-genai
-pysqlite3-binary
-chromadb>=0.4.0
-duckdb
+pandas
+pdfplumber
