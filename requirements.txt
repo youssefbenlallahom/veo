@@ -1,6 +1,6 @@
 streamlit
 python-dotenv
 PyPDF2
-google-genai
+google.generativeai
 pandas
 pdfplumber
