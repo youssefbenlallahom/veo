@@ -88,10 +88,9 @@ def extract_pdf_text(file_path):
 def get_barem_from_gemini(job_title, job_description, api_key):
     """Generate evaluation criteria using Gemini."""
     try:
-        import google.genai as genai
+        from google import genai
         
-        genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-pro')
+        client = genai.Client(api_key=api_key)
         
         prompt = f"""
 I will give you a job description. Based on that, create a detailed evaluation barème (scoring rubric) out of 100 points for assessing resumes of applicants to this role.
@@ -124,7 +123,11 @@ Job Description:
 {job_description}
 """
         
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model="gemini-2.0-flash", 
+            contents=prompt
+        )
+        
         match = re.search(r'\{.*\}', response.text, re.DOTALL)
         if match:
             barem_json = match.group(0)
@@ -139,14 +142,13 @@ Job Description:
 def analyze_resume_with_gemini(resume_text, job_title, job_description, barem, candidate_name):
     """Analyze resume using Gemini API."""
     try:
-        import google.genai as genai
+        from google import genai
         
         api_key = os.environ.get("GEMINI_API_KEY")
         if not api_key:
             return {"error": "GEMINI_API_KEY not found"}
             
-        genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-pro')
+        client = genai.Client(api_key=api_key)
         
         prompt = f"""
 Analyze this resume against the job requirements and provide a comprehensive evaluation.
@@ -205,7 +207,11 @@ Please provide your analysis in this EXACT format:
 **Next Steps:** [If recommended, what development areas to focus on]
 """
         
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model="gemini-2.0-flash", 
+            contents=prompt
+        )
+        
         return {"analysis": response.text}
         
     except Exception as e:
