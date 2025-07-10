@@ -83,11 +83,11 @@ cache/
 extracted_*.txt
 
 # Analysis reports (if they contain sensitive data) - COMMENTED OUT to allow existing files
-# report_*.md
-# report.json
+report_*.md
+report.json
 
 # Token usage files - COMMENTED OUT to allow existing files
-# token_usage_*.txt
+token_usage_*.txt
 
 # Analysis configuration files (if they contain sensitive data)
 barem_*.json
