@@ -79,15 +79,15 @@ cache/
 *.docx
 *.doc
 
-# Extracted text files (from CV processing)
-extracted_*.txt
+# Extracted text files (from CV processing) - COMMENTED OUT to allow existing files
+# extracted_*.txt
 
-# Analysis reports (if they contain sensitive data)
-report_*.md
-report.json
+# Analysis reports (if they contain sensitive data) - COMMENTED OUT to allow existing files
+# report_*.md
+# report.json
 
-# Token usage files
-token_usage_*.txt
+# Token usage files - COMMENTED OUT to allow existing files
+# token_usage_*.txt
 
 # Analysis configuration files (if they contain sensitive data)
 barem_*.json
