@@ -80,7 +80,7 @@ cache/
 *.doc
 
 # Extracted text files (from CV processing) - COMMENTED OUT to allow existing files
-# extracted_*.txt
+extracted_*.txt
 
 # Analysis reports (if they contain sensitive data) - COMMENTED OUT to allow existing files
 # report_*.md
