@@ -1,0 +1,52 @@
+=== COMPLETE PDF DOCUMENT CONTENT ===
+
+--- Page 1 ---
+SAFA OCHI
+HR Business Analyst, 2 years of experience
+Tel: +216 56 121 446 (WhatsApp) - Email: safaochi9@gmail.com - Location: Tunisia
+LinkedIn: linkedin.com/in/safa-ochi-75442a108/ - Github: https://github.com/safaochi?tab=repositories
+PROFESSIONNAL EXPERIENCE
+EDLIGO Tunis, Tunisia
+Business Analyst & Database Engineer 09/2022 to Present
+Business Analyst
+ Collected, transformed and analyzed data from different sources, enabled advanced seamless data analysis, resulting an
+efficiency of relevant insights for decision-making
+ Analyzed large datasets to identify anomalies, trends and patterns, increases 20% in the HR processes and programs
+ Developped KPIs responding to data requirements and aligned with the business needs to measure the HR productivity
+ Designed an automated and interactive BI dashboards and reports to effectively communicate the results, achieving a
+success rate in organizational and operational goals
+ Delivered presentations, ensuring the best practices of the solution, leveraging up the importance of clients data
+Database Engineer: PostgreSQL
+ Structured databases by developing SQL queries, ETL pipelines, and database objects, ensuring the organization's needs
+ Implemented data backup and recovery strategies and apply security patches to protect sensitive data
+ Installed, configured, and upgraded database management system, optimizes 10% of datas integration timing
+ Optimized database parameters and structure by writing SQL scripts that enhance data integration efficiency
+ Cooperated with Back-end developers to ensure smooth interaction between applications and the database
+ OPTIMETRIKS Paris, France
+Data Analyst 02/2022 to 07/2022
+ Analyzed data collected from the Web and mobile application of 1000 users to improve client businesses performance
+ Implemented a retail workflow demonstrating new market segment on field that raises the customer base by 10%
+ Developed KPIs responding to existing findings and predictions, reducing 5% in customer support sales issues
+ Conceived and automated interactive dashboards and specified functional requirements, enhancing data accessibility
+ Conducted Ad hoc analysis to improve user engagement on digital platforms and investigate data anomalies
+ Coordinated with sales team to analyze and identify new sales opportunities, resulting in a 7% increase in revenue
+EDUCATION
+ESPRIT Tunis, Tunisia
+Master in Business Analytics (Big Data, Data Science, Advanced statistics) 09/2020 to 07/2022
+ENIM Monastir, Tunisia
+Energy Engineering (Mathematics, Engineering, Statistics) 09/2015 to 10/2018
+SKILLS
+Technical Skills:
+ DATABASE MANAGEMENT PostgreSQL, SQL Server (SSIS, SSRS)
+ DATA VISUALIZATION Power BI (DAX)
+ DATA ANALYSIS Python (Pandas, Machine Learning, API), Excel
+ CLOUD Azure, Google Cloud Platform (GCP)
+Project Management (Methodology): Jira, Sage (CRM), Azure DevOps, Pack Office / Agile-Scrum, Kanban
+Languages:
+English (Fluent) | French (Fluent) | German (Intermediate) | Arabic (Native)
+CERTIFICATIONS
+ IBM Data Science (https://www.coursera.org/account/accomplishments/certificate/5RTJCEYZAU5R) 02/2023
+ IBM Data Analysis with Python (https://www.coursera.org/account/accomplishments/verify/56DTNBWDFQE2) 01/2023
+ MICROSOFT Data Analyst Associate (Microsoft Certification ID: 992469302) 12/2021
+
+=== END OF DOCUMENT ===

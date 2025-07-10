@@ -1,0 +1,2 @@
+Token Usage for ferchichi-mehdi-cv:
+total_tokens=27122 prompt_tokens=23296 cached_prompt_tokens=0 completion_tokens=3826 successful_requests=7

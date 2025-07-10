@@ -1,0 +1,2 @@
+Token Usage for mahdi-abdelhedi-cv:
+total_tokens=141665 prompt_tokens=137143 cached_prompt_tokens=0 completion_tokens=4522 successful_requests=17

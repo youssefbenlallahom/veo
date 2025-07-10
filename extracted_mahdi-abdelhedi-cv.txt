@@ -1,0 +1,98 @@
+=== COMPLETE PDF DOCUMENT CONTENT ===
+
+--- Page 1 ---
+MAHDI ABDELHEDI
+Tunis, Aouina
+mahdi.abdelhedi@msb.tn
+B U S I N E S S , D A T A & R P A
+52920222
+C O N S U L T A N T
+1 Year CIVP
+EDUCATION
+PROFILE
+2024 - Present | Bachelor in Computer Science
+Hardworking, motivated, and a fast learner, I have built strong technical
+Engineering
+and business skills through hands-on experience and continuous learning.
+ESPRIT | cole sup prive d'ingnierie et de
+Currently pursuing a degree in computer science, I am well-equipped to
+technologies
+help organizations streamline operations and drive digital transformation.
+2020- 2022 | Master in Business Analytics and Big
+Constantly seeking new challenges, I am committed to enhancing my skills
+data (AMBA Accreditation . London UK)
+and bridging the gap between business and technology
+EXPERIENCES Mediterranean School of Business (MSB) | South
+Mediterranean University (SMU)
+Data Analyst July 2024 - Present 2017-2020 | License in Business Administration
+Parenin (Caterpillar , Atlas Copco , John Deere, Good Year , Grove) International School of Business
+Conduct advanced analytics for Marketing, including customer segmentation and sales forecasting, to identify
+SKILLS
+growth opportunities and tailor strategies.
+Perform Financial Analysis, focusing on liquidity and solvency assessments to inform fiscal planning and risk
+management.
+Optimize operational efficiency through Inventory Management and other process improvement initiatives. Communication and leadership Skills
+Collaborate with Digital Marketing teams to design and monitor e-commerce platforms, websites, and social media
+Analytical and conceptual skills
+analytics, ensuring effective performance tracking and insights generation.
+Work closely with Sales Teams to analyze commercial performance, including market and aftermarket activities, to Project & Operation Management
+enhance revenue streams.
+Process and analyze market data from diverse sources to uncover trends and inform strategic decisions. Data, Statistical, Business and Financial
+Develop and deliver impactful deliverables such as dashboards, study reports, and other analytical outputs.
+Create and implement automation workflows to ensure data quality, accuracy, and reliability. Analysis
+Participate in crafting comprehensive marketing plans by integrating cross-departmental insights. Predictive and Descriptive modeling
+Skills: Python, Statistics , Machine learning, Power BI, ERP, CRM , Excel, Management, and business strategy Python, .NET, C
+SGBD (SQL , PL / SQL)
+Quant analyst | ALM-Treasury Analyst January 2024 - May 2024
+Excel (Advanced), Microsoft PowerBI,
+UBCI
+Tableau
+Conducted studies and data science projects focusing on liquidity risk (DAV, DAT), money market risk (TND to
+EURO/USD), and customer segmentation to support strategic decision-making. ETL: SSIS, SSAS
+Contributed to the establishment, evolution, configuration, and maintenance of financial databases for the
+RPA: UiPath, Power Automate, Captos
+Finance department, ensuring data reliability and accessibility.
+Calculated and monitored results of Asset and Liability Management (ALM) - Treasury, optimizing risk and return. ERP: SAP (BO) , Sage X3 , Financial ERP
+Tracked benchmark market indices and macro/microeconomic data to identify trends, anticipate market
+developments, and inform financial strategies. Business Process Modelling (Bizagi)
+Project management tolls : Jira , Trello
+Skills: Python, Statistics (Stochastique calculus, Stress testing ...) ,Machine learning, Excel (VBA) ,SAP , Finance , Risk
+Management and business strategy
+Consultant Technico-Fonctionnel |BI Consultant Jully 2023 - November 2023 CERTIFICATES
+UniQ Soft Technology
+Customized and developed financial reports tailored to client needs.
+Collaborated with a team to design and implement an accounting data analytics application, enhancing data-driven
+decision-making.
+Developed an ETL automation process to streamline data integration and transformation.
+Google Project Management:
+Delivered presentations and demonstrations of the application to the client, ensuring successful adoption.
+Authored comprehensive technical and functional documentation (FSD, STD) and provided both internal and
+external training sessions. Professional Certificate
+Designed and executed functional, technical, and performance tests to ensure application reliability and efficiency.
+Robotic Process Automation (RPA)
+Client: Arab Tunisian Bank (ATB)
+Skills: SSIS, Microsoft Power BI, SQL, Python, Django ,ERP, Excel, Consolidation, Financial Accounting, and Regulatory
+Specialization | UiPath
+Reporting
+RPA Consultant September 2022 - February 2023 SQL for Data Science | University of
+Yperflow
+California, Davis
+Helped organizations to design, develop, test, and implement process automation using RPA
+software
+Machine Learning with Python | IBM
+Improvement and modeling of business processes. Technical design and documentation.
+indsutries : accounting , Finance and energy
+Excel skills for business | Macquarie
+Skills: Process Automation, Python,REST API , HTTP, HTML, CSS, Excel, VBA, NLTK, XML, JSON,
+University
+Captos, UiPath
+Data Analyst (Intern) | BIAT February 2022 - June 2022
+LANGUAGES
+Develop an algorithm for predicting customers based on their behaviors and characteristics
+Analysis and use of data from former bank customers to identify a correlation between their
+behavior and their decision to leave/change bank (churn) English : Fluent
+Develop a marketing strategy based on the obtained insights.
+French: Advanced
+Skills: Python, Machine learning , marketing , business strategy and Power BI Arabic ; Native
+
+=== END OF DOCUMENT ===

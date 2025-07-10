@@ -1,0 +1,56 @@
+=== COMPLETE PDF DOCUMENT CONTENT ===
+
+--- Page 1 ---
+RIM JAMLI
+CONSULTANTE DATA ANALYST
+Consultante Data Analyste avec une expertise en analyse de donnes, business intelligence et
+Reporting. Spcialise dans la modlisation de donnes, loptimisation des performances et la
+visualisation avance sous Power BI. Forte capacit transformer des donnes complexes en
+insights stratgiques.
++216 23 351 368 Tunisie, Kairouan jamlirim94dataanalyst@gmail.com linkedin.com/in/rim-jamli-717456108/
+COMPTENCES METIER QUALITES
+Python (Panda s, NumPy, Matplotlib) Powerbi, Excel, Tableau Esprit analytique & rsolution de problmes
+S QL, SSIS, SSAS Scrap ing Big data & cloud Storyte lling Gestion du temps & priorisation
+Business intelligence, Reporting Data modeling & Visualisation Gestion de projet & collaboration
+ETL, Nettoyage et modlisation des donnes JIRA, Ms Office Curiosit & dsir dapprendre
+EXPRIENCE PROFESSIONNELLE
+Alu S Kairouan, Tunisie
+Business Analyste | juillet 2020 Juin 2024
+ Dveloppement de tableaux de bord Power BI pour le suivi des indicateurs de performance (KPIs).
+ Analyse des ventes, chiffre daffaires, taux de rotation, taux de conversion, CLV et satisfaction client pour optimiser les
+stratgies de pricing et dapprovisionnement.
+ Automatisation des rapports et cration de prsentations PowerPoint professionnelles pour la direction.
+ Identification des tendances et recommandations pour amliorer la rentabilit.
+ Collaboration avec les dpartements ventes, finance, logistique et marketing pour assurer une prise de dcision base
+COMPETENCES TECHNIQUES
+sur les donnes et amliorer la performance globale.
+Analyste des oprations commerciales | juillet 2018 Juin 2020
+ Recueil et formalisation des besoins techniques et fonctionnels sous forme dUser Stories.
+ Collecte et transformation des donnes via Power Query pour garantir leur qualit et pertinence.
+ Cration de mesures et colonnes calcules en DAX pour automatiser lanalyse des ventes sous Power BI.
+ Mise jour des niveaux de stock en fonction des analyses des produits vendus pour viter les ruptures et le surstockage.
+ Recommandations bases sur lanalyse des retours clients.
+Assistant commerciale & coordinatrice des oprations | juin 2017 Juin 2018
+ Gestion des commandes, suivi des paiements et facturation via ERP.
+ Supervision des livraisons, gestion des stocks et coordination avec les fournisseurs.
+ Prparation de rapports de ventes et analyse des tendances l'aide d'Excel, Power Pivot, Power Query pour automatiser
+et structurer les donnes, avec prsentation des rsultats via PowerPoint.
+LANGUES
+Franais Courant Anglais Professionnel Arabe Langue maternelle
+CERTIFICATIONS
+Project Management Professional Scrum for Operations and DevOps Fundamentals Scrum Fundamentals
+(PMP)
+Digital Marketing Fundamentals Six Sigma Yellow Belt Negotiation Associate
+EDUCATION
+ Master en Data Science ISIGK - Institut Suprieur d'Informatique et de Gestion de Kairouan (2020-2023)
+ BSc en science Informatique ISIGK - Institut Suprieur d'Informatique et de Gestion de Kairouan (2013-2016)
+
+--- Page 1 Table 1 ---
+RIM JAMLI
+CONSULTANTE DATA ANALYST
+Consultante Data Analyste avec une expertise en analyse de donnes, business intelligence et
+Reporting. Spcialise dans la modlisation de donnes, loptimisation des performances et la
+visualisation avance sous Power BI. Forte capacit transformer des donnes complexes en
+insights stratgiques.
+
+=== END OF DOCUMENT ===

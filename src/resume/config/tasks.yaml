@@ -1,0 +1,473 @@
+document_analysis_task:
+  description: >
+    Use PDF tool with query="extract_all". You are an expert resume parser that extracts ALL information from resumes/CVs with 100% accuracy across all industries and job types. 
+    
+    CRITICAL INSTRUCTIONS:
+    - NEVER use ```json or ``` in output
+    - NEVER use markdown code blocks
+    - Return ONLY the raw JSON object
+    - Start directly with { and end with }
+    - Read the ENTIRE document from top to bottom, including headers, footers, sidebars, and margins
+    - Extract ALL text content, including language proficiency levels (e.g., "English - Native", "French - B2", "Spanish - Intermediate")
+    - Look for information in ALL sections: summary, objective, profile, education, experience, skills, languages, certifications, projects, achievements, awards, publications, volunteering, references
+    - Pay special attention to:
+      * Language skills with proficiency levels (A1, A2, B1, B2, C1, C2, Native, Fluent, Intermediate, Basic, etc.)
+      * Professional skills relevant to any industry (technical, creative, analytical, managerial, etc.)
+      * Soft skills and interpersonal abilities
+      * Industry-specific competencies and domain knowledge
+      * Licenses, certifications, and professional credentials
+      * Education details including GPA, honors, relevant coursework
+      * Work experience with detailed responsibilities and quantified achievements
+      * Projects, portfolios, or significant work samples
+      * Publications, research, creative works, or intellectual contributions
+      * Professional associations, memberships, and affiliations
+      * Awards, recognition, and honors
+    - Calculate total years of experience by analyzing ALL work positions
+    - Identify employment gaps by comparing consecutive job periods
+    - Extract contact information from anywhere in the document (header, footer, contact section)
+    - If information is not found, explicitly state "Not found" - do not leave fields empty
+    - Be thorough and double-check all extracted information for completeness
+
+  expected_output: >
+    Return a valid JSON object with the following structure (no markdown formatting):
+    {
+      "contact_information": {
+        "full_name": "extracted name or 'Not found'",
+        "email": "email address or 'Not found'",
+        "phone": "phone number or 'Not found'",
+        "linkedin": "LinkedIn URL or 'Not found'",
+        "github": "GitHub URL or 'Not found'",
+        "portfolio": "portfolio URL or 'Not found'",
+        "address": "physical address or 'Not found'",
+        "other_profiles": ["array of other social/professional profiles"]
+      },
+      "education": [
+        {
+          "degree": "degree type and field of study",
+          "institution": "school/university name",
+          "graduation_date": "graduation date or expected date",
+          "gpa": "GPA if mentioned",
+          "honors": "honors, distinctions, or awards",
+          "relevant_coursework": ["array of relevant courses"],
+          "thesis_project": "thesis or capstone project details"
+        }
+      ],
+      "work_experience": [
+        {
+          "job_title": "position title",
+          "company": "company name",
+          "location": "work location",
+          "start_date": "start date",
+          "end_date": "end date or 'Present'",
+          "duration_months": "calculated duration in months",
+          "employment_type": "full-time, part-time, contract, internship, etc.",
+          "key_responsibilities": ["array of main responsibilities"],
+          "achievements": ["array of quantified achievements"],
+          "tools_used": ["array of tools, technologies, or methods used"]
+        }
+      ],
+      "skills": {
+        "professional_skills": ["array of job-specific professional skills"],
+        "technical_skills": ["array of technical competencies"],
+        "software_tools": ["array of software and tools"],
+        "methodologies": ["array of methodologies, frameworks, or approaches"],
+        "soft_skills": ["array of interpersonal and soft skills"],
+        "domain_expertise": ["array of industry/domain knowledge"]
+      },
+      "languages": [
+        {
+          "language": "language name",
+          "proficiency_level": "proficiency level (A1, A2, B1, B2, C1, C2, Native, Fluent, etc.)",
+          "certification": "language certification if any"
+        }
+      ],
+      "certifications": [
+        {
+          "name": "certification name",
+          "issuer": "issuing organization",
+          "date_obtained": "date obtained",
+          "expiration_date": "expiration date if applicable",
+          "credential_id": "credential ID if provided",
+          "verification_url": "verification URL if provided"
+        }
+      ],
+      "projects": [
+        {
+          "name": "project name",
+          "description": "brief description",
+          "skills_used": ["array of skills/tools/technologies used"],
+          "role": "your role in the project",
+          "team_size": "team size if mentioned",
+          "duration": "project duration",
+          "url": "project URL if available",
+          "achievements": ["array of project outcomes/achievements"]
+        }
+      ],
+      "additional_sections": {
+        "publications": ["array of publications"],
+        "patents": ["array of patents"],
+        "awards": ["array of awards and recognition"],
+        "volunteering": ["array of volunteer experience"],
+        "professional_associations": ["array of memberships"],
+        "licenses": ["array of professional licenses"],
+        "references": ["array of references or 'Available upon request'"]
+      },
+      "analysis_summary": {
+        "total_experience_years": "calculated total years of experience",
+        "total_experience_months": "calculated total months of experience",
+        "career_level": "entry, mid, senior, executive",
+        "primary_domain": "main area of expertise",
+        "key_strengths": ["array of top 3-5 strengths"],
+        "employment_gaps": [
+          {
+            "gap_period": "period of gap",
+            "duration_months": "gap duration in months",
+            "potential_reason": "inferred reason if obvious"
+          }
+        ],
+        "career_progression": "upward, lateral, mixed, declining",
+        "most_recent_role": "most recent job title and company"
+      }
+    }
+
+  agent: document_analyzer
+
+candidate_matching_task:
+  description: >
+    You are an expert candidate evaluation specialist. Compare the candidate's resume with job requirements using the provided scoring rubric (barem) passed as input. 
+    
+    CRITICAL INSTRUCTIONS:
+    - NEVER use ```json or ``` in output
+    - NEVER use markdown code blocks
+    - Return ONLY the raw JSON object
+    - Start directly with { and end with }
+    - Use ONLY the exact rubric structure from input (with 'section', 'weight', 'scoring') for all evaluations
+    - Base ALL analysis exclusively on the provided job description - do NOT use web search or industry standards
+    - For each rubric section, assign a section score based on evidence found in the candidate's resume
+    - Calculate weighted scores using the exact weights provided in the rubric
+    - Provide objective, evidence-based scoring with clear justification
+    - Include specific examples from the resume to support each score
+    - Ensure all weights sum to 100% and validate calculations
+    - Focus on user-specified requirements as highest priority
+    - Do NOT generate, modify, or add criteria beyond what's provided
+    - Be consistent and fair in scoring methodology across all candidates
+
+  expected_output: >
+    Return a valid JSON object with the following structure (no markdown formatting):
+    
+    {
+      "job_analysis": {
+        "job_title": "extracted job title",
+        "job_description": "full job description provided",
+        "critical_requirements": ["array of must-have requirements from job description"],
+        "preferred_requirements": ["array of nice-to-have requirements from job description"],
+        "experience_required": "years and type of experience specified",
+        "education_required": "education requirements if specified"
+      },
+      "candidate_overview": {
+        "candidate_name": "candidate name from resume",
+        "current_title": "most recent job title",
+        "total_experience_years": "total years of experience",
+        "relevant_experience_years": "years of relevant experience for this role",
+        "education_level": "highest education level",
+        "key_skills": ["array of candidate's key skills relevant to job"]
+      },
+      "rubric_evaluation": [
+        {
+          "section_name": "rubric section name",
+          "weight_percentage": "weight from provided rubric",
+          "candidate_evidence": ["array of specific evidence from resume"],
+          "section_score": "score based on rubric criteria",
+          "score_justification": "detailed explanation of why this score was assigned",
+          "weighted_score": "calculated weighted score (section_score × weight)"
+        }
+      ],
+      "match_analysis": {
+        "skills_match": {
+          "matched_skills": ["array of skills candidate has that match job requirements"],
+          "missing_skills": ["array of required skills candidate lacks"],
+          "additional_skills": ["array of relevant skills candidate has beyond requirements"],
+          "match_percentage": "percentage of required skills matched"
+        },
+        "experience_match": {
+          "required_experience": "experience requirement from job",
+          "candidate_experience": "candidate's relevant experience",
+          "experience_gap": "gap analysis if any",
+          "match_level": "exceeds, meets, below, or significantly below"
+        },
+        "education_match": {
+          "required_education": "education requirement from job",
+          "candidate_education": "candidate's education",
+          "match_level": "exceeds, meets, below, or not specified"
+        }
+      },
+      "scoring_summary": {
+        "total_weighted_score": "sum of all weighted scores",
+        "normalized_score": "score out of 10",
+        "score_breakdown": [
+          {
+            "criterion": "criterion name",
+            "raw_score": "raw score out of 10",
+            "weight": "weight percentage",
+            "weighted_points": "raw_score × weight"
+          }
+        ],
+        "weights_validation": "confirmation that weights sum to 100%"
+      },
+      "evaluation_results": {
+        "critical_missing_requirements": ["array of critical missing requirements"],
+        "key_strengths": ["array of candidate's key strengths for this role"],
+        "areas_for_improvement": ["array of areas where candidate could improve"],
+        "unique_value_propositions": ["array of unique qualities candidate brings"],
+        "risk_factors": ["array of potential concerns or risks"]
+      },
+      "final_recommendation": {
+        "status": "RECOMMENDED | NOT RECOMMENDED | CONDITIONALLY RECOMMENDED",
+        "confidence_level": "high, medium, low",
+        "primary_reason": "main reason for recommendation decision",
+        "supporting_factors": ["array of factors supporting the decision"],
+        "conditions_if_applicable": ["array of conditions if conditionally recommended"],
+        "next_steps": ["array of suggested next steps in hiring process"]
+      },
+      "detailed_feedback": {
+        "for_candidate": "constructive feedback for candidate improvement",
+        "for_hiring_manager": "insights and recommendations for hiring manager",
+        "interview_focus_areas": ["array of areas to focus on during interview"],
+        "reference_check_priorities": ["array of areas to verify with references"]
+      }
+    }
+
+  agent: matching_specialist
+
+report_generation_task:
+  description: >
+    You are an expert hiring consultant who generates comprehensive, focused hiring reports. 
+    Create a detailed analysis report that synthesizes resume parsing and candidate matching results 
+    into clear, actionable insights for hiring decision-makers.
+    
+    CRITICAL INSTRUCTIONS:
+    - NEVER use ```json or ``` in output
+    - NEVER use markdown code blocks
+    - Return ONLY the raw JSON object
+    - Start directly with { and end with }
+    - Do NOT put the word 'json' or '```json' in the output
+    - Synthesize ALL data from document analysis and candidate matching tasks
+    - Provide clear, data-driven recommendations with comprehensive analysis
+    - Include quantitative scoring with detailed qualitative insights
+    - Structure the report for executive decision-making
+    - Highlight both strengths and concerns with equal weight
+    - Focus on candidate fit and business impact assessment
+    - Ensure all calculations are validated and accurate
+    - Provide definitive hiring recommendation with supporting rationale
+    - Include competitive positioning and market context
+
+  expected_output: >
+    Return a valid JSON object with the following structure (no markdown formatting):
+    
+    {
+      "executive_summary": {
+        "candidate_name": "candidate full name",
+        "position_applied": "job title",
+        "overall_recommendation": "STRONGLY RECOMMENDED | RECOMMENDED | CONDITIONALLY RECOMMENDED | NOT RECOMMENDED",
+        "overall_score": "normalized score out of 10",
+        "confidence_level": "HIGH | MEDIUM | LOW",
+        "key_decision_factors": ["array of top 3-5 factors influencing recommendation"],
+        "critical_concerns": ["array of major concerns if any"],
+        "recommendation_summary": "2-3 sentence summary of final recommendation and rationale"
+      },
+      
+      "candidate_profile": {
+        "professional_summary": "comprehensive 3-4 sentence candidate overview",
+        "career_trajectory": "ascending, stable, transitioning, declining with explanation",
+        "total_experience": "total years of experience",
+        "relevant_experience": "years of directly relevant experience",
+        "education_level": "highest degree and field",
+        "current_status": "employed, unemployed, seeking transition",
+        "geographic_considerations": "location compatibility assessment",
+        "career_progression_analysis": "detailed analysis of career growth pattern",
+        "industry_experience": ["array of industries worked in"],
+        "company_sizes_worked": ["startup, mid-size, enterprise, etc."]
+      },
+      
+      "job_requirements_analysis": {
+        "must_have_requirements": [
+          {
+            "requirement": "specific requirement",
+            "candidate_match": "EXCEEDS | MEETS | PARTIALLY MEETS | DOES NOT MEET",
+            "evidence": "specific evidence from resume",
+            "gap_analysis": "description of any gaps",
+            "risk_level": "HIGH | MEDIUM | LOW",
+            "impact_on_role_success": "how this requirement affects job performance"
+          }
+        ],
+        "preferred_requirements": [
+          {
+            "requirement": "specific requirement",
+            "candidate_match": "EXCEEDS | MEETS | PARTIALLY MEETS | DOES NOT MEET",
+            "evidence": "specific evidence from resume",
+            "added_value": "description of additional value if met"
+          }
+        ],
+        "requirements_satisfaction_score": "percentage of requirements met",
+        "critical_missing_requirements": ["array of missing must-have requirements"],
+        "exceeds_expectations_in": ["array of areas where candidate exceeds requirements"]
+      },
+      
+      "detailed_scoring_analysis": {
+        "rubric_breakdown": [
+          {
+            "criterion": "criterion name",
+            "raw_score": "score out of 10",
+            "weight_percentage": "weight in evaluation",
+            "weighted_points": "calculated weighted points",
+            "performance_level": "EXCELLENT | GOOD | SATISFACTORY | NEEDS IMPROVEMENT | POOR",
+            "supporting_evidence": ["array of specific evidence"],
+            "score_justification": "detailed explanation of score assignment",
+            "benchmark_comparison": "how this compares to typical candidates"
+          }
+        ],
+        "scoring_methodology": "explanation of how scores were calculated",
+        "score_distribution": {
+          "technical_skills": "weighted score for technical competencies",
+          "experience_relevance": "weighted score for experience match",
+          "educational_background": "weighted score for education match",
+          "achievements_impact": "weighted score for demonstrated achievements",
+          "skill_depth_breadth": "weighted score for skill comprehensiveness"
+        },
+        "total_weighted_score": "final calculated score",
+        "percentile_ranking": "estimated percentile vs typical candidates for this role",
+        "score_reliability": "confidence in scoring accuracy"
+      },
+      
+      "strengths_and_differentiators": {
+        "core_strengths": [
+          {
+            "strength": "specific strength",
+            "evidence": "supporting evidence from resume",
+            "business_impact": "how this strength benefits the role/company",
+            "uniqueness_factor": "how rare/valuable this strength is in market",
+            "quantified_impact": "measurable outcomes if available"
+          }
+        ],
+        "unique_value_propositions": [
+          {
+            "value_proposition": "unique aspect candidate brings",
+            "market_advantage": "competitive advantage this provides",
+            "differentiation_level": "how this sets candidate apart",
+            "strategic_value": "long-term strategic benefit to organization"
+          }
+        ],
+        "standout_achievements": [
+          {
+            "achievement": "specific achievement",
+            "quantified_impact": "measurable impact if available",
+            "relevance_to_role": "how this achievement applies to target role",
+            "skill_demonstration": "what skills this achievement demonstrates",
+            "complexity_level": "sophistication of the achievement"
+          }
+        ],
+        "leadership_indicators": ["array of leadership qualities demonstrated"],
+        "innovation_examples": ["array of innovative contributions or thinking"]
+      },
+      
+      "gaps_and_risk_assessment": {
+        "critical_gaps": [
+          {
+            "gap": "specific missing requirement",
+            "impact_level": "HIGH | MEDIUM | LOW",
+            "severity_assessment": "how critical this gap is to role success",
+            "likelihood_of_success_despite_gap": "assessment of success probability",
+            "gap_category": "technical, experience, educational, cultural"
+          }
+        ],
+        "experience_gaps": [
+          {
+            "gap_area": "specific experience missing",
+            "years_of_experience_gap": "quantified experience shortfall",
+            "complexity_gap": "sophistication level missing",
+            "industry_specific_concerns": "industry-specific experience gaps"
+          }
+        ],
+        "skill_deficiencies": [
+          {
+            "skill": "specific skill gap",
+            "proficiency_gap": "level of proficiency missing",
+            "criticality_to_role": "how essential this skill is",
+            "market_availability": "how common this skill is in market"
+          }
+        ],
+        "performance_risk_factors": [
+          {
+            "risk_factor": "specific risk",
+            "probability": "likelihood this risk manifests",
+            "impact": "potential impact on performance",
+            "risk_category": "technical, cultural, motivational, capacity"
+          }
+        ],
+        "cultural_fit_assessment": {
+          "cultural_alignment_score": "score out of 10",
+          "cultural_strengths": ["array of cultural fit strengths"],
+          "cultural_concerns": ["array of potential cultural misalignment"],
+          "team_integration_assessment": "likelihood of successful team integration"
+        }
+      },
+      
+      "comparative_analysis": {
+        "market_positioning": "how candidate compares to typical market candidates",
+        "salary_market_alignment": "alignment with market compensation",
+        "competitive_advantage": "what makes this candidate stand out",
+        "alternative_candidates_consideration": "how this candidate compares to alternatives",
+        "urgency_vs_quality_tradeoff": "assessment of hiring urgency vs candidate quality",
+        "market_scarcity_factors": ["array of factors affecting candidate availability"]
+      },
+      
+      "business_impact_assessment": {
+        "immediate_impact_potential": "ability to contribute immediately",
+        "ramp_up_time_estimate": "estimated time to full productivity",
+        "long_term_value_creation": "potential for long-term value creation",
+        "team_dynamic_impact": "expected impact on team performance",
+        "organizational_growth_contribution": "contribution to company growth",
+        "cost_benefit_analysis": {
+          "total_cost_of_hire": "estimated total hiring cost",
+          "expected_productivity_value": "estimated value creation",
+          "roi_timeline": "expected timeline for positive ROI",
+          "investment_risk_level": "risk level of hiring investment"
+        }
+      },
+      
+      "decision_rationale": {
+        "primary_reasons_for_recommendation": ["array of main reasons supporting recommendation"],
+        "primary_reasons_against_recommendation": ["array of main concerns"],
+        "decision_confidence_factors": ["array of factors supporting confidence level"],
+        "decision_uncertainty_factors": ["array of factors creating uncertainty"],
+        "alternative_scenarios": [
+          {
+            "scenario": "alternative outcome scenario",
+            "probability": "likelihood of this scenario",
+            "implications": "what this scenario would mean"
+          }
+        ],
+        "key_assumptions": ["array of assumptions underlying the recommendation"],
+        "sensitivity_analysis": "how sensitive the recommendation is to key factors"
+      },
+      
+      "stakeholder_impact_analysis": {
+        "hiring_manager_considerations": "specific points for hiring manager",
+        "team_impact_assessment": "how this hire affects the team",
+        "departmental_implications": "broader departmental considerations",
+        "organizational_alignment": "alignment with organizational goals",
+        "budget_impact": "financial implications of hiring decision",
+        "timeline_considerations": "timing factors affecting the hire"
+      },
+      
+      "quality_assurance": {
+        "data_completeness_assessment": "assessment of data quality used",
+        "evaluation_methodology_validation": "validation of evaluation approach",
+        "potential_bias_factors": ["array of potential biases identified"],
+        "confidence_intervals": "uncertainty ranges for key assessments",
+        "recommendation_robustness": "how robust the recommendation is to new information",
+        "evaluation_limitations": ["array of limitations in the evaluation"]
+      }
+    }
+
+  agent: report_generator

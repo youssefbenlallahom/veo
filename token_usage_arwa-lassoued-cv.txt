@@ -1,0 +1,2 @@
+Token Usage for arwa-lassoued-cv:
+total_tokens=21930 prompt_tokens=16685 cached_prompt_tokens=0 completion_tokens=5245 successful_requests=5

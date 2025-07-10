@@ -1,0 +1,2 @@
+Token Usage for baha-kahri-cv:
+total_tokens=12862 prompt_tokens=8226 cached_prompt_tokens=0 completion_tokens=4636 successful_requests=4

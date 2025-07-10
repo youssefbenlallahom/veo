@@ -1,0 +1,2 @@
+Token Usage for alaeddine-selmi-cv:
+total_tokens=14024 prompt_tokens=10891 cached_prompt_tokens=0 completion_tokens=3133 successful_requests=5

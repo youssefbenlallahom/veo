@@ -1,0 +1,106 @@
+=== COMPLETE PDF DOCUMENT CONTENT ===
+
+--- Page 1 ---
+Mehdi Ferchichi
+Business Intelligence Analyst
+Tunis, Tunisie |+216 26 695 484| ferchichimehdi10@gmail.com
+LinkedIn | https://www.linkedin.com/in/mehdi-ferchichi/
+Prsentation
+ Expertise en Business Intelligence, modlisation dimensionnelle et Data Warehouse
+ Conception et dveloppement de solutions BI (Power BI, Metabase, Talend)
+ Exprience en conception et optimisation des processus ETL et gestion des flux de donnes
+ Matrise des bases de donnes SQL (PostgreSQL, MySQL, Oracle) et optimisation des requtes
+ Excellentes capacits analytiques et de rsolution de problmes pour la prise de dcision
+ Autonome, rigoureux, avec un excellent sens de la communication et du travail en quipe
+ Capacit grer plusieurs projets en parallle et collaborer avec des quipes multidisciplinaires
+Diplme
+ Mastre Professionnel en Business Analytics
+ESPRIT School of Business 09/2020 -
+07/2022
+ Licence en Gestion, spcialit Finance
+ISG Bizerte 09/2015 -
+07/2019
+Exprience Professionnelle
+Consultant Business Intelligence Analyst
+Fulfillment Bridge
+01/2024 01/2025
+ Sujet : Dveloppement de tableaux de bord Power BI et Metabase pour le suivi des KPI.
+ Analyse des besoins et identification des KPI :
+o Collaboration avec les parties prenantes pour dfinir les indicateurs cls de performance
+(KPI).
+o Traduction des besoins mtiers en spcifications techniques.
+ Travail dans Power BI :
+o Collecte et transformation des donnes :
+ Connexion directe Google Cloud PostgreSQL pour extraire les donnes.
+ Utilisation de Power Query pour nettoyer et transformer les donnes.
+o Modlisation des donnes :
+ Cration du modle de donnes dans Power BI Desktop.
+ Dveloppement de mesures et calculs avancs laide de DAX (Data Analysis
+Expressions).
+o Dveloppement de tableaux de bord :
+ Conception de tableaux de bord interactifs et dynamiques dans Power BI Desktop.
+ Mise en place de visualisations adaptes aux KPI dfinis (graphiques, cartes, filtres).
+o Dploiement :
+ Publication des tableaux de bord sur Power BI Service.
+1
+
+--- Page 2 ---
+Gestion des accs utilisateurs et partage scuris des rapports.
+ Travail dans Metabase :
+o Cration de rapports supplmentaires pour des analyses spcifiques.
+o Connexion directe Google Cloud PostgreSQL pour un accs en temps rel aux donnes.
+o Conception de tableaux de bord simplifis et interactifs dans Metabase, avec une approche
+centre sur les besoins oprationnels.
+Environnement technique : Power BI, Metabase, Google Cloud PostgreSQL, Power Query, DAX, Power BI
+Service.
+Consultant en Business Intelligence & Business Analyst
+XPERT Consulting & Strategy
+01/2023 01/2024
+ Conception de tableaux de bord Power BI pour le suivi des KPI, intgration de sources multiples
+et automatisation des analyses.
+ Analyse et traitement des donnes sous Excel avec formules avances, TCD et macros VBA pour
+optimiser les rapports.
+ Utilisation de Sage 100 pour la gestion comptable et financire, suivi des factures et reporting de
+performance.
+ Paramtrage et optimisation des ERP en automatisant les processus mtiers et en intgrant des
+solutions BI.
+ Formation et accompagnement des utilisateurs pour matriser Power BI, Excel et ERP, avec
+support et conseils stratgiques.
+Environnement technique : Power BI, Excel (formules avances, TCD, VBA), Sage 100, ERP.
+Stagiaire BI
+TWINS DIGITAL LABS
+02/2022 06/2022
+ Sujet : Mise en place des tableaux de bord pour la solution AD-Caisse au sein de TWINS DIGITAL
+LABS.
+ Mise en place d'une solution daide la dcision pour l'entreprise.
+ Recueil et analyse des besoins fonctionnels pour comprendre les attentes et les objectifs des
+utilisateurs.
+ Cration et chargement d'un entrept de donnes dans MySQL.
+ Mise en place d'un processus ETL avec Talend, incluant la cration des jobs ETL et lalimentation
+des tables.
+ Cration de tableaux de bord interactifs pour faciliter lanalyse des donnes et fournir des
+insights clairs et exploitables.
+Environnement technique : Power BI, Talend, MySQL.
+2
+
+--- Page 3 ---
+Comptences
+ Business Intelligence: Power BI, Metabase, SAP Analytics Cloud
+ ETL: Talend Open Studio, Power Query
+ Bases de Donnes : MySQL, PostgreSQL, MongoDB
+ Langages de Programmation : Python (Pandas, NumPy), R (ggplot2, Forecast)
+ Big Data : Hadoop, Spark, Elasticsearch
+ Gestion de Projet : Agile, Scrum
+Certifications
+ Scrum Master PSM II Certification Udemy
+ Agile Scrum Master Training : tudes de cas et applications pratiques Udemy
+ Matrise de Talend Open Studio pour le Big Data Udemy
+ Diplme Python Programming A-Z : Matrise complte de Python Udemy
+ BI Data Engineer Analyst : Comptences en Power BI, SQL, Excel et DAX Udemy
+Langues
+ Franais : Courant
+ Anglais : Courant
+ Arabe : Natif
+3
+
+=== END OF DOCUMENT ===

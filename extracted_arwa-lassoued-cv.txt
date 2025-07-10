@@ -1,0 +1,196 @@
+=== COMPLETE PDF DOCUMENT CONTENT ===
+
+--- Page 1 ---
+Arwa LASSOUED
+Lac Victoria, berges du lac1, 1053
+GSM : 50 845 260
+m@il: arwa.lassoued@yahoo.fr
+Ne le : 11-12-1989 en Arabie Saoudite
+EXPERIENCE PROFESSIONNELLE
+Janvier 21_Aujourdhui Manager Data Steward Technology Acceleration Center TAC PWC :
+Automatiser les processus de gestion des donnes, y compris l'ingestion, le
+nettoyage, la transformation et l'analyse des donnes.
+Collaborer entre les quipes de donnes, les dveloppeurs et les oprationnels pour
+faciliter l'intgration de divers outils et technologies de gestion de donnes,
+permettant une orchestration fluide des workflows.
+Instaurer des processus pour surveiller, vrifier et amliorer la qualit des donnes
+tout au long de leur cycle de vie.
+Encourager l'exprimentation et l'itration rapide, permettant aux quipes de tester
+de nouvelles ides et d'ajuster les processus en fonction des rsultats.
+Crer et grer les pipelines de donnes automatiss qui couvrent l'ensemble du flux
+de travail des donnes, de l'ingestion la transformation, au stockage et l'analyse.
+Dvelopper des tests automatiss pour vrifier la qualit des donnes et la
+performance des pipelines, garantissant que les modifications apportes
+n'introduisent pas de nouvelles erreurs ou problmes.
+Mise en uvre de processus rigoureux pour assurer la prcision et la fiabilit des
+donnes.
+Former et grer lquipe sur les meilleures pratiques de DataOps et l'utilisation des
+outils, augmentant l'adoption des nouvelles technologies.
+Environnements Techniques : Exel, G-Sheet, PowerBI, Alteryx, MDM, SAP,
+SalesForce, PMDM, Workday, JIRA
+Mot cls : Data Management, Data Quality, Data Gouvernance, Gestion des projets
+DataOps, PO, recette, KPI, Dashboard
+Juillet 19 Janvier 21 Data Analyst Ressource Humaine Ste Tunisienne dAssistance et de Service
+(STAS), filiale de la socit TLS Contact :
+ Dvelopper, analyser, optimiser et automatiser des tableaux de bord RH, des
+processus et outils danalyse de donnes, des rapports aligns au plan stratgique RH
+ Effectuer diverses analyses et fournir les indicateurs cls de performance
+Participer l'laboration des budgets, plans d'action, objectifs et stratgies
+ Assurer la consolidation des rapports mensuels de tout le groupe (WW) et laborer
+des rapports claires et utiles pour les prises des dcisions
+Raliser le reporting des effectifs et le suivi de masse salariale, en lien avec le
+contrle de gestion
+Surveiller les sources de donnes dans les systmes afin de reprer les erreurs et
+prendre les mesures ncessaires.
+Automatiser les maquettes des rapports Mensuel, Trimestriel et annuel (les
+maquettes budgtaires)
+Etablir les paies des employs de lAfrique du Sud et Niger.
+Environnements Techniques : Exel, G-Sheet, Orange, PowerBI
+Mot cls : Data Analyst, Data Preparation, Data Aggregation, Data Quality,
+Dashboard
+Juin 16 Juin 19 Responsable Grante SAMSUNG BRAND SHOP les berges du lac :
+Gestion du stock des 2 boutiques, organisation et prparation des inventaire,
+Elaborer un planning prvisionnel d'activit dans son domaine, Fixer des objectifs
+quantitatifs et qualitatifs et en vrifier la ralisation, Facturation et enregistrement
+des ventes, Contrle du niveau de prestation qualitatif de la boutique, Grer les
+demandes et rclamations-clients, Grer le service aprs-vente, Accueil de la
+clientle, Conseils et vente de produits la clientle, Crer et dvelopper une
+relation de confiance avec les clients, Grer les commandes en-ligne, encadrer le
+
+--- Page 1 Table 1 ---
+Janvier 21_Aujourdhui | Manager Data Steward Technology Acceleration Center TAC PWC :
+Automatiser les processus de gestion des donnes, y compris l'ingestion, le
+nettoyage, la transformation et l'analyse des donnes.
+Collaborer entre les quipes de donnes, les dveloppeurs et les oprationnels pour
+faciliter l'intgration de divers outils et technologies de gestion de donnes,
+permettant une orchestration fluide des workflows.
+Instaurer des processus pour surveiller, vrifier et amliorer la qualit des donnes
+tout au long de leur cycle de vie.
+Encourager l'exprimentation et l'itration rapide, permettant aux quipes de tester
+de nouvelles ides et d'ajuster les processus en fonction des rsultats.
+Crer et grer les pipelines de donnes automatiss qui couvrent l'ensemble du flux
+de travail des donnes, de l'ingestion la transformation, au stockage et l'analyse.
+Dvelopper des tests automatiss pour vrifier la qualit des donnes et la
+performance des pipelines, garantissant que les modifications apportes
+n'introduisent pas de nouvelles erreurs ou problmes.
+Mise en uvre de processus rigoureux pour assurer la prcision et la fiabilit des
+donnes.
+Former et grer lquipe sur les meilleures pratiques de DataOps et l'utilisation des
+outils, augmentant l'adoption des nouvelles technologies.
+Environnements Techniques : Exel, G-Sheet, PowerBI, Alteryx, MDM, SAP,
+SalesForce, PMDM, Workday, JIRA
+Mot cls : Data Management, Data Quality, Data Gouvernance, Gestion des projets
+DataOps, PO, recette, KPI, Dashboard
+Juillet 19 Janvier 21 | Data Analyst Ressource Humaine Ste Tunisienne dAssistance et de Service
+(STAS), filiale de la socit TLS Contact :
+Dvelopper, analyser, optimiser et automatiser des tableaux de bord RH, des
+processus et outils danalyse de donnes, des rapports aligns au plan stratgique RH
+Effectuer diverses analyses et fournir les indicateurs cls de performance
+Participer l'laboration des budgets, plans d'action, objectifs et stratgies
+Assurer la consolidation des rapports mensuels de tout le groupe (WW) et laborer
+des rapports claires et utiles pour les prises des dcisions
+Raliser le reporting des effectifs et le suivi de masse salariale, en lien avec le
+contrle de gestion
+Surveiller les sources de donnes dans les systmes afin de reprer les erreurs et
+prendre les mesures ncessaires.
+Automatiser les maquettes des rapports Mensuel, Trimestriel et annuel (les
+maquettes budgtaires)
+Etablir les paies des employs de lAfrique du Sud et Niger.
+Environnements Techniques : Exel, G-Sheet, Orange, PowerBI
+Mot cls : Data Analyst, Data Preparation, Data Aggregation, Data Quality,
+Dashboard
+Juin 16 Juin 19 | Responsable Grante SAMSUNG BRAND SHOP les berges du lac :
+Gestion du stock des 2 boutiques, organisation et prparation des inventaire,
+Elaborer un planning prvisionnel d'activit dans son domaine, Fixer des objectifs
+quantitatifs et qualitatifs et en vrifier la ralisation, Facturation et enregistrement
+des ventes, Contrle du niveau de prestation qualitatif de la boutique, Grer les
+demandes et rclamations-clients, Grer le service aprs-vente, Accueil de la
+clientle, Conseils et vente de produits la clientle, Crer et dvelopper une
+relation de confiance avec les clients, Grer les commandes en-ligne, encadrer le
+
+--- Page 1 Table 2 ---
+Environnements Techniques : Exel, G-Sheet, PowerBI, Alteryx, MDM, SAP,
+SalesForce, PMDM, Workday, JIRA
+Mot cls : Data Management, Data Quality, Data Gouvernance, Gestion des projets
+DataOps, PO, recette, KPI, Dashboard
+
+--- Page 1 Table 3 ---
+Environnements Techniques : Exel, G-Sheet, Orange, PowerBI
+Mot cls : Data Analyst, Data Preparation, Data Aggregation, Data Quality,
+Dashboard
+
+--- Page 1 Table 4 ---
+Gestion du stock des 2 boutiques, organisation et prparation des inventaire,
+Elaborer un planning prvisionnel d'activit dans son domaine, Fixer des objectifs
+quantitatifs et qualitatifs et en vrifier la ralisation, Facturation et enregistrement
+des ventes, Contrle du niveau de prestation qualitatif de la boutique, Grer les
+demandes et rclamations-clients, Grer le service aprs-vente, Accueil de la
+clientle, Conseils et vente de produits la clientle, Crer et dvelopper une
+relation de confiance avec les clients, Grer les commandes en-ligne, encadrer le
+
+--- Page 2 ---
+personnel, suivre et analyser les rsultats et les indicateurs commerciaux, amliorer
+le site web www.SamsungShop.tn
+Environnements Techniques : EXCEL, SAGE COMMERCIAL, Oodoo
+Mot cls : Recette et test, MOA, Business Analyst,
+Juin 14 Avril 16 Ingnieur en statistique et analyse d'information - MARAM Company (Groupe
+KASSAB) :
+Optimisation de la base de donnes "Gestion fournisseurs" des diffrents sites du
+groupes, cration d'un tableau de bord des prix de vente de march de gros
+SO.TU.MAG et des donnes des pointeuses des 7 socits du groupe, analyse des
+donnes de pointage, mise en place des rgles de gestion d'une base de gestion du
+stock d'un restaurant.
+Environnements Techniques : EXCEL, QlikView, CS-Time, Talend.
+Mot cls :
+Fvrier 13 Aout 13 Projet de fin dtude - Office de lAviation Civile et des Aroports (OACA) :
+Prvision du trafic arien des passagers, pour les aroports de Tunis Carthage et de
+Djerba Zarzis.
+Environnements Techniques : EVIEWS et QlikView.
+CURSUS ACADEMIQUE
+Fvrier 2014 Diplme national dingnieur en statistique et analyse dinformation
+Ecole Suprieure de la Statistique et de lAnalyse de lInformation
+2010-2013
+(ESSAI) : Cycle ingnieur en statistique et analyse de linformation
+Institut Prparatoire aux Etudes d'Ingnieurs de Nabeul (IPEIN) :
+2008 - 2010
+Section Math Physique
+Juin 2008 Baccalaurat Mathmatique, Lyce Grombalia
+FORMATIONS
+Formation Agile Scrum Master Product Owner Advancia Training
+Mai 2024
+Center
+Certificat DATAMINING de lAcadmie Tunisienne pour la Formation et
+Dcembre 2018
+les Etudes (ATFE)
+LANGUES
+Arabe Lu, crit, courant
+Anglais Utilisateur comptant (Acadmique IELTS : 6/9)
+Franais Lu, crit, courant
+CENTRES DINTERET
+Sport : Marche, Arobique, Dance, Natation
+Cinma ; Musique ; Lecture
+
+--- Page 2 Table 1 ---
+ | | personnel, suivre et analyser les rsultats et les indicateurs commerciaux, amliorer | |
+ | | le site web www.SamsungShop.tn | |
+ | | Environnements Techniques : EXCEL, SAGE COMMERCIAL, Oodoo | |
+ | | Mot cls : Recette et test, MOA, Business Analyst, | |
+Juin 14 Avril 16 | Ingnieur en statistique et analyse d'information - MARAM Company (Groupe
+KASSAB) :
+Optimisation de la base de donnes "Gestion fournisseurs" des diffrents sites du
+groupes, cration d'un tableau de bord des prix de vente de march de gros
+SO.TU.MAG et des donnes des pointeuses des 7 socits du groupe, analyse des
+donnes de pointage, mise en place des rgles de gestion d'une base de gestion du
+stock d'un restaurant.
+Environnements Techniques : EXCEL, QlikView, CS-Time, Talend.
+Mot cls : | | |
+Fvrier 13 Aout 13 | Projet de fin dtude - Office de lAviation Civile et des Aroports (OACA) :
+Prvision du trafic arien des passagers, pour les aroports de Tunis Carthage et de
+Djerba Zarzis.
+Environnements Techniques : EVIEWS et QlikView. | | |
+
+--- Page 2 Table 2 ---
+Environnements Techniques : EXCEL, QlikView, CS-Time, Talend.
+Mot cls :
+
+=== END OF DOCUMENT ===

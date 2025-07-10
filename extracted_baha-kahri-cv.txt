@@ -1,0 +1,70 @@
+=== COMPLETE PDF DOCUMENT CONTENT ===
+
+--- Page 1 ---
+Baha Kahri
+Ee
+Junior Data Analyst | Junior Data Scientist
+Tunisia, Tunis | bahakahri@gmail.com |+21627688657| linkedin.com/in/baha-kahri
+PROFESSIONAL SUMMARY
+Results-driven Data Analyst with experience in fast-growing tech startups, driving data-powered decision-
+making. Proficient in Python, SQL, R, Tableau, AI-driven analytics, and data automation to optimize KPIs
+and revenue forecasting. Proven ability to leverage predictive modeling, business intelligence, and data
+storytelling to drive business impact. Seeking to apply expertise in data-driven strategy in a new field.
+CORE SKILLS & TECHNICAL EXPERTISE
+Programming: Python, R, SQL, VBA (Microsoft Office), HTML/CSS, Java, JavaScript, TensorFlow, C, SQL, NoSQL.
+Data Analysis & Business Intelligence Tools: Tableau, Power BI, Looker, Microsoft Excel (Advanced), Google
+Analytics, Salesforce, SAP, Starburst, Oracle, SAS, SPSS, CRM Management.
+Machine Learning & AI: TensorFlow, Scikit-learn, NLP, Predictive Modeling, Time Series Analysis, Spark, Hadoop.
+Data Processing & Engineering: ETL, Data Warehouse, Data Pipelines, SQL Optimization, BigQuery, StarUML, Data
+Collection, Database Architecture, Snowflake.
+Statistical Methods & Quantitative Analysis: Data Manipulation (Pandas, NumPy, dplyr), Data Visualization
+(Matplotlib, Seaborn, ggplot2), Data Quality, Data Validation, Experimental Design, Data Mining, A/B Testing, Statistical
+Modeling, Regression Analysis, PCA, MCA, Forecasting, Pricing Strategies, Market Research.
+Business & Strategic Skills: Sales Strategy, Pricing Strategy, Data Visualization & Presentations, Business Performance
+Assessment, Data Strategy, Reporting, Documentation, Business Intelligence, Agile Problem-Solving.
+Soft Skills: Data-Driven Decision Making, Stakeholder Communication, Cross-Functional Collaboration, Insightful Data
+Storytelling, Strategic Planning, Project Management, Adaptability, Time Management.
+WORK EXPERIENCE
+Glovo | Market Analyst Tunis, Tunisia | 06/2024 - Present
+ Automated 25% of workflows using Python & SQL, boosting team efficiency.
+ Developed KPI reports on sales performance, customer retention, and operational metrics, improving
+business outcomes by 15%.
+ Conducted market trend analysis that led to a 10% increase in market share.
+United Nations Population Fund | Data Analyst Consultant Tunis, Tunisia | 05/2023 07/2023
+ Analyzed 50,000+ death certificates, identifying key trends in causes of death & potential years of life lost.
+ Automated 80% of data processing using Python (Pandas, NumPy), cutting manual effort significantly.
+ Created Tableau dashboards that reduced data retrieval time by 40%, enabling faster decision-making.
+National Institute of Public Health | Data Analyst Tunis, Tunisia | 03/2023 10/2023
+ Cleansed and processed 100,000+ disease records, improving data quality by 20%.
+ Designed bar charts, heatmaps, and histograms in Python & Power BI, enhancing public health insights.
+ Developed predictive models that improved early disease detection accuracy by 30%.
+EDUCATION
+Higher School of Statistics and Data Analysis |Engineering degree of Statistics and data analysis, Tunis Tunisia
+|09.2019-10.2023
+ Specialization: Big Data, Advanced Analytics, Machine Learning
+CERTIFICATIONS
+ Sales Google Data Analytics Professional Certificate
+ Microsoft Power BI Data Analyst Associate
+ AWS Cloud Practitioner Essentials
+
+--- Page 1 Table 1 ---
+Glovo | Market Analyst Tunis, Tunisia | 06/2024 - Present
+ | Automated 25% of workflows using Python & SQL, boosting team efficiency.
+ | Developed KPI reports on sales performance, customer retention, and operational metrics, improving
+ | business outcomes by 15%.
+ | Conducted market trend analysis that led to a 10% increase in market share.
+United Nations Population Fund | Data Analyst Consultant Tunis, Tunisia | 05/2023 07/2023
+ | Analyzed 50,000+ death certificates, identifying key trends in causes of death & potential years of life lost.
+ | Automated 80% of data processing using Python (Pandas, NumPy), cutting manual effort significantly.
+ | Created Tableau dashboards that reduced data retrieval time by 40%, enabling faster decision-making.
+National Institute of Public Health | Data Analyst Tunis, Tunisia | 03/2023 10/2023
+ | Cleansed and processed 100,000+ disease records, improving data quality by 20%.
+ | Designed bar charts, heatmaps, and histograms in Python & Power BI, enhancing public health insights.
+ | Developed predictive models that improved early disease detection accuracy by 30%.
+
+--- Page 1 Table 2 ---
+Higher School of Statistics and Data Analysis |Engineering degree of Statistics and data analysis, Tunis Tunisia
+|09.2019-10.2023
+ | Specialization: Big Data, Advanced Analytics, Machine Learning
+
+=== END OF DOCUMENT ===

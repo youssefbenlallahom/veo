@@ -1,0 +1,9 @@
+Thought
+I need to extract all information from the provided PDF resume. The first step is to use the `PDF Document Reader` tool with the `extract_all` query to get the full text content of the document. After that, I will parse the text to fill in the required JSON structure, including contact information, education, work experience, skills, and other sections, while also performing an analysis for AI-screening optimization.Action
+PDF Document Reader
+Action Input:
+```json
+{
+  "query": "extract_all"
+}
+```

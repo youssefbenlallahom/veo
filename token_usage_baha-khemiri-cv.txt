@@ -1,0 +1,2 @@
+Token Usage for baha-khemiri-cv:
+total_tokens=42112 prompt_tokens=38479 cached_prompt_tokens=0 completion_tokens=3633 successful_requests=10

@@ -1,0 +1,98 @@
+=== COMPLETE PDF DOCUMENT CONTENT ===
+
+--- Page 1 ---
+Imen Zarai
+Phone: 00216 51 654 500
+Email: zaraiimene@gmail.com
+LinkedIn: https://www.linkedin.com/in/imene-zarai-3302b2160
+Tableau: https://public.tableau.com/app/profile/imene5953
+Address: 17 Victory Street, Sousse, Tunisia
+Data Analyst
+JOB EXPERIENCES
+HR Data Analyst, Analytical and Social Management September 2023 Present
+Control Officer
+Rose Blanche Group, Sousse, Tunisia
+ Implemented necessary resources and management tools.
+ Improved procedures within scope.
+ Set up and monitored reporting indicators(KPIs).
+ Organized activities and improved the group's PMS aligning with strategic objectives.
+ Facilitated HR reporting using PowerBi and ensured data quality.
+Business Intelligence / PowerBi and Python Feb 2023 Present
+Instructor
+GOMYCODE, Sousse, Tunisia
+ Taught and supervised learners in carrying out concrete projects.
+ Designed assessments to measure understanding and skills.
+ Provided constructive feedback for improvement.
+Data Engineer Feb 2022 Nov 2022
+TTS, Sousse, Tunisia
+Managed data collection, manipulation, and analysis for trend reports.
+ Developed dashboards for data visualization using Power BI.
+ Used Talend for ETL processes from multiple data sources.
+ Conducted sentiment analysis of customer reviews using Python.
+ Predicted market trends and future situations using machine learning.
+
+--- Page 1 Table 1 ---
+Imen Zarai
+Phone: 00216 51 654 500
+Email: zaraiimene@gmail.com
+LinkedIn: https://www.linkedin.com/in/imene-zarai-3302b2160
+Tableau: https://public.tableau.com/app/profile/imene5953
+Address: 17 Victory Street, Sousse, Tunisia
+Data Analyst
+JOB EXPERIENCES
+HR Data Analyst, Analytical and Social Management September 2023 Present
+Control Officer
+Rose Blanche Group, Sousse, Tunisia
+ Implemented necessary resources and management tools.
+ Improved procedures within scope.
+ Set up and monitored reporting indicators(KPIs).
+ Organized activities and improved the group's PMS aligning with strategic objectives.
+ Facilitated HR reporting using PowerBi and ensured data quality.
+Business Intelligence / PowerBi and Python Feb 2023 Present
+Instructor
+GOMYCODE, Sousse, Tunisia
+ Taught and supervised learners in carrying out concrete projects.
+ Designed assessments to measure understanding and skills.
+ Provided constructive feedback for improvement.
+Data Engineer Feb 2022 Nov 2022
+TTS, Sousse, Tunisia
+Managed data collection, manipulation, and analysis for trend reports.
+ Developed dashboards for data visualization using Power BI.
+ Used Talend for ETL processes from multiple data sources.
+ Conducted sentiment analysis of customer reviews using Python.
+ Predicted market trends and future situations using machine learning.
+
+--- Page 1 Table 2 ---
+ | | Imen Zarai
+Phone: 00216 51 654 500
+Email: zaraiimene@gmail.com
+LinkedIn: https://www.linkedin.com/in/imene-zarai-3302b2160
+Tableau: https://public.tableau.com/app/profile/imene5953
+Address: 17 Victory Street, Sousse, Tunisia
+ | | Data Analyst
+
+--- Page 2 ---
+Senior Technician July 2020 Jan 2022
+Web2Com, Sousse, Tunisia
+ Managed technical preparation and validation for Web and Mobile projects.
+ Developed web applications using PHP, C#, HTML, CSS.
+ Trained interns and new technicians.
+ACADEMIC INTERNSHIPS
+Data Analyst Intern Feb 2020 May 2020
+General Insurance Committee, Tunis, Tunisia
+ Visualized data and created dashboards using PowerBi.
+ Conducted predictive and descriptive analysis with Python.
+ Deployed prediction results and dashboards into a site using Flask.
+Intern (Machine Learning) July 2020 September 2020
+Discovery, Tunis, Tunisia
+ Created an intelligent chatbot for customer relationship management using NLP, NumPy,
+TextBlob, Spacy, NLTK.
+EDUCATION
+Computer Science Engineering, Business Intelligence
+Private School of Engineering and Technology, Tunisia, 2022
+Degree in Fundamental Computer Science
+Higher School of Sciences and Technologies of Hammam Sousse, Tunisia, 2019
+LANGUAGES
+French: B2 English: B2 German: A2
+
+=== END OF DOCUMENT ===

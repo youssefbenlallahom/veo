@@ -1,0 +1,42 @@
+=== COMPLETE PDF DOCUMENT CONTENT ===
+
+--- Page 1 ---
+Mohamed Ali Ben Salah
++216 22 345 678
+mohamed.ali.bensalah@email.com
+Sousse, Tunisia
+Objective
+Detail-oriented accounting graduate seeking an Accounts Payable role at a reputable company. I
+aim to contribute my growing experience in financial operations and strong analytical mindset while
+learning and growing in a collaborative environment.
+Professional Experience
+Junior Accountant - ABC Consulting, Sousse
+March 2023 - Present
+- Processed and verified supplier invoices for accuracy and compliance
+- Maintained digital records of expense reports and payment vouchers
+- Assisted in monthly account reconciliations
+- Followed up with vendors for payment schedules and documentation
+Accounting Intern - Socit Gnrale Tunisie
+July 2022 - September 2022
+- Supported the accounts payable team by preparing payment summaries
+- Validated invoice data and input into the internal ERP system
+- Participated in the month-end closing process
+Education
+Bachelor's in Finance & Accounting
+Institut Suprieur de Gestion, Sousse
+2019 - 2022
+Skills
+- Accounts Reconciliation
+
+--- Page 2 ---
+- Invoice Processing
+- MS Excel (Pivot Tables, VLOOKUP)
+- Team Collaboration
+- Time Management
+- Intermediate French (B1) / English (B2)
+Additional
+- Knowledge of basic accounting software (Odoo, QuickBooks)
+- Currently taking SAP Fundamentals course (MOOC)
+- Available immediately
+
+=== END OF DOCUMENT ===
