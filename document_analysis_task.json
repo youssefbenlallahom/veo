@@ -12,7 +12,7 @@
   "education": [
     {
       "degree": "Bachelor's in Finance & Accounting",
-      "institution": "Institut Supérieur de Gestion, Sousse",
+      "institution": "Institut Suprieur de Gestion, Sousse",
       "graduation_date": "2022",
       "gpa": "Not found",
       "honors": "Not found",
@@ -27,7 +27,7 @@
       "location": "Sousse",
       "start_date": "March 2023",
       "end_date": "Present",
-      "duration_months": "Not specified",
+      "duration_months": "Not calculated",
       "employment_type": "Not found",
       "key_responsibilities": [
         "Processed and verified supplier invoices for accuracy and compliance",
@@ -40,7 +40,7 @@
     },
     {
       "job_title": "Accounting Intern",
-      "company": "Société Générale Tunisie",
+      "company": "Socit Gnrale Tunisie",
       "location": "Not found",
       "start_date": "July 2022",
       "end_date": "September 2022",
@@ -64,13 +64,12 @@
       "Financial Operations",
       "Month-end closing"
     ],
-    "technical_skills": [
-      "MS Excel (Pivot Tables, VLOOKUP)"
-    ],
+    "technical_skills": [],
     "software_tools": [
+      "MS Excel (Pivot Tables, VLOOKUP)",
       "Odoo",
       "QuickBooks",
-      "SAP"
+      "SAP (Fundamentals course)"
     ],
     "methodologies": [],
     "soft_skills": [
@@ -92,14 +91,14 @@
     },
     {
       "language": "English",
-      "proficiency_level": "B2",
+      "proficiency_level": "B2 (Intermediate)",
       "certification": "Not found"
     }
   ],
   "certifications": [
     {
-      "name": "SAP Fundamentals",
-      "issuer": "MOOC",
+      "name": "SAP Fundamentals course (MOOC)",
+      "issuer": "Not found",
       "date_obtained": "Currently taking",
       "expiration_date": "Not applicable",
       "credential_id": "Not found",
@@ -120,20 +119,20 @@
   },
   "analysis_summary": {
     "total_experience_years": "1",
-    "total_experience_months": "19",
-    "career_level": "Entry",
+    "total_experience_months": "12",
+    "career_level": "Entry-level",
     "primary_domain": "Accounting",
     "key_strengths": [
       "Accounts Payable",
       "Invoice Processing",
-      "Accounts Reconciliation",
+      "Account Reconciliation",
       "MS Excel"
     ],
     "employment_gaps": [
       {
         "gap_period": "October 2022 - February 2023",
         "duration_months": "5",
-        "potential_reason": "Job searching after graduation and internship completion."
+        "potential_reason": "Job searching after internship and graduation."
       }
     ],
     "career_progression": "Upward",

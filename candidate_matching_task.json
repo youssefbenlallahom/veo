@@ -1,26 +1,26 @@
 {
   "job_analysis": {
-    "job_title": "Junior Accountant",
-    "job_description": "We are seeking a detail-oriented Junior Accountant to join our finance team. The successful candidate will be responsible for processing invoices, assisting with account reconciliations, supporting the month-end closing process, and maintaining accurate financial records. This role requires strong analytical skills, proficiency in MS Excel, and experience with accounting software.",
+    "job_title": "Accounts Payable Specialist",
+    "job_description": "Seeking a detail-oriented Accounts Payable Specialist to join our team. The ideal candidate will be responsible for managing the full-cycle accounts payable process, including high-volume invoice processing, vendor communications, payment runs, and account reconciliations. This role requires a strong understanding of accounting principles and proficiency with financial software.",
     "critical_requirements": [
-      "1-2 years of experience in an accounting role",
-      "Proven experience with invoice processing and accounts payable",
-      "Demonstrated ability to perform account reconciliations",
-      "High proficiency in MS Excel, including VLOOKUPs and Pivot Tables"
+      "1-2 years of experience in an Accounts Payable or similar accounting role",
+      "Bachelor's degree in Accounting, Finance, or related field",
+      "Proficiency in MS Excel (VLOOKUP, Pivot Tables)",
+      "Experience with accounting software (e.g., SAP, Oracle, QuickBooks)"
     ],
     "preferred_requirements": [
-      "Bachelor's degree in Accounting or Finance",
-      "Experience with ERP systems such as SAP, Odoo, or QuickBooks",
-      "Familiarity with month-end closing procedures"
+      "Experience with 3-way matching processes",
+      "Experience with SAP",
+      "Experience with month-end closing procedures"
     ],
-    "experience_required": "1-2 years of relevant accounting experience",
+    "experience_required": "1-2 years of experience in an Accounts Payable or similar accounting role",
     "education_required": "Bachelor's degree in Accounting, Finance, or related field"
   },
   "candidate_overview": {
     "candidate_name": "Mohamed Ali Ben Salah",
     "current_title": "Junior Accountant",
-    "total_experience_years": "1.6 years (19 months)",
-    "relevant_experience_years": "1.6 years (19 months)",
+    "total_experience_years": "1",
+    "relevant_experience_years": "1",
     "education_level": "Bachelor's in Finance & Accounting",
     "key_skills": [
       "Accounts Reconciliation",
@@ -28,67 +28,68 @@
       "MS Excel (Pivot Tables, VLOOKUP)",
       "Odoo",
       "QuickBooks",
-      "SAP (Fundamentals)",
-      "Month-end closing"
+      "Vendor Communication"
     ]
   },
   "rubric_evaluation": [
     {
-      "section_name": "Core Accounting Experience (Accounts Payable/Receivable)",
-      "weight_percentage": "35",
+      "section_name": "Accounts Payable Experience",
+      "weight_percentage": "40",
       "candidate_evidence": [
-        "Junior Accountant: Processed and verified supplier invoices for accuracy and compliance.",
-        "Junior Accountant: Followed up with vendors for payment schedules and documentation.",
-        "Accounting Intern: Supported the accounts payable team by preparing payment summaries.",
-        "Accounting Intern: Validated invoice data and input into the internal ERP system."
+        "Role: Junior Accountant - Processed and verified supplier invoices for accuracy and compliance",
+        "Role: Junior Accountant - Followed up with vendors for payment schedules and documentation",
+        "Role: Accounting Intern - Supported the accounts payable team by preparing payment summaries",
+        "Role: Accounting Intern - Validated invoice data and input into the internal ERP system"
       ],
-      "section_score": "9",
-      "score_justification": "Excellent alignment. The candidate's current and past roles directly involve invoice processing and vendor management, which are core to the job. Verbs like 'Processed', 'Verified', and 'Supported' mirror typical AP duties. The score is not a perfect 10 because the resume lacks quantification (e.g., number of invoices processed per week, value of payments managed).",
-      "weighted_score": "3.15"
+      "section_score": "7",
+      "score_justification": "Candidate has 1 year of direct, relevant experience in AP functions. The verbs used ('Processed', 'Supported', 'Assisted') align with a junior-level role. The score is solid but not higher because the resume lacks quantification of achievements (e.g., invoice volume, cycle times), which is a key factor in AI-screening for impact and scale.",
+      "weighted_score": "2.8"
     },
     {
-      "section_name": "Financial Reconciliation & Closing",
+      "section_name": "Technical Skills (Software & Excel)",
       "weight_percentage": "25",
       "candidate_evidence": [
-        "Junior Accountant: Assisted in monthly account reconciliations.",
-        "Accounting Intern: Participated in the month-end closing process.",
-        "Professional Skills: Accounts Reconciliation."
+        "Skills: MS Excel (Pivot Tables, VLOOKUP)",
+        "Skills: basic accounting software (Odoo, QuickBooks)",
+        "Certifications: Currently taking SAP Fundamentals course (MOOC)"
       ],
       "section_score": "8",
-      "score_justification": "Strong alignment. The candidate has direct, stated experience in both account reconciliations and month-end closing processes from two different roles. This demonstrates consistent exposure. The score is capped at 8 because the verbs 'Assisted' and 'Participated' suggest a supporting role rather than ownership, which is appropriate for a junior level but shows room for growth. Lack of detail on the complexity of reconciliations is also a factor.",
+      "score_justification": "Excellent skills clustering. Candidate explicitly lists the required advanced Excel functions (Pivot Tables, VLOOKUP) and relevant accounting software (Odoo, QuickBooks). Proactively taking an SAP course directly addresses a preferred requirement and shows high motivation, boosting the score.",
       "weighted_score": "2.0"
     },
     {
-      "section_name": "Technical & Software Skills (ERP, Excel)",
-      "weight_percentage": "20",
-      "candidate_evidence": [
-        "Technical Skills: MS Excel (Pivot Tables, VLOOKUP).",
-        "Software Tools: Odoo, QuickBooks.",
-        "Certifications: SAP Fundamentals (Currently taking)."
-      ],
-      "section_score": "9",
-      "score_justification": "Excellent alignment. The candidate explicitly lists the required Excel skills (Pivot Tables, VLOOKUP) and has experience with two of the preferred ERP systems (Odoo, QuickBooks). Proactively taking an SAP course is a strong positive indicator. The skills are well-clustered, indicating a focus in this area. A perfect score is withheld as the SAP knowledge is still in progress.",
-      "weighted_score": "1.8"
-    },
-    {
       "section_name": "Education & Foundational Knowledge",
-      "weight_percentage": "10",
+      "weight_percentage": "15",
       "candidate_evidence": [
-        "Education: Bachelor's in Finance & Accounting, Institut Supérieur de Gestion, Sousse (2022)."
+        "Education: Bachelor's in Finance & Accounting",
+        "Institution: Institut Suprieur de Gestion, Sousse"
       ],
       "section_score": "10",
-      "score_justification": "Perfect match. The candidate possesses the exact preferred degree from a relevant institution. This fully meets the educational requirement.",
-      "weighted_score": "1.0"
+      "score_justification": "Perfect match. The candidate holds the exact degree specified in the critical requirements for the role. There is no ambiguity or gap in this criterion.",
+      "weighted_score": "1.5"
     },
     {
-      "section_name": "Professional & Soft Skills",
+      "section_name": "Reconciliation & Analytical Skills",
       "weight_percentage": "10",
       "candidate_evidence": [
-        "Soft Skills: Team Collaboration, Time Management.",
-        "Objective: Seeking a challenging role... leveraging my analytical mindset and detail-oriented approach."
+        "Role: Junior Accountant - Assisted in monthly account reconciliations",
+        "Role: Accounting Intern - Participated in the month-end closing process",
+        "Summary: 'strong analytical mindset'"
+      ],
+      "section_score": "6",
+      "score_justification": "Candidate has exposure to reconciliation and month-end closing. However, the verb alignment ('Assisted', 'Participated') suggests a supporting role rather than ownership of the process. The score reflects foundational experience but lacks evidence of independent problem-solving or discrepancy resolution.",
+      "weighted_score": "0.6"
+    },
+    {
+      "section_name": "Communication & Professionalism",
+      "weight_percentage": "10",
+      "candidate_evidence": [
+        "Role: Junior Accountant - Followed up with vendors for payment schedules and documentation",
+        "Languages: English: Intermediate (B2)",
+        "Skills: Team Collaboration"
       ],
       "section_score": "7",
-      "score_justification": "Good alignment. The candidate lists relevant soft skills like 'Team Collaboration' and 'Time Management'. While these are present, they are not supported by contextual examples or achievements in the work experience section, which is a common limitation in resumes but noted by AI screening for impact. The skills are standard and not uniquely demonstrated.",
+      "score_justification": "Evidence of direct vendor communication is a key strength. English proficiency at B2 is adequate for a professional environment. The resume is well-structured and professional. The score is appropriate for an entry-level candidate.",
       "weighted_score": "0.7"
     }
   ],
@@ -97,23 +98,24 @@
       "matched_skills": [
         "Invoice Processing",
         "Accounts Reconciliation",
-        "Month-end closing",
         "MS Excel (Pivot Tables, VLOOKUP)",
-        "Odoo",
         "QuickBooks",
-        "SAP"
+        "Month-end closing",
+        "Vendor Communication"
       ],
-      "missing_skills": [],
+      "missing_skills": [
+        "3-way matching (explicitly)"
+      ],
       "additional_skills": [
-        "French (B1)",
-        "English (B2)"
+        "Odoo",
+        "SAP (in training)"
       ],
-      "match_percentage": "100%"
+      "match_percentage": "90%"
     },
     "experience_match": {
       "required_experience": "1-2 years",
-      "candidate_experience": "1.6 years (19 months)",
-      "experience_gap": "No gap. Candidate falls squarely within the required range.",
+      "candidate_experience": "1 year",
+      "experience_gap": "No gap; meets the minimum requirement.",
       "match_level": "Meets"
     },
     "education_match": {
@@ -123,35 +125,35 @@
     }
   },
   "scoring_summary": {
-    "total_weighted_score": "8.65",
-    "normalized_score": "8.65 out of 10",
+    "total_weighted_score": "7.6",
+    "normalized_score": "7.6",
     "score_breakdown": [
       {
-        "criterion": "Core Accounting Experience (Accounts Payable/Receivable)",
-        "raw_score": "9",
-        "weight": "35%",
-        "weighted_points": "3.15"
+        "criterion": "Accounts Payable Experience",
+        "raw_score": "7",
+        "weight": "40%",
+        "weighted_points": "2.8"
       },
       {
-        "criterion": "Financial Reconciliation & Closing",
+        "criterion": "Technical Skills (Software & Excel)",
         "raw_score": "8",
         "weight": "25%",
         "weighted_points": "2.0"
       },
       {
-        "criterion": "Technical & Software Skills (ERP, Excel)",
-        "raw_score": "9",
-        "weight": "20%",
-        "weighted_points": "1.8"
-      },
-      {
         "criterion": "Education & Foundational Knowledge",
         "raw_score": "10",
-        "weight": "10%",
-        "weighted_points": "1.0"
+        "weight": "15%",
+        "weighted_points": "1.5"
       },
       {
-        "criterion": "Professional & Soft Skills",
+        "criterion": "Reconciliation & Analytical Skills",
+        "raw_score": "6",
+        "weight": "10%",
+        "weighted_points": "0.6"
+      },
+      {
+        "criterion": "Communication & Professionalism",
         "raw_score": "7",
         "weight": "10%",
         "weighted_points": "0.7"
@@ -162,51 +164,53 @@
   "evaluation_results": {
     "critical_missing_requirements": [],
     "key_strengths": [
-      "Direct experience in all core job duties: invoice processing, reconciliations, and month-end closing support.",
-      "Meets the exact experience requirement (1.6 years vs 1-2 years required).",
-      "High proficiency in required software: MS Excel (VLOOKUP, Pivots), Odoo, and QuickBooks.",
-      "Proactive learner, demonstrated by currently taking an SAP Fundamentals course."
+      "Meets all critical requirements for experience, education, and skills.",
+      "Strong, explicitly stated MS Excel skills (VLOOKUP, Pivot Tables).",
+      "Proactive learner, demonstrated by the in-progress SAP Fundamentals course.",
+      "Direct experience in core AP tasks like invoice processing and vendor follow-up."
     ],
     "areas_for_improvement": [
-      "Resume lacks quantifiable achievements; impact is stated but not measured (e.g., volume of invoices, value of reconciliations).",
-      "Experience in month-end closing is as a participant/assistant; opportunity to grow into a more leading role."
+      "Resume lacks quantifiable metrics to demonstrate impact and scale of work.",
+      "Experience in reconciliation and month-end closing appears to be in a supporting capacity.",
+      "No explicit mention of 3-way matching experience."
     ],
     "unique_value_propositions": [
-      "Bilingual proficiency (French and English) can be an asset in a multinational business environment.",
-      "Combination of experience with multiple accounting software platforms (Odoo, QuickBooks, and soon SAP) provides versatility."
+      "Immediate availability.",
+      "Eagerness to grow and learn, as evidenced by the SAP course."
     ],
     "risk_factors": [
-      "A 5-month employment gap between internship and first full-time role (Oct 2022 - Feb 2023), which is minor but should be understood.",
-      "Soft skills are listed but not demonstrated with evidence, a minor risk that can be assessed in an interview."
+      "Experience is at the minimum required level (1 year), may require more ramp-up time.",
+      "The 5-month gap between internship and full-time role may warrant a brief inquiry."
     ]
   },
   "final_recommendation": {
     "status": "RECOMMENDED",
     "confidence_level": "High",
-    "primary_reason": "The candidate is an exceptionally strong match for a junior-level role, meeting or exceeding all critical and preferred requirements, including years of experience, specific accounting duties, and software skills.",
+    "primary_reason": "The candidate is a strong match who meets all critical requirements for the role, including relevant experience, education, and specific technical skills. His proactive learning of SAP indicates high potential and motivation.",
     "supporting_factors": [
-      "Direct alignment of current job title and responsibilities with the advertised role.",
-      "Possession of all required technical skills.",
-      "Proactive professional development (SAP course)."
+      "Perfect education match.",
+      "Direct experience in core AP functions.",
+      "Strong alignment on required software skills."
     ],
     "conditions_if_applicable": [],
     "next_steps": [
-      "Proceed to a first-round interview with the hiring manager.",
-      "Prepare for a brief technical assessment on Excel and basic accounting principles."
+      "Proceed to a first-round screening interview.",
+      "Schedule a technical assessment focusing on Excel and basic accounting principles."
     ]
   },
   "detailed_feedback": {
-    "for_candidate": "Your experience is a strong fit for this type of role. To further strengthen your resume for future AI screening, consider quantifying your achievements. For example, instead of 'Processed invoices,' try 'Processed approximately 150 supplier invoices weekly with 99.8% accuracy.' This demonstrates impact and scale.",
-    "for_hiring_manager": "This is a high-potential candidate who aligns almost perfectly with the job requirements on paper. The profile is ideal for a Junior Accountant position. The interview should focus on validating the depth of their experience and assessing their problem-solving skills and cultural fit.",
+    "for_candidate": "You have a strong profile for an entry-level AP role. To enhance your resume for AI screeners and future opportunities, focus on quantifying your accomplishments. For example, 'Processed and verified supplier invoices' could become 'Processed ~150 supplier invoices weekly with 99% accuracy.' This provides concrete evidence of your capability and impact.",
+    "for_hiring_manager": "This is a promising entry-level candidate who meets all baseline requirements and shows initiative. He is a strong fit for a team looking to develop talent. The interview should focus on assessing the depth of his practical knowledge beyond what's on the resume.",
     "interview_focus_areas": [
-      "Ask for a specific example of a complex account reconciliation they handled.",
-      "Inquire about their practical experience using Odoo and QuickBooks: what modules did they use most frequently?",
-      "Discuss the 5-month gap post-internship to understand their job search journey.",
-      "Probe their understanding of the concepts from the SAP course they are taking."
+      "Ask for a specific example of a complex invoice discrepancy they resolved.",
+      "Inquire about the scope of their involvement in monthly account reconciliations.",
+      "Discuss their understanding of the full accounts payable cycle, including 3-way matching.",
+      "Explore their motivation for taking the SAP course and their career aspirations."
     ],
     "reference_check_priorities": [
-      "Verify the scope of responsibilities and performance at ABC Consulting.",
-      "Confirm their role and contribution during the month-end closing process."
+      "Verify the volume and complexity of invoices handled at ABC Consulting.",
+      "Inquire about their ability to work independently and their attention to detail.",
+      "Confirm their role and contribution to the month-end closing process."
     ]
   }
 }

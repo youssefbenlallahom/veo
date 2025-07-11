@@ -10,8 +10,8 @@ from crewai.llm import LLM
 import os
 from datetime import datetime
 from dotenv import load_dotenv
-from tools.custom_tool import CustomPDFTool
-from schemas import DocumentAnalysisOutput, CandidateMatchingOutput, ReportGenerationOutput
+from .tools.custom_tool import CustomPDFTool
+from .schemas import DocumentAnalysisOutput, CandidateMatchingOutput, ReportGenerationOutput
 
 load_dotenv()
 
