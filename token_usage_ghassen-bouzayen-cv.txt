@@ -1,2 +1,0 @@
-Token Usage for ghassen-bouzayen-cv:
-total_tokens=17214 prompt_tokens=11811 cached_prompt_tokens=0 completion_tokens=5403 successful_requests=5

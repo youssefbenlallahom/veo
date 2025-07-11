@@ -1,2 +1,0 @@
-Token Usage for imen-zarai-cv:
-total_tokens=11975 prompt_tokens=8461 cached_prompt_tokens=0 completion_tokens=3514 successful_requests=4

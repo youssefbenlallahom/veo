@@ -1,2 +1,0 @@
-Token Usage for safa-ochi-cv:
-total_tokens=13731 prompt_tokens=9380 cached_prompt_tokens=0 completion_tokens=4351 successful_requests=5

@@ -1,2 +1,0 @@
-Token Usage for kais-garci-cv:
-total_tokens=14554 prompt_tokens=10059 cached_prompt_tokens=0 completion_tokens=4495 successful_requests=5

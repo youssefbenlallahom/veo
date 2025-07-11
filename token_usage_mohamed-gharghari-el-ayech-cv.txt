@@ -1,2 +1,0 @@
-Token Usage for mohamed-gharghari-el-ayech-cv:
-total_tokens=12719 prompt_tokens=8153 cached_prompt_tokens=0 completion_tokens=4566 successful_requests=4

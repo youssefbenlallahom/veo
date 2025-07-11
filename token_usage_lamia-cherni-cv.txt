@@ -1,2 +1,0 @@
-Token Usage for lamia-cherni-cv:
-total_tokens=15459 prompt_tokens=11175 cached_prompt_tokens=0 completion_tokens=4284 successful_requests=5

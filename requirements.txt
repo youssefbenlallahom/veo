@@ -4,3 +4,7 @@ python-dotenv
 streamlit
 pypdf
 google-genai
+requests
+fastapi
+uvicorn[standard]
+pydantic

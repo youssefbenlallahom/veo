@@ -1,2 +1,0 @@
-Token Usage for Mohamed_Ali_Ben_Salah_CV:
-total_tokens=30701 prompt_tokens=17774 cached_prompt_tokens=0 completion_tokens=12927 successful_requests=4
