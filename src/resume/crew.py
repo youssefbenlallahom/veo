@@ -1,3 +1,13 @@
+import sys
+import os
+from pathlib import Path
+
+# Add current directory and parent directory to Python path for imports
+current_dir = Path(__file__).parent
+parent_dir = current_dir.parent
+sys.path.insert(0, str(current_dir))
+sys.path.insert(0, str(parent_dir))
+
 try:
     from crewai import Agent, Crew, Process, Task
 except ImportError as e:
@@ -10,18 +20,54 @@ from crewai.llm import LLM
 import os
 from datetime import datetime
 from dotenv import load_dotenv
-from .tools.custom_tool import CustomPDFTool
-from .schemas import DocumentAnalysisOutput, CandidateMatchingOutput, ReportGenerationOutput
+
+# Try to import with better error handling
+try:
+    from .tools.custom_tool import CustomPDFTool
+except ImportError:
+    try:
+        from .tools.custom_tool import CustomPDFTool
+    except ImportError:
+        import sys
+        tools_path = os.path.join(os.path.dirname(__file__), 'tools')
+        sys.path.append(tools_path)
+        from custom_tool import CustomPDFTool
+
+try:
+    from .schemas import DocumentAnalysisOutput, CandidateMatchingOutput, ReportGenerationOutput
+except ImportError:
+    try:
+        from .schemas import DocumentAnalysisOutput, CandidateMatchingOutput, ReportGenerationOutput
+    except ImportError:
+        # As a last resort, try absolute import
+        schemas_path = os.path.join(os.path.dirname(__file__), 'schemas.py')
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("schemas", schemas_path)
+        schemas = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(schemas)
+        DocumentAnalysisOutput = schemas.DocumentAnalysisOutput
+        CandidateMatchingOutput = schemas.CandidateMatchingOutput
+        ReportGenerationOutput = schemas.ReportGenerationOutput
 
 load_dotenv()
 
-# Reduced temperature for more consistent results
+# Use Gemini for more reliable structured output
+"""
 llm = LLM(
-    model="gemini/gemini-2.5-pro",
+    model="gemini/gemini-2.5-flash",
     temperature=0.0,
+    api_key=os.getenv("GEMINI_API_KEY"),
+)"""
 
+# Backup Azure configuration if needed
+llm = LLM(
+    model=os.getenv("AZURE_DEPLOYMENT_NAME"),
+    api_version=os.getenv("AZURE_API_VERSION"),
+    api_base=os.getenv("AZURE_API_BASE"),
+    api_key=os.getenv("AZURE_API_KEY"),
+    temperature=0.0,
 )
-
+    
 @CrewBase
 class Resume():
     """Resume crew"""

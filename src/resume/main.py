@@ -12,6 +12,10 @@ from pathlib import Path
 from typing import Dict, List, Optional, Any
 from dotenv import load_dotenv
 
+# Add current directory to Python path for imports
+current_dir = Path(__file__).parent
+sys.path.insert(0, str(current_dir))
+
 from crew import Resume
 from utils.file_handler import FileHandler
 from utils.barem_generator import BaremGenerator
@@ -225,11 +229,11 @@ class ResumeAnalysisEngine:
         sanitized_name = self.file_handler.sanitize_filename(candidate_name)
         report_filename = self.output_dir / "reports" / f"report_{sanitized_name}.md"
         
-        # Move report.md to unique filename
-        if os.path.exists('report.md'):
+        # Move report.json to unique filename
+        if os.path.exists('report.json'):
             if report_filename.exists():
                 report_filename.unlink()
-            os.rename('report.md', report_filename)
+            os.rename('report.json', report_filename)
         
         return str(report_filename)
     
@@ -249,7 +253,12 @@ class ResumeAnalysisEngine:
                 for idx, result in enumerate(results, 1):
                     score = result.get('score', 0)
                     recommendation = result.get('recommendation', 'Unknown')
-                    f.write(f"{idx}. **{result['candidate_name']}** - Score: {score:.1f}/10 - {recommendation}\n")
+                    # Ensure score is a float for formatting
+                    try:
+                        score_float = float(score)
+                    except (ValueError, TypeError):
+                        score_float = 0.0
+                    f.write(f"{idx}. **{result['candidate_name']}** - Score: {score_float:.1f}/10 - {recommendation}\n")
                 
             logger.info(f"Batch results saved to {summary_file}")
         except Exception as e:
