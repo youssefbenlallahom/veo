@@ -133,9 +133,24 @@ class ResumeAnalysisEngine:
             if barem:
                 inputs['barem'] = barem
             
-            # Execute crew analysis
+            # Execute crew analysis with telemetry error handling
             logger.info(f"Executing crew analysis for {candidate_name}")
-            result = resume_crew.crew().kickoff(inputs=inputs)
+            try:
+                result = resume_crew.execute_crew_safely(inputs)
+            except Exception as e:
+                # Handle telemetry and other crew execution errors
+                error_msg = str(e).lower()
+                if any(keyword in error_msg for keyword in ['telemetry', 'timeout', 'connection']):
+                    logger.warning(f"Telemetry error for {candidate_name}, retrying without telemetry: {e}")
+                    # Try basic crew execution as fallback
+                    try:
+                        result = resume_crew.crew().kickoff(inputs=inputs)
+                    except Exception as inner_e:
+                        logger.error(f"Failed to execute crew for {candidate_name}: {inner_e}")
+                        raise inner_e
+                else:
+                    logger.error(f"Non-telemetry error executing crew for {candidate_name}: {e}")
+                    raise e
             
             # Save token usage
             self._save_token_usage(candidate_name, result.token_usage)
@@ -150,14 +165,27 @@ class ResumeAnalysisEngine:
             return analysis_result
             
         except Exception as e:
-            logger.error(f"Error analyzing resume for {candidate_name}: {e}")
-            return {
-                "candidate_name": candidate_name,
-                "valid": False,
-                "error": str(e),
-                "score": 0,
-                "recommendation": "Error"
-            }
+            error_msg = str(e)
+            logger.error(f"Error analyzing resume for {candidate_name}: {error_msg}")
+            
+            # Determine if it's a telemetry-related error
+            if any(keyword in error_msg.lower() for keyword in ['telemetry', 'timeout', 'connection']):
+                logger.info(f"Telemetry error detected for {candidate_name}, marked as non-critical")
+                return {
+                    "candidate_name": candidate_name,
+                    "valid": False,
+                    "error": f"Telemetry service unavailable: {error_msg}",
+                    "score": 0,
+                    "recommendation": "Retry Analysis"
+                }
+            else:
+                return {
+                    "candidate_name": candidate_name,
+                    "valid": False,
+                    "error": str(e),
+                    "score": 0,
+                    "recommendation": "Error"
+                }
     
     def analyze_multiple_resumes(
         self,
