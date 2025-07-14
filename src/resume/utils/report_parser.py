@@ -7,6 +7,46 @@ from typing import Dict, List, Any
 class ReportParser:
     """Parses analysis reports to extract structured data."""
     
+    def _clean_json_from_markdown(self, content: str) -> str:
+        """
+        Clean JSON content from markdown code blocks.
+        
+        Handles cases where CrewAI tasks return JSON wrapped in markdown code blocks:
+        ```json
+        {"key": "value"}
+        ```
+        
+        Args:
+            content: Raw content that might contain markdown-wrapped JSON
+            
+        Returns:
+            Cleaned JSON string
+        """
+        # Remove markdown code block markers
+        content = content.strip()
+        
+        # Pattern to match ```json...``` blocks
+        json_block_pattern = r'```json\s*\n?(.*?)\n?```'
+        match = re.search(json_block_pattern, content, re.DOTALL | re.IGNORECASE)
+        
+        if match:
+            # Extract JSON content from the code block
+            json_content = match.group(1).strip()
+            return json_content
+        
+        # Pattern to match ```...``` blocks without language specifier
+        generic_block_pattern = r'```\s*\n?(.*?)\n?```'
+        match = re.search(generic_block_pattern, content, re.DOTALL)
+        
+        if match:
+            # Check if the content looks like JSON
+            potential_json = match.group(1).strip()
+            if potential_json.startswith('{') and potential_json.endswith('}'):
+                return potential_json
+        
+        # Return original content if no markdown blocks found
+        return content
+    
     def parse_report(self, report_path: str, candidate_name: str) -> Dict[str, Any]:
         """Parse the report file to extract scores and recommendations."""
         result = {
@@ -33,7 +73,9 @@ class ReportParser:
             
             # Try to parse as JSON first (new format)
             try:
-                json_data = json.loads(report_content)
+                # Clean potential markdown code blocks before parsing
+                cleaned_content = self._clean_json_from_markdown(report_content)
+                json_data = json.loads(cleaned_content)
                 return self._parse_json_report(json_data, candidate_name)
             except json.JSONDecodeError:
                 # Fall back to markdown parsing (old format)

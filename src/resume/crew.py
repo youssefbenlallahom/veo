@@ -20,6 +20,10 @@ from crewai.llm import LLM
 import os
 from datetime import datetime
 from dotenv import load_dotenv
+import logging
+
+# Configure logging for telemetry issues
+logger = logging.getLogger(__name__)
 
 # Try to import with better error handling
 try:
@@ -50,6 +54,20 @@ except ImportError:
         ReportGenerationOutput = schemas.ReportGenerationOutput
 
 load_dotenv()
+
+# Configure telemetry to be non-blocking
+def configure_telemetry():
+    """Configure telemetry to handle connection timeouts gracefully."""
+    try:
+        # Disable telemetry or set short timeout to prevent blocking
+        os.environ['CREWAI_TELEMETRY_ENABLED'] = 'false'
+        os.environ['CREWAI_TELEMETRY_TIMEOUT'] = '5'  # 5 second timeout
+        logger.info("Telemetry configured with timeout protection")
+    except Exception as e:
+        logger.warning(f"Failed to configure telemetry: {e}")
+
+# Configure telemetry on module load
+configure_telemetry()
 
 # Use Gemini for more reliable structured output
 """
@@ -156,12 +174,52 @@ class Resume():
             output_json=ReportGenerationOutput
         )
     
+    def execute_crew_safely(self, inputs: dict):
+        """Execute crew with telemetry error handling."""
+        try:
+            crew_instance = self.crew()
+            result = crew_instance.kickoff(inputs=inputs)
+            return result
+        except Exception as e:
+            error_msg = str(e).lower()
+            
+            # Check if it's a telemetry-related error
+            if any(keyword in error_msg for keyword in ['telemetry', 'timeout', 'connection', 'network']):
+                logger.warning(f"Telemetry error occurred, continuing with analysis: {e}")
+                # Try to create a basic crew without telemetry
+                try:
+                    basic_crew = Crew(
+                        agents=self.agents,
+                        tasks=self.tasks,
+                        process=Process.sequential,
+                        verbose=False,
+                    )
+                    result = basic_crew.kickoff(inputs=inputs)
+                    return result
+                except Exception as inner_e:
+                    logger.error(f"Failed to execute crew even without telemetry: {inner_e}")
+                    raise inner_e
+            else:
+                # Re-raise non-telemetry errors
+                raise e
+
     @crew
     def crew(self) -> Crew:
-        """Creates the Resume crew"""
-        return Crew(
-            agents=self.agents,
-            tasks=self.tasks,
-            process=Process.sequential,
-            verbose=True,
-        )
+        """Creates the Resume crew with telemetry error handling"""
+        try:
+            return Crew(
+                agents=self.agents,
+                tasks=self.tasks,
+                process=Process.sequential,
+                verbose=True,
+            )
+        except Exception as e:
+            # Log telemetry or other crew creation errors but don't fail
+            logger.warning(f"Non-critical error during crew creation: {e}")
+            # Return crew without problematic configuration
+            return Crew(
+                agents=self.agents,
+                tasks=self.tasks,
+                process=Process.sequential,
+                verbose=False,  # Reduce verbosity if there are issues
+            )
