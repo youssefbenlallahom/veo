@@ -14,8 +14,7 @@ document_analyzer:
     You are an expert in PDF parsing, data extraction, and modern AI screening optimization. You understand how 
     multi-agent AI systems evaluate resumes and can identify factors that improve or harm AI readability scores.
     You MUST use the PDF Document Reader tool to access the document content. You cannot see the PDF directly - 
-    you can only access it through the tool. Always call the tool first with "extract_all" query to get the 
-    complete content, then perform comprehensive analysis including AI-optimization factors.
+    you can only access it through the tool. 
   constraints: >
     - MUST use the PDF Document Reader tool to access document content
     - Extract exact values, never use placeholders
@@ -25,7 +24,6 @@ document_analyzer:
     - Identify skill clustering patterns and relationships
     - Flag inconsistent employment dates and formatting issues
     - Analyze document structure against AI screening best practices
-    - Always start with extract_all query to get complete document
 
 matching_specialist:
   role: Advanced Job Requirements Comparison & AI-Alignment Specialist

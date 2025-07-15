@@ -1,188 +1,250 @@
 {
   "job_analysis": {
-    "job_title": "Accounting Assistant",
-    "job_description": "Assist in managing accounts payable, ensure accurate financial reporting, and maintain financial records.",
+    "job_title": "Accounts Payable Specialist",
+    "job_description": "We are seeking a meticulous and proactive Accounts Payable Specialist to join our finance team. The ideal candidate will be responsible for processing invoices, managing vendor accounts, reconciling statements, and ensuring timely and accurate payments. This role requires strong attention to detail, excellent organizational skills, and proficiency in accounting software. Key responsibilities include: processing a high volume of invoices, verifying accuracy and proper coding, resolving discrepancies with vendors, preparing payment runs, maintaining accurate vendor records, assisting with month-end close activities, and ensuring compliance with company policies and financial regulations. A Bachelor's degree in Accounting, Finance, or a related field is required, along with 2-3 years of experience in an Accounts Payable role. Experience with SAP is highly preferred.",
     "critical_requirements": [
-      "2+ years of accounting experience",
-      "Bachelor's in Accounting or related field",
-      "Proficiency in SAP and Excel"
+      "Processing invoices",
+      "Managing vendor accounts",
+      "Reconciling statements",
+      "Ensuring timely and accurate payments",
+      "Strong attention to detail",
+      "Excellent organizational skills",
+      "Proficiency in accounting software",
+      "Processing a high volume of invoices",
+      "Verifying accuracy and proper coding",
+      "Resolving discrepancies with vendors",
+      "Preparing payment runs",
+      "Maintaining accurate vendor records",
+      "Assisting with month-end close activities",
+      "Ensuring compliance with company policies and financial regulations",
+      "Bachelor's degree in Accounting, Finance, or a related field",
+      "2-3 years of experience in an Accounts Payable role"
     ],
     "preferred_requirements": [
-      "Experience with invoice management",
-      "Strong organizational skills"
+      "Experience with SAP"
     ],
-    "experience_required": "2+ years",
-    "education_required": "Bachelor's in Accounting or related field"
+    "experience_required": "2-3 years of experience in an Accounts Payable role",
+    "education_required": "Bachelor's degree in Accounting, Finance, or a related field"
   },
   "candidate_overview": {
     "candidate_name": "Emna Trabelsi",
-    "current_title": "Recently graduated with a Master's in Accounting and Financial Analysis",
-    "total_experience_years": "0 years",
-    "relevant_experience_years": "5 months",
-    "education_level": "Bachelor's in Business Administration, pursuing Master's in Accounting and Financial Analysis",
+    "current_title": "Accounting Assistant",
+    "total_experience_years": "0.58",
+    "relevant_experience_years": "0.58",
+    "education_level": "Bachelor's in Business Administration (pursuing Master's in Accounting and Financial Analysis)",
     "key_skills": [
-      "SAP",
-      "Excel",
-      "invoice management",
-      "detail-oriented",
-      "communicative"
+      "Supplier Invoice Management",
+      "Payment File Preparation",
+      "Supplier Reconciliation",
+      "Accounts Payable Monitoring",
+      "Excel (Pivot Tables, LOOKUP functions)",
+      "SAP (basic use)",
+      "Detail-Oriented",
+      "Reliable Under Pressure",
+      "Communicative",
+      "Organizational",
+      "Reconciliation",
+      "Accuracy",
+      "Continuous Improvement",
+      "Finance",
+      "Accounting",
+      "Banking"
     ]
   },
   "rubric_evaluation": [
     {
-      "section_name": "Relevant Experience",
+      "section_name": "Experience",
+      "weight_percentage": "40%",
+      "candidate_evidence": [
+        "Managed payment request files and verified supporting documentation",
+        "Helped monitor accounts payable ledgers to ensure proper classification of entries",
+        "Participated in weekly team meetings to prioritize payments and follow up on schedules",
+        "Prepared supplier reconciliation statements under supervision",
+        "Helped resolve payment discrepancies with vendors",
+        "Supported the team with SAP invoice entry tasks"
+      ],
+      "section_score": "4.8",
+      "score_justification": "Candidate has 7 months of direct experience in AP-related tasks (Accounting Assistant, Finance Intern), which is significantly less than the required 2-3 years. However, strong verb mirroring ('managed', 'monitor', 'prepared', 'resolve') and high contextual relevance to AP functions (invoice management, reconciliation, payment support) boost the score. Lack of explicit quantification of volume or impact limits a higher score.",
+      "weighted_score": "19.2"
+    },
+    {
+      "section_name": "Skills",
       "weight_percentage": "30%",
       "candidate_evidence": [
-        "5 months of experience in accounting roles"
+        "Supplier Invoice Management",
+        "Payment File Preparation",
+        "Supplier Reconciliation",
+        "Accounts Payable Monitoring",
+        "Excel (Pivot Tables, LOOKUP functions)",
+        "SAP (basic use)",
+        "Detail-Oriented",
+        "Organizational"
       ],
-      "section_score": "6/10",
-      "score_justification": "Less than required experience, but relevant internships and roles held.",
-      "weighted_score": "18/30"
+      "section_score": "10.0",
+      "score_justification": "Candidate demonstrates strong proficiency in core AP skills directly matching job requirements, including invoice management, supplier reconciliation, and accounts payable monitoring. Explicit mention of SAP and Excel proficiency meets software requirements. Skills are well-clustered and contextually relevant. Strong verb alignment between resume skills and job description verbs contributes to a high score. No explicit quantification of skill impact (e.g., 'processed X invoices') prevents exceeding the maximum score.",
+      "weighted_score": "30.0"
     },
     {
       "section_name": "Education",
       "weight_percentage": "20%",
       "candidate_evidence": [
-        "Bachelor's in Business Administration",
-        "Pursuing Master's in Accounting and Financial Analysis"
+        "Bachelor's in Business Administration (2022)",
+        "Master's in Accounting and Financial Analysis (Present)"
       ],
-      "section_score": "8/10",
-      "score_justification": "Relevant education background, pursuing higher education in the field.",
-      "weighted_score": "16/20"
+      "section_score": "10.0",
+      "score_justification": "Candidate meets the Bachelor's degree requirement with a Bachelor's in Business Administration and is currently pursuing a Master's in Accounting and Financial Analysis, which is highly relevant and exceeds the stated educational requirement. The education aligns perfectly with the finance/accounting domain, demonstrating strong foundational knowledge and commitment.",
+      "weighted_score": "20.0"
     },
     {
-      "section_name": "Technical Skills",
-      "weight_percentage": "20%",
+      "section_name": "Soft Skills & Other",
+      "weight_percentage": "10%",
       "candidate_evidence": [
-        "Proficient in SAP, Excel, and invoice management"
+        "Detail-Oriented",
+        "Organizational",
+        "Treasurer for ENACTUS Club - budget planning and expense tracking"
       ],
-      "section_score": "8/10",
-      "score_justification": "Meets the technical requirements, though SAP proficiency is basic.",
-      "weighted_score": "16/20"
-    },
-    {
-      "section_name": "Soft Skills",
-      "weight_percentage": "30%",
-      "candidate_evidence": [
-        "Detail-oriented",
-        "reliable under pressure",
-        "communicative"
-      ],
-      "section_score": "9/10",
-      "score_justification": "Demonstrates strong soft skills relevant to the role.",
-      "weighted_score": "27/30"
+      "section_score": "9.9",
+      "score_justification": "Candidate explicitly lists 'Detail-Oriented' and 'Organizational' skills, which are critical. The role as 'Treasurer for ENACTUS Club' provides practical evidence of these skills in a financial context, including 'budget planning and expense tracking', demonstrating proactive engagement and contextual relevance. While no specific quantification of impact, the demonstration of these skills through a relevant extracurricular activity is strong.",
+      "weighted_score": "9.9"
     }
   ],
   "match_analysis": {
     "skills_match": {
       "matched_skills": [
-        "SAP",
+        "Supplier Invoice Management",
+        "Payment File Preparation",
+        "Supplier Reconciliation",
+        "Accounts Payable Monitoring",
         "Excel",
-        "invoice management"
+        "SAP (basic use)",
+        "Detail-Oriented",
+        "Organizational",
+        "Resolving discrepancies with vendors"
       ],
       "missing_skills": [
-        "Advanced SAP proficiency"
+        "Processing a high volume of invoices",
+        "Verifying accuracy and proper coding (explicitly coding)",
+        "Preparing payment runs (explicitly)",
+        "Maintaining accurate vendor records (explicitly)",
+        "Assisting with month-end close activities",
+        "Ensuring compliance with company policies and financial regulations"
       ],
       "additional_skills": [
-        "Communicative"
+        "Reliable Under Pressure",
+        "Communicative",
+        "Continuous Improvement",
+        "Banking"
       ],
-      "match_percentage": "80%"
+      "match_percentage": "64.29%"
     },
     "experience_match": {
-      "required_experience": "2+ years",
-      "candidate_experience": "5 months",
-      "experience_gap": "1.5 years",
-      "match_level": "Below"
+      "required_experience": "2-3 years of experience in an Accounts Payable role",
+      "candidate_experience": "0.58 years",
+      "experience_gap": "Approximately 1.5 to 2.5 years",
+      "match_level": "significantly below"
     },
     "education_match": {
-      "required_education": "Bachelor's in Accounting or related field",
-      "candidate_education": "Bachelor's in Business Administration",
-      "match_level": "Meets"
+      "required_education": "Bachelor's degree in Accounting, Finance, or a related field",
+      "candidate_education": "Bachelor's in Business Administration (completed), Master's in Accounting and Financial Analysis (pursuing)",
+      "match_level": "exceeds"
     }
   },
   "scoring_summary": {
-    "total_weighted_score": "77/100",
-    "normalized_score": "7.7/10",
+    "total_weighted_score": "79.1",
+    "normalized_score": "7.91",
     "score_breakdown": [
       {
-        "criterion": "Relevant Experience",
-        "raw_score": "6/10",
+        "criterion": "Experience",
+        "raw_score": "4.8",
+        "weight": "40%",
+        "weighted_points": "19.2"
+      },
+      {
+        "criterion": "Skills",
+        "raw_score": "10.0",
         "weight": "30%",
-        "weighted_points": "18/30"
+        "weighted_points": "30.0"
       },
       {
         "criterion": "Education",
-        "raw_score": "8/10",
+        "raw_score": "10.0",
         "weight": "20%",
-        "weighted_points": "16/20"
+        "weighted_points": "20.0"
       },
       {
-        "criterion": "Technical Skills",
-        "raw_score": "8/10",
-        "weight": "20%",
-        "weighted_points": "16/20"
-      },
-      {
-        "criterion": "Soft Skills",
-        "raw_score": "9/10",
-        "weight": "30%",
-        "weighted_points": "27/30"
+        "criterion": "Soft Skills & Other",
+        "raw_score": "9.9",
+        "weight": "10%",
+        "weighted_points": "9.9"
       }
     ],
-    "weights_validation": "30 + 20 + 20 + 30 = 100%"
+    "weights_validation": "Weights sum to 100% (40+30+20+10 = 100)."
   },
   "evaluation_results": {
     "critical_missing_requirements": [
-      "1.5 years of experience",
-      "Advanced SAP proficiency"
+      "2-3 years of direct Accounts Payable experience",
+      "Explicit experience with high-volume invoice processing",
+      "Assisting with month-end close activities",
+      "Ensuring compliance with company policies and financial regulations"
     ],
     "key_strengths": [
-      "Soft skills",
-      "Relevant education",
-      "Basic technical skills"
+      "Strong foundational knowledge in Accounts Payable processes (invoice management, reconciliation)",
+      "Proficiency in SAP and Excel",
+      "Relevant academic background (Master's in Accounting and Financial Analysis in progress)",
+      "Strong soft skills (detail-oriented, organizational)",
+      "Demonstrated practical financial skills through extracurriculars (Treasurer role)"
     ],
     "areas_for_improvement": [
-      "Gain more experience",
-      "Enhance SAP skills"
+      "Gain more direct professional experience in an Accounts Payable role to meet the required years",
+      "Seek opportunities to handle high-volume transactions and month-end close activities",
+      "Develop explicit experience in ensuring compliance with financial regulations",
+      "Quantify achievements in future roles to enhance resume impact"
     ],
     "unique_value_propositions": [
-      "Pursuing higher education",
-      "Strong soft skills"
+      "Currently pursuing a Master's in Accounting and Financial Analysis, indicating strong theoretical knowledge and commitment to the field",
+      "Experience as Treasurer for ENACTUS Club demonstrates practical application of financial and organizational skills beyond typical coursework"
     ],
     "risk_factors": [
-      "Limited experience"
+      "Limited professional experience (0.58 years) may require more training and supervision compared to candidates meeting the 2-3 year requirement",
+      "Potential learning curve for high-volume processing and complex month-end close procedures"
     ]
   },
   "final_recommendation": {
     "status": "CONDITIONALLY RECOMMENDED",
-    "confidence_level": "Medium",
-    "primary_reason": "Potential with the right training and experience",
+    "confidence_level": "medium",
+    "primary_reason": "Candidate possesses strong foundational skills and relevant education but significantly lacks the required years of experience for an Accounts Payable Specialist role.",
     "supporting_factors": [
-      "Relevant education",
-      "Strong soft skills",
-      "Basic technical skills"
+      "Excellent match on core AP skills and software proficiency",
+      "Strong and highly relevant educational background (Bachelor's completed, Master's in progress)",
+      "Good soft skills explicitly mentioned and demonstrated through extracurriculars",
+      "Strong AI-alignment factors (verb mirroring, contextual relevance, skills clustering) indicate high ATS readability"
     ],
     "conditions_if_applicable": [
-      "Gain 1.5+ years of experience",
-      "Improve SAP proficiency"
+      "If the company is open to hiring a high-potential candidate with less experience who can be mentored and quickly grow into the role",
+      "If the role can be adjusted to a Junior Accounts Payable Specialist position initially"
     ],
     "next_steps": [
-      "Interview to assess fit and potential",
-      "Reference check"
+      "Conduct an interview to assess practical application of skills, problem-solving abilities, and willingness to learn/grow into the role despite limited experience",
+      "Explore the candidate's understanding of month-end close processes and compliance requirements"
     ]
   },
   "detailed_feedback": {
-    "for_candidate": "Focus on gaining more experience and enhancing technical skills, particularly in SAP.",
-    "for_hiring_manager": "Consider the candidate's potential and eagerness to learn. An interview could provide more insights into their fit for the role.",
+    "for_candidate": "Emna, your resume highlights strong foundational skills in Accounts Payable, including invoice management, reconciliation, and proficiency in SAP and Excel. Your Master's degree in Accounting and Financial Analysis is a significant asset. To strengthen your profile for future Accounts Payable Specialist roles, consider seeking opportunities that explicitly involve high-volume transaction processing, month-end close activities, and ensuring compliance with financial regulations. Quantifying your achievements (e.g., 'processed X invoices per day/week', 'reduced discrepancies by Y%') would also significantly enhance your resume's impact for AI screening systems.",
+    "for_hiring_manager": "Emna is a promising candidate with a strong academic background and direct, albeit limited, experience in core Accounts Payable functions. While she falls short of the 2-3 years of experience, her explicit skills in invoice management, reconciliation, and SAP usage, combined with her current Master's studies, suggest a high potential for rapid learning and growth. The resume scores well on AI-alignment factors due to good verb mirroring and contextual relevance. Consider her for a junior AP role or if there's capacity to mentor a high-potential candidate.",
     "interview_focus_areas": [
-      "Technical skills",
-      "Experience",
-      "Soft skills"
+      "Deep dive into specific AP processes handled (e.g., full invoice lifecycle, complex reconciliations)",
+      "Problem-solving scenarios related to payment discrepancies or vendor issues",
+      "Understanding of month-end close procedures in an AP context",
+      "Knowledge of financial regulations and compliance",
+      "Motivation for an AP Specialist role despite limited experience and how she plans to bridge the experience gap",
+      "Ability to handle high-volume tasks and prioritize effectively"
     ],
     "reference_check_priorities": [
-      "Work ethic",
-      "Teamwork",
-      "Attention to detail"
+      "Verification of responsibilities and performance in previous AP-related roles",
+      "Confirmation of attention to detail and organizational skills",
+      "Ability to learn quickly and adapt to new systems/processes",
+      "Teamwork and communication skills",
+      "Reliability and ability to work under pressure"
     ]
   }
 }

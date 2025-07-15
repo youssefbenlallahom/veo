@@ -14,12 +14,15 @@ except ImportError as e:
     print("Import Error:", e)
 from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
-from typing import List
+from typing import List, Tuple, Any
 from crewai_tools import *
 from crewai.llm import LLM
 import os
 from datetime import datetime
 from dotenv import load_dotenv
+import json
+from langchain_openai import AzureChatOpenAI
+
 
 # Try to import with better error handling
 try:
@@ -51,23 +54,46 @@ except ImportError:
 
 load_dotenv()
 
+
 # Use Gemini for more reliable structured output
-"""
+os.environ["GEMINI_API_KEY"]="AIzaSyD4wr8nrFBM9scvZTAFvEzbpDZtFIR2qHw"
 llm = LLM(
     model="gemini/gemini-2.5-flash",
     temperature=0.0,
     api_key=os.getenv("GEMINI_API_KEY"),
-)"""
-
-# Backup Azure configuration if needed
-llm = LLM(
-    model=os.getenv("AZURE_DEPLOYMENT_NAME"),
-    api_version=os.getenv("AZURE_API_VERSION"),
-    api_base=os.getenv("AZURE_API_BASE"),
-    api_key=os.getenv("AZURE_API_KEY"),
-    temperature=0.0,
 )
+
+os.environ['CREWAI_DISABLE_TELEMETRY'] = 'true'
+
+# Disable all OpenTelemetry (including CrewAI)
+os.environ['OTEL_SDK_DISABLED'] = 'true'
+
+import os
+os.environ["AZURE_API_KEY"] = "4Yyy8h5DwLynTdUgvzaDR9MEosUoonomgDFyt0bsXbApsiugWyPtJQQJ99BGACHYHv6XJ3w3AAAAACOG31ig"
+os.environ["AZURE_API_BASE"] = "https://youss-mcpff1c2-eastus2.cognitiveservices.azure.com"
+os.environ["AZURE_API_VERSION"] = "2024-12-01-preview"
+
+"""llm = LLM(
+    model="azure/gpt-4.1",  # This should match your deployment name
+    api_key="4Yyy8h5DwLynTdUgvzaDR9MEosUoonomgDFyt0bsXbApsiugWyPtJQQJ99BGACHYHv6XJ3w3AAAAACOG31ig",
+    base_url="https://youss-mcpff1c2-eastus2.cognitiveservices.azure.com",
+    api_version="2024-12-01-preview"
+)"""
     
+def ensure_dict_guardrail(result) -> Tuple[bool, Any]:
+    """Guardrail to ensure output is a dict, parsing from JSON string if needed."""
+    # CrewAI passes TaskOutput or raw output depending on version
+    raw = getattr(result, 'raw', result)
+    if isinstance(raw, dict):
+        return (True, raw)
+    if isinstance(raw, str):
+        try:
+            parsed = json.loads(raw)
+            return (True, parsed)
+        except Exception as e:
+            return (False, f"Output is not valid JSON: {e}")
+    return (False, "Output is neither a dict nor a JSON string")
+
 @CrewBase
 class Resume():
     """Resume crew"""
@@ -137,7 +163,8 @@ class Resume():
         return Task(
             config=self.tasks_config['document_analysis_task'],
             output_file='document_analysis_task.json',
-            output_json=DocumentAnalysisOutput
+            output_json=DocumentAnalysisOutput,
+            guardrail=ensure_dict_guardrail
         )
     
     @task
@@ -145,7 +172,8 @@ class Resume():
         return Task(
             config=self.tasks_config['candidate_matching_task'],
             output_file='candidate_matching_task.json',
-            output_json=CandidateMatchingOutput
+            output_json=CandidateMatchingOutput,
+            guardrail=ensure_dict_guardrail
         )
     
     @task
@@ -153,7 +181,8 @@ class Resume():
         return Task(
             config=self.tasks_config['report_generation_task'], 
             output_file='report.json',
-            output_json=ReportGenerationOutput
+            output_json=ReportGenerationOutput,
+            guardrail=ensure_dict_guardrail
         )
     
     @crew

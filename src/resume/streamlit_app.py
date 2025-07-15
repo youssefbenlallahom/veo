@@ -367,6 +367,7 @@ class StreamlitApp:
     
     def _run_analysis(self, resume_files, job_title, job_description):
         """Run the resume analysis process."""
+        resume_file_list = []  # Ensure this is always defined
         if not resume_files:
             st.error("Please upload at least one resume.")
             return
@@ -383,14 +384,7 @@ class StreamlitApp:
             # Initialize analysis engine
             engine = ResumeAnalysisEngine()
             
-            if not engine.validate_requirements():
-                st.error("System requirements not met. Please check environment variables.")
-                return
-            
             # Prepare file list for batch processing
-            resume_file_list = []
-            total_files = len(resume_files)
-            
             for i, uploaded_file in enumerate(resume_files):
                 # Create temporary file
                 with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp_file:
@@ -474,11 +468,10 @@ class StreamlitApp:
             executive_summary = result.get('executive_summary', {})
             candidate_profile = result.get('candidate_profile', {})
             score_raw = executive_summary.get('overall_score', result.get('score', 0))
-            if isinstance(score_raw, str):
-                match = re.match(r'([\d\.]+)', score_raw)
-                score = float(match.group(1)) if match else 0.0
-            else:
+            try:
                 score = float(score_raw)
+            except (ValueError, TypeError):
+                score = 0.0
             recommendation = executive_summary.get('overall_recommendation', result.get('recommendation', 'Unknown'))
             if isinstance(recommendation, (list, dict)):
                 recommendation = str(recommendation)
@@ -506,11 +499,10 @@ class StreamlitApp:
             candidate_name = result.get('candidate_name', 'Unknown')
             executive_summary = result.get('executive_summary', {})
             score_raw = executive_summary.get('overall_score', result.get('score', 0))
-            if isinstance(score_raw, str):
-                match = re.match(r'([\d\.]+)', score_raw)
-                score = float(match.group(1)) if match else 0.0
-            else:
+            try:
                 score = float(score_raw)
+            except (ValueError, TypeError):
+                score = 0.0
             recommendation = executive_summary.get('overall_recommendation', result.get('recommendation', 'Unknown'))
             if isinstance(recommendation, (list, dict)):
                 recommendation = str(recommendation)
@@ -526,8 +518,31 @@ class StreamlitApp:
             with st.expander(f"#{i}: {candidate_name} - {score:.1f}/10"):
                 if result.get('valid', True):
                     st.markdown("### 🎯 Executive Summary")
-                    st.markdown(f"**Overall Score:** {score:.1f}/10")
-                    st.markdown(f"**Recommendation:** {recommendation}")
+                    st.write(f"**Candidate Name:** {executive_summary.get('candidate_name', '')}")
+                    st.write(f"**Position Applied:** {executive_summary.get('position_applied', '')}")
+                    st.write(f"**Overall Recommendation:** {executive_summary.get('overall_recommendation', '')}")
+                    st.write(f"**Overall Score:** {executive_summary.get('overall_score', '')}")
+                    st.write(f"**Confidence Level:** {executive_summary.get('confidence_level', '')}")
+                    st.write("**Key Decision Factors:**")
+                    for factor in executive_summary.get('key_decision_factors', []):
+                        st.markdown(f"- {factor}")
+                    st.write("**Critical Concerns:**")
+                    for concern in executive_summary.get('critical_concerns', []):
+                        st.markdown(f"- {concern}")
+                    st.write(f"**Summary:** {executive_summary.get('recommendation_summary', '')}")
+
+                    candidate_profile = result.get('candidate_profile', {})
+                    st.markdown("### 👤 Candidate Profile")
+                    st.write(f"**Professional Summary:** {candidate_profile.get('professional_summary', '')}")
+                    st.write(f"**Career Trajectory:** {candidate_profile.get('career_trajectory', '')}")
+                    st.write(f"**Total Experience:** {candidate_profile.get('total_experience', '')}")
+                    st.write(f"**Relevant Experience:** {candidate_profile.get('relevant_experience', '')}")
+                    st.write(f"**Education Level:** {candidate_profile.get('education_level', '')}")
+                    st.write(f"**Current Status:** {candidate_profile.get('current_status', '')}")
+                    st.write(f"**Geographic Considerations:** {candidate_profile.get('geographic_considerations', '')}")
+                    st.write(f"**Career Progression Analysis:** {candidate_profile.get('career_progression_analysis', '')}")
+                    st.write(f"**Industry Experience:** {', '.join(candidate_profile.get('industry_experience', []))}")
+                    st.write(f"**Company Sizes Worked:** {', '.join(candidate_profile.get('company_sizes_worked', []))}")
 
                     st.markdown("### ✅ Strengths and Differentiators")
                     if strengths:
@@ -543,11 +558,9 @@ class StreamlitApp:
                     else:
                         st.markdown("No gaps found.")
 
-                    st.markdown("### 📄 Full Report")
-                    if report_content:
-                        st.markdown(report_content)
-                    else:
-                        st.markdown("No report content available.")
+                    st.markdown("### 📄 Full Report (JSON)")
+                    with st.expander("Show raw JSON output"):
+                        st.json(result)
                 else:
                     st.error(f"Analysis failed: {result.get('error', 'Unknown error')}")
     
@@ -567,7 +580,11 @@ class StreamlitApp:
         score_count = 0
         for result in valid_results:
             executive_summary = result.get('executive_summary', {})
-            score = executive_summary.get('overall_score', 0)
+            score_raw = executive_summary.get('overall_score', 0)
+            try:
+                score = float(score_raw)
+            except (ValueError, TypeError):
+                score = 0.0
             if score > 0:
                 total_score += score
                 score_count += 1
@@ -580,11 +597,15 @@ class StreamlitApp:
         
         for result in results:
             executive_summary = result.get('executive_summary', {})
-            
+            score_raw = executive_summary.get('overall_score', 0)
+            try:
+                score = float(score_raw)
+            except (ValueError, TypeError):
+                score = 0.0
             recent_analyses.append({
                 'Date': pd.Timestamp.now().strftime('%Y-%m-%d %H:%M'),
                 'Candidate': executive_summary.get('candidate_name', 'Unknown'),
-                'Score': f"{executive_summary.get('overall_score', 0):.1f}/10",
+                'Score': f"{score:.1f}/10",
                 'Recommendation': executive_summary.get('overall_recommendation', 'Unknown'),
                 'Confidence': executive_summary.get('confidence_level', 'Unknown'),
                 'Status': '✅ Success' if result.get('valid', True) else '❌ Failed'

@@ -13,7 +13,7 @@
     {
       "degree": "Master's in Accounting and Financial Analysis",
       "institution": "Universit de Sousse",
-      "graduation_date": "Not found",
+      "graduation_date": "Present",
       "gpa": "Not found",
       "honors": "Not found",
       "relevant_coursework": [],
@@ -36,7 +36,7 @@
       "location": "Sfax",
       "start_date": "February 2023",
       "end_date": "May 2023",
-      "duration_months": "3",
+      "duration_months": "4",
       "employment_type": "Not found",
       "key_responsibilities": [
         "Managed payment request files and verified supporting documentation",
@@ -53,7 +53,7 @@
       "location": "Not found",
       "start_date": "August 2022",
       "end_date": "October 2022",
-      "duration_months": "2",
+      "duration_months": "3",
       "employment_type": "Internship",
       "key_responsibilities": [
         "Prepared supplier reconciliation statements under supervision",
@@ -69,23 +69,32 @@
   "skills": {
     "professional_skills": [
       "Supplier Invoice Management",
-      "Payment File Preparation"
+      "Payment File Preparation",
+      "Supplier Reconciliation",
+      "Accounts Payable Monitoring"
     ],
     "technical_skills": [
-      "SAP",
-      "Excel"
+      "Excel (Pivot Tables, LOOKUP functions)"
     ],
     "software_tools": [
-      "SAP",
+      "SAP (basic use)",
       "Excel"
     ],
     "methodologies": [],
     "soft_skills": [
       "Detail-Oriented",
       "Reliable Under Pressure",
-      "Communicative"
+      "Communicative",
+      "Organizational",
+      "Reconciliation",
+      "Accuracy",
+      "Continuous Improvement"
     ],
-    "domain_expertise": []
+    "domain_expertise": [
+      "Finance",
+      "Accounting",
+      "Banking"
+    ]
   },
   "languages": [
     {
@@ -106,24 +115,28 @@
     "patents": [],
     "awards": [],
     "volunteering": [
-      "Volunteered as Treasurer for ENACTUS Club - budget planning and expense tracking"
+      "Treasurer for ENACTUS Club - budget planning and expense tracking"
     ],
     "professional_associations": [],
     "licenses": [],
-    "references": []
+    "references": [
+      "Not found"
+    ]
   },
   "analysis_summary": {
     "total_experience_years": "0",
-    "total_experience_months": "5",
+    "total_experience_months": "7",
     "career_level": "Entry",
-    "primary_domain": "Finance",
+    "primary_domain": "Finance & Accounting",
     "key_strengths": [
-      "Organizational skills",
-      "Reconciliation skills",
-      "Detail-Oriented"
+      "Supplier Invoice Management",
+      "Reconciliation Skills",
+      "SAP & Excel Proficiency",
+      "Detail-Oriented",
+      "Communicative"
     ],
     "employment_gaps": [],
-    "career_progression": "Not applicable",
+    "career_progression": "Upward (from intern to assistant while pursuing Master's)",
     "most_recent_role": "Accounting Assistant at Euronova Industries"
   }
 }
