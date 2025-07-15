@@ -1,28 +1,37 @@
 {
   "contact_information": {
-    "full_name": "Emna Trabelsi",
-    "email": "emna.trabelsi@email.com",
-    "phone": "+216 27 456 321",
-    "linkedin": "Not found",
+    "full_name": "SELMI Alaeddine",
+    "email": "selmialaeddine@gmail.com",
+    "phone": "+216 53 996 994",
+    "linkedin": "linkedin.com/in/selmialaeddine",
     "github": "Not found",
     "portfolio": "Not found",
-    "address": "Sousse, Tunisia",
+    "address": "Ariana, Tunisie",
     "other_profiles": []
   },
   "education": [
     {
-      "degree": "Master's in Accounting and Financial Analysis",
-      "institution": "Universit de Sousse",
-      "graduation_date": "Present",
+      "degree": "Engineering degree Business Intelligence and Information Systems",
+      "institution": "Conservatoire national des arts et mtiers",
+      "graduation_date": "Present (2022 - Present)",
       "gpa": "Not found",
       "honors": "Not found",
       "relevant_coursework": [],
       "thesis_project": "Not found"
     },
     {
-      "degree": "Bachelor's in Business Administration",
-      "institution": "IHEC Carthage",
+      "degree": "Bachelor's degree General Science Technologies",
+      "institution": "Conservatoire national des arts et mtiers",
       "graduation_date": "2022",
+      "gpa": "Not found",
+      "honors": "Not found",
+      "relevant_coursework": [],
+      "thesis_project": "Not found"
+    },
+    {
+      "degree": "Advanced technician in Networking and computing",
+      "institution": "Institut Maghrbin des Sciences Economiques et de Technologies",
+      "graduation_date": "2021",
       "gpa": "Not found",
       "honors": "Not found",
       "relevant_coursework": [],
@@ -31,80 +40,147 @@
   ],
   "work_experience": [
     {
-      "job_title": "Accounting Assistant",
-      "company": "Euronova Industries",
-      "location": "Sfax",
-      "start_date": "February 2023",
-      "end_date": "May 2023",
-      "duration_months": "4",
-      "employment_type": "Not found",
+      "job_title": "HR Data Analyst",
+      "company": "SAIPH Socit Arabe des Industries Pharmaceutiques",
+      "location": "Zaghouan , Tunisia",
+      "start_date": "01/2024",
+      "end_date": "Present",
+      "duration_months": "6",
+      "employment_type": "full-time",
       "key_responsibilities": [
-        "Managed payment request files and verified supporting documentation",
-        "Updated supplier banking details in coordination with the compliance team",
-        "Helped monitor accounts payable ledgers to ensure proper classification of entries",
-        "Participated in weekly team meetings to prioritize payments and follow up on schedules"
+        "Designing and maintaining dashboards using Power BI",
+        "Developing and maintaining a data warehouse",
+        "Performing ETL tasks using Python Pandas and MS SQL Server",
+        "Utilizing Excel for data quality checks and visualization",
+        "Analyzing surveys for social events",
+        "Evaluating employees' time management",
+        "Conducting payroll data analyses",
+        "Reviewing and analyzing training expenses",
+        "Supporting employee administration and recruitment with data-driven insights",
+        "Preparing monthly activity reports to track HR metrics",
+        "Collaborating on cross-departmental projects",
+        "Creating applications for data flows and standardization"
       ],
-      "achievements": [],
-      "tools_used": []
+      "achievements": [
+        "Provided real-time HR insights via Power BI dashboards",
+        "Enhanced accuracy in payroll and training expense analytics",
+        "Improved employee engagement analysis through survey analysis",
+        "Streamlined HR reporting processes"
+      ],
+      "tools_used": [
+        "Power BI",
+        "MS SQL Server",
+        "Excel",
+        "Python",
+        "Pandas"
+      ]
     },
     {
-      "job_title": "Finance Intern",
-      "company": "UIB (Union Internationale de Banques)",
-      "location": "Not found",
-      "start_date": "August 2022",
-      "end_date": "October 2022",
-      "duration_months": "3",
-      "employment_type": "Internship",
+      "job_title": "Business Intelligence Developer Intern",
+      "company": "SAIPH Socit Arabe des Industries Pharmaceutiques",
+      "location": "Zaghouan , Tunisia",
+      "start_date": "08/2023",
+      "end_date": "12/2023",
+      "duration_months": "5",
+      "employment_type": "internship",
       "key_responsibilities": [
-        "Prepared supplier reconciliation statements under supervision",
-        "Helped resolve payment discrepancies with vendors",
-        "Supported the team with SAP invoice entry tasks"
+        "Created and implemented dashboards using Power BI and SQL",
+        "Analyzed and collected HR data",
+        "Assisted in candidate profiling and employee time management",
+        "Developed dashboards for Absenteeism, Productivity, Workforce, Salary, and Social Works Analysis",
+        "Assisted with HR tasks including candidate profiling and social work"
       ],
-      "achievements": [],
+      "achievements": [
+        "Enhanced data-driven decision-making in HR department",
+        "Streamlined HR process efficiency through dashboard implementation"
+      ],
       "tools_used": [
-        "SAP"
+        "Power BI",
+        "Microsoft SQL Server"
+      ]
+    },
+    {
+      "job_title": "Web Developer Intern",
+      "company": "Alpha Energy",
+      "location": "Ben Arous , Tunisia",
+      "start_date": "02/2022",
+      "end_date": "08/2022",
+      "duration_months": "7",
+      "employment_type": "internship",
+      "key_responsibilities": [
+        "Developed web application for electronics inventory",
+        "Enabled efficient product search functionality by category"
+      ],
+      "achievements": [
+        "Improved electronics inventory management process"
+      ],
+      "tools_used": [
+        "PHP",
+        "HTML",
+        "CSS",
+        "MySQL"
       ]
     }
   ],
   "skills": {
     "professional_skills": [
-      "Supplier Invoice Management",
-      "Payment File Preparation",
-      "Supplier Reconciliation",
-      "Accounts Payable Monitoring"
+      "Data Analysis",
+      "Business Intelligence",
+      "Dashboard Creation",
+      "Statistical Analysis",
+      "Data Governance",
+      "Data Warehousing",
+      "ETL Processes",
+      "Collaboration",
+      "Stakeholder Communication"
     ],
     "technical_skills": [
-      "Excel (Pivot Tables, LOOKUP functions)"
+      "Python",
+      "SQL",
+      "PHP",
+      "ETL",
+      "Data Warehousing",
+      "Statistical Analysis",
+      "PySpark",
+      "Pandas",
+      "NumPy"
     ],
     "software_tools": [
-      "SAP (basic use)",
-      "Excel"
+      "Power BI",
+      "MS SQL Server",
+      "Excel",
+      "MySQL"
     ],
-    "methodologies": [],
+    "methodologies": [
+      "Kimball methodologies"
+    ],
     "soft_skills": [
-      "Detail-Oriented",
-      "Reliable Under Pressure",
-      "Communicative",
-      "Organizational",
-      "Reconciliation",
-      "Accuracy",
-      "Continuous Improvement"
+      "Communication",
+      "Collaboration",
+      "Stakeholder Engagement",
+      "Teamwork"
     ],
     "domain_expertise": [
-      "Finance",
-      "Accounting",
-      "Banking"
+      "HR Analytics",
+      "Pharmaceuticals",
+      "Business Intelligence",
+      "Web Development"
     ]
   },
   "languages": [
     {
-      "language": "French",
-      "proficiency_level": "C1",
+      "language": "Arabic",
+      "proficiency_level": "Native or Bilingual Proficiency",
       "certification": "Not found"
     },
     {
       "language": "English",
-      "proficiency_level": "B2",
+      "proficiency_level": "Full Professional Proficiency",
+      "certification": "Not found"
+    },
+    {
+      "language": "French",
+      "proficiency_level": "Limited Working Proficiency",
       "certification": "Not found"
     }
   ],
@@ -114,9 +190,7 @@
     "publications": [],
     "patents": [],
     "awards": [],
-    "volunteering": [
-      "Treasurer for ENACTUS Club - budget planning and expense tracking"
-    ],
+    "volunteering": [],
     "professional_associations": [],
     "licenses": [],
     "references": [
@@ -124,19 +198,19 @@
     ]
   },
   "analysis_summary": {
-    "total_experience_years": "0",
-    "total_experience_months": "7",
-    "career_level": "Entry",
-    "primary_domain": "Finance & Accounting",
+    "total_experience_years": "1",
+    "total_experience_months": "18",
+    "career_level": "entry",
+    "primary_domain": "HR Data Analytics / Business Intelligence",
     "key_strengths": [
-      "Supplier Invoice Management",
-      "Reconciliation Skills",
-      "SAP & Excel Proficiency",
-      "Detail-Oriented",
-      "Communicative"
+      "Expertise in data analysis and visualization with Power BI",
+      "Skilled in ETL processes and database management",
+      "Strong communication and collaboration skills",
+      "Proven ability to support HR operations through analytics",
+      "Experience with dashboard creation and business intelligence tools"
     ],
     "employment_gaps": [],
-    "career_progression": "Upward (from intern to assistant while pursuing Master's)",
-    "most_recent_role": "Accounting Assistant at Euronova Industries"
+    "career_progression": "upward",
+    "most_recent_role": "HR Data Analyst, SAIPH Socit Arabe des Industries Pharmaceutiques"
   }
 }

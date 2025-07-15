@@ -1,5 +1,6 @@
 import json
 import os
+import tempfile
 from pathlib import Path
 from typing import Dict, Optional
 from google import genai
@@ -9,36 +10,46 @@ from google.genai import types
 class BaremGenerator:
     """Generates and manages scoring rubrics (barem) for job positions."""
     
-    def __init__(self, output_dir: Path):
-        self.output_dir = output_dir
-        self.barem_cache_dir = output_dir / "barem_cache"
-        self.barem_cache_dir.mkdir(exist_ok=True)
+    def __init__(self, output_dir: Path = None):
+        # Store reference to temporary file for cleanup
+        self.temp_file = None
     
     def get_barem(self, job_title: str, job_description: str) -> Optional[Dict]:
-        """Get or generate barem for the job."""
-        # Create cache filename based on job title
-        cache_filename = self.barem_cache_dir / f"barem_{self._sanitize_job_title(job_title)}.json"
-        
-        # Try to load from cache
-        if cache_filename.exists():
-            try:
-                with open(cache_filename, 'r', encoding='utf-8') as f:
-                    return json.load(f)
-            except Exception:
-                pass  # If cache is corrupted, regenerate
-        
-        # Generate new barem
+        """Generate barem and save as temporary file."""
+        # Always generate new barem
         barem = self._generate_barem_from_gemini(job_title, job_description)
         
-        # Save to cache
+        # Save as temporary file
         if barem:
             try:
-                with open(cache_filename, 'w', encoding='utf-8') as f:
-                    json.dump(barem, f, ensure_ascii=False, indent=2)
-            except Exception:
-                pass  # Non-critical if cache save fails
+                # Create a temporary file with .json extension
+                self.temp_file = tempfile.NamedTemporaryFile(
+                    mode='w', 
+                    suffix='.json', 
+                    prefix=f'barem_{self._sanitize_job_title(job_title)}_',
+                    delete=False,  # Don't delete automatically, we'll handle cleanup
+                    encoding='utf-8'
+                )
+                
+                json.dump(barem, self.temp_file, ensure_ascii=False, indent=2)
+                self.temp_file.close()
+                
+                print(f"Temporary barem saved to: {self.temp_file.name}")
+            except Exception as e:
+                print(f"Warning: Could not save temporary barem file: {e}")
         
         return barem
+    
+    def cleanup(self):
+        """Clean up temporary barem file."""
+        if self.temp_file and os.path.exists(self.temp_file.name):
+            try:
+                os.unlink(self.temp_file.name)
+                print(f"Cleaned up temporary barem file: {self.temp_file.name}")
+            except Exception as e:
+                print(f"Warning: Could not clean up temporary file: {e}")
+            finally:
+                self.temp_file = None
     
     def _sanitize_job_title(self, job_title: str) -> str:
         """Sanitize job title for filename."""

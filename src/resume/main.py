@@ -18,7 +18,7 @@ current_dir = Path(__file__).parent
 sys.path.insert(0, str(current_dir))
 
 from crew import Resume
-from utils.file_handler import FileHandler
+from utils.barem_generator import BaremGenerator
 from utils.report_parser import ReportParser
 from utils.pdf_validator import PDFValidator
 
@@ -46,44 +46,29 @@ class ResumeAnalysisEngine:
     Follows CrewAI best practices for clean architecture.
     """
     
-    def __init__(self, output_dir: str = "output"):
+    def __init__(self):
         """Initialize the analysis engine."""
         
-        # Convert output_dir to Path object for compatibility
-        output_path = Path(output_dir)
-        
-        # Initialize utilities
-        self.file_handler = FileHandler(output_path)
+        # Initialize utilities without output directory dependencies
+        self.barem_generator = BaremGenerator()
         self.report_parser = ReportParser()
         self.pdf_validator = PDFValidator()
         
-        # Load barem from JSON file
-        self.barem = self._load_barem_from_json()
-        
         logger.info(f"Resume Analysis Engine initialized")
     
-    def _load_barem_from_json(self) -> Optional[Dict]:
-        """Load barem directly from barem_gemini.json file."""
+    def generate_or_load_barem(self, job_title: str, job_description: str) -> Optional[Dict]:
+        """Generate or load barem using the existing BaremGenerator."""
         try:
-            # Look for barem_gemini.json in the project root
-            current_dir = Path(__file__).parent
-            project_root = current_dir.parent.parent
-            barem_file = project_root / "barem_gemini.json"
-            
-            if not barem_file.exists():
-                logger.error(f"Barem file not found at {barem_file}")
+            barem = self.barem_generator.get_barem(job_title, job_description)
+            if barem:
+                logger.info(f"Barem generated/loaded successfully for job: {job_title}")
+                return barem
+            else:
+                logger.error(f"Failed to generate barem for job: {job_title}")
                 return None
-                
-            with open(barem_file, 'r', encoding='utf-8') as f:
-                barem_data = json.load(f)
-                
-            logger.info(f"Barem loaded successfully from {barem_file}")
-            return barem_data
-            
         except Exception as e:
-            logger.error(f"Error loading barem from JSON: {e}")
+            logger.error(f"Error generating/loading barem: {e}")
             return None
-    
     
     def _parse_result_directly(self, result, candidate_name: str) -> Dict[str, Any]:
         """Parse crew result directly without saving to file."""
@@ -138,10 +123,6 @@ class ResumeAnalysisEngine:
                 "score": 0,
                 "recommendation": "Error"
             }
-
-    def generate_or_load_barem(self, job_title: str, job_description: str) -> Optional[Dict]:
-        """Return the loaded barem from JSON file."""
-        return self.barem
     
     def analyze_single_resume(
         self, 
@@ -243,19 +224,20 @@ class ResumeAnalysisEngine:
         results = []
         total_files = len(resume_files)
         
-        for idx, (resume_path, candidate_name) in enumerate(resume_files):
-            # Update progress
-            if progress_callback:
-                progress_callback(idx, total_files, candidate_name)
-            
-            # Analyze single resume
-            result = self.analyze_single_resume(
-                resume_path, job_title, job_description, candidate_name, barem
-            )
-            results.append(result)
-            
-            # Clean up temporary file if needed
-            self.file_handler.cleanup_temp_file(resume_path)
+        try:
+            for idx, (resume_path, candidate_name) in enumerate(resume_files):
+                # Update progress
+                if progress_callback:
+                    progress_callback(idx, total_files, candidate_name)
+                
+                # Analyze single resume
+                result = self.analyze_single_resume(
+                    resume_path, job_title, job_description, candidate_name, barem
+                )
+                results.append(result)
+        finally:
+            # Clean up temporary barem file
+            self.barem_generator.cleanup()
         
         # Sort results by score
         results.sort(key=lambda x: x.get('score', 0), reverse=True)
@@ -286,11 +268,13 @@ def run_single_analysis(
     
     engine = ResumeAnalysisEngine()
     
-    
-    
-    return engine.analyze_single_resume(
-        resume_path, job_title, job_description, candidate_name
-    )
+    try:
+        return engine.analyze_single_resume(
+            resume_path, job_title, job_description, candidate_name
+        )
+    finally:
+        # Clean up temporary barem file
+        engine.barem_generator.cleanup()
 
 
 def run_batch_analysis(

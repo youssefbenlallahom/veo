@@ -1,250 +1,272 @@
 {
   "job_analysis": {
-    "job_title": "Accounts Payable Specialist",
-    "job_description": "We are seeking a meticulous and proactive Accounts Payable Specialist to join our finance team. The ideal candidate will be responsible for processing invoices, managing vendor accounts, reconciling statements, and ensuring timely and accurate payments. This role requires strong attention to detail, excellent organizational skills, and proficiency in accounting software. Key responsibilities include: processing a high volume of invoices, verifying accuracy and proper coding, resolving discrepancies with vendors, preparing payment runs, maintaining accurate vendor records, assisting with month-end close activities, and ensuring compliance with company policies and financial regulations. A Bachelor's degree in Accounting, Finance, or a related field is required, along with 2-3 years of experience in an Accounts Payable role. Experience with SAP is highly preferred.",
+    "job_title": "HR Analyst",
+    "job_description": "We are looking for a detail-oriented HR Analyst to support our HR department with data analysis and reporting. You'll work on tracking key HR metrics like employee turnover, recruitment efficiency, and compensation trends to support strategic decisions.\nKey Responsibilities:\nAnalyze HR data and create dashboards\nTrack and report KPIs (e.g., time-to-hire, attrition)\nMaintain HR systems and ensure data accuracy\nSupport workforce planning and recruitment analysis\nProfile:\nBachelor’s/Master’s in HR, Business, or related field\nStrong Excel and analytical skills\nFamiliar with HRIS (SAP, Odoo, etc.)\nFrench and English (B2 level)\nOrganized and data-driven",
     "critical_requirements": [
-      "Processing invoices",
-      "Managing vendor accounts",
-      "Reconciling statements",
-      "Ensuring timely and accurate payments",
-      "Strong attention to detail",
-      "Excellent organizational skills",
-      "Proficiency in accounting software",
-      "Processing a high volume of invoices",
-      "Verifying accuracy and proper coding",
-      "Resolving discrepancies with vendors",
-      "Preparing payment runs",
-      "Maintaining accurate vendor records",
-      "Assisting with month-end close activities",
-      "Ensuring compliance with company policies and financial regulations",
-      "Bachelor's degree in Accounting, Finance, or a related field",
-      "2-3 years of experience in an Accounts Payable role"
+      "3+ years of direct experience as HR Analyst or similar data-centric HR role",
+      "Hands-on experience with HR data analysis",
+      "Creating reports/dashboards for HR metrics (turnover, recruitment, compensation)",
+      "Maintaining HR systems/HRIS",
+      "Bachelor’s/Master’s in HR, Business, or related field",
+      "Explicit advanced Excel skills",
+      "Familiarity with HRIS (SAP, Odoo, Workday)",
+      "B2 level proficiency in French and English",
+      "Organized, data-driven, detail-oriented"
     ],
     "preferred_requirements": [
-      "Experience with SAP"
+      "HR/data analytics certifications",
+      "Advanced tools (Power BI, Tableau, Python, R)",
+      "Quantifiable achievements in HR analytics",
+      "Predictive workforce planning experience"
     ],
-    "experience_required": "2-3 years of experience in an Accounts Payable role",
-    "education_required": "Bachelor's degree in Accounting, Finance, or a related field"
+    "experience_required": "3+ years in HR Analyst or highly similar data-centric HR role, direct experience with HR data analysis and dashboard/report creation",
+    "education_required": "Bachelor's or Master's in HR, Business, or a related quantitative field"
   },
   "candidate_overview": {
-    "candidate_name": "Emna Trabelsi",
-    "current_title": "Accounting Assistant",
-    "total_experience_years": "0.58",
-    "relevant_experience_years": "0.58",
-    "education_level": "Bachelor's in Business Administration (pursuing Master's in Accounting and Financial Analysis)",
+    "candidate_name": "SELMI Alaeddine",
+    "current_title": "HR Data Analyst",
+    "total_experience_years": "1.5",
+    "relevant_experience_years": "1",
+    "education_level": "Engineering degree in Business Intelligence and Information Systems (in progress), Bachelor's degree in General Science Technologies",
     "key_skills": [
-      "Supplier Invoice Management",
-      "Payment File Preparation",
-      "Supplier Reconciliation",
-      "Accounts Payable Monitoring",
-      "Excel (Pivot Tables, LOOKUP functions)",
-      "SAP (basic use)",
-      "Detail-Oriented",
-      "Reliable Under Pressure",
-      "Communicative",
-      "Organizational",
-      "Reconciliation",
-      "Accuracy",
-      "Continuous Improvement",
-      "Finance",
-      "Accounting",
-      "Banking"
+      "Data Analysis",
+      "Business Intelligence",
+      "Dashboard Creation",
+      "Statistical Analysis",
+      "Data Warehousing",
+      "ETL Processes",
+      "Excel",
+      "Power BI",
+      "Python",
+      "SQL",
+      "Collaboration",
+      "HR Analytics"
     ]
   },
   "rubric_evaluation": [
     {
-      "section_name": "Experience",
-      "weight_percentage": "40%",
+      "section_name": "Relevant Work Experience",
+      "weight_percentage": "30",
       "candidate_evidence": [
-        "Managed payment request files and verified supporting documentation",
-        "Helped monitor accounts payable ledgers to ensure proper classification of entries",
-        "Participated in weekly team meetings to prioritize payments and follow up on schedules",
-        "Prepared supplier reconciliation statements under supervision",
-        "Helped resolve payment discrepancies with vendors",
-        "Supported the team with SAP invoice entry tasks"
+        "HR Data Analyst at SAIPH since 01/2024 (6+ months)",
+        "Business Intelligence Developer Intern at SAIPH, with duties including HR data analysis and dashboard creation",
+        "Experience with dashboards for Absenteeism, Productivity, Workforce, Salary, and Social Works",
+        "Supported recruitment and employee management analytics"
       ],
-      "section_score": "4.8",
-      "score_justification": "Candidate has 7 months of direct experience in AP-related tasks (Accounting Assistant, Finance Intern), which is significantly less than the required 2-3 years. However, strong verb mirroring ('managed', 'monitor', 'prepared', 'resolve') and high contextual relevance to AP functions (invoice management, reconciliation, payment support) boost the score. Lack of explicit quantification of volume or impact limits a higher score.",
-      "weighted_score": "19.2"
+      "section_score": "15",
+      "score_justification": "Candidate has approximately 1 year of direct HR Analyst/data-centric HR experience, with relevant responsibilities in HR metrics, dashboards, and recruitment analytics, but does not meet the 3+ year requirement. Therefore, partial points awarded.",
+      "weighted_score": "4.5"
     },
     {
-      "section_name": "Skills",
-      "weight_percentage": "30%",
+      "section_name": "Skills and Technical Expertise",
+      "weight_percentage": "25",
       "candidate_evidence": [
-        "Supplier Invoice Management",
-        "Payment File Preparation",
-        "Supplier Reconciliation",
-        "Accounts Payable Monitoring",
-        "Excel (Pivot Tables, LOOKUP functions)",
-        "SAP (basic use)",
-        "Detail-Oriented",
-        "Organizational"
+        "Proficient in Excel; key responsibilities include using Excel for data quality checks and visualization",
+        "Advanced skills in Power BI, SQL, Python (Pandas)",
+        "Hands-on with HR analytics dashboards and reporting",
+        "No explicit mention of HRIS such as SAP, Odoo, or Workday",
+        "English: Full professional proficiency; French: Limited working proficiency (not B2)"
       ],
-      "section_score": "10.0",
-      "score_justification": "Candidate demonstrates strong proficiency in core AP skills directly matching job requirements, including invoice management, supplier reconciliation, and accounts payable monitoring. Explicit mention of SAP and Excel proficiency meets software requirements. Skills are well-clustered and contextually relevant. Strong verb alignment between resume skills and job description verbs contributes to a high score. No explicit quantification of skill impact (e.g., 'processed X invoices') prevents exceeding the maximum score.",
-      "weighted_score": "30.0"
+      "section_score": "12",
+      "score_justification": "Candidate describes proficiency in Excel, but advanced Excel skills (Pivot Tables, VLOOKUPs, etc.) not explicitly stated. No named HRIS systems per job requirements; advanced analytical tool skills shown; French below B2. Thus, earns partial points.",
+      "weighted_score": "3"
     },
     {
-      "section_name": "Education",
-      "weight_percentage": "20%",
+      "section_name": "Educational Background and Certifications",
+      "weight_percentage": "15",
       "candidate_evidence": [
-        "Bachelor's in Business Administration (2022)",
-        "Master's in Accounting and Financial Analysis (Present)"
+        "Currently pursuing Engineering degree in Business Intelligence and Information Systems",
+        "Holds Bachelor’s degree in General Science Technologies",
+        "No mention of specific HR-related coursework or HR/data analytics certifications"
       ],
-      "section_score": "10.0",
-      "score_justification": "Candidate meets the Bachelor's degree requirement with a Bachelor's in Business Administration and is currently pursuing a Master's in Accounting and Financial Analysis, which is highly relevant and exceeds the stated educational requirement. The education aligns perfectly with the finance/accounting domain, demonstrating strong foundational knowledge and commitment.",
-      "weighted_score": "20.0"
+      "section_score": "7",
+      "score_justification": "Bachelor’s and pursuing engineering in a related quantitative field; however, not explicit HR or business major, and no HR certifications. Partial points appropriate; degree is related to analytics.",
+      "weighted_score": "1.05"
     },
     {
-      "section_name": "Soft Skills & Other",
-      "weight_percentage": "10%",
+      "section_name": "Achievements and Impact",
+      "weight_percentage": "15",
       "candidate_evidence": [
-        "Detail-Oriented",
-        "Organizational",
-        "Treasurer for ENACTUS Club - budget planning and expense tracking"
+        "Enhanced accuracy in payroll and training expense analytics",
+        "Provided real-time HR insights via dashboards",
+        "Streamlined HR reporting",
+        "Improved employee engagement analysis"
       ],
-      "section_score": "9.9",
-      "score_justification": "Candidate explicitly lists 'Detail-Oriented' and 'Organizational' skills, which are critical. The role as 'Treasurer for ENACTUS Club' provides practical evidence of these skills in a financial context, including 'budget planning and expense tracking', demonstrating proactive engagement and contextual relevance. While no specific quantification of impact, the demonstration of these skills through a relevant extracurricular activity is strong.",
-      "weighted_score": "9.9"
+      "section_score": "7",
+      "score_justification": "Achievements describe improvements and impact, but lack quantifiable results (e.g., percentage/time saved). Verbs demonstrate ownership and impact orientation. Partial points assigned.",
+      "weighted_score": "1.05"
+    },
+    {
+      "section_name": "Soft Skills and Cultural Fit",
+      "weight_percentage": "10",
+      "candidate_evidence": [
+        "Described as collaborative, detail-oriented in actions, stakeholder communication skills",
+        "Roles and achievements demonstrate organization and teamwork",
+        "No direct use of all job description keywords ('data-driven', 'detail-oriented') in resume wording"
+      ],
+      "section_score": "5",
+      "score_justification": "Soft skills are implied through experience, but the explicit alignment and mirroring of job description language is limited. Resume structure is clear, indicating some organization. Partial points appropriate.",
+      "weighted_score": "0.5"
+    },
+    {
+      "section_name": "Bonus",
+      "weight_percentage": "5",
+      "candidate_evidence": [
+        "Advanced Power BI skills indicated in dashboard design and real-time reporting",
+        "Use of Python for ETL and data processing",
+        "No predictive modeling or R/statistical programming"
+      ],
+      "section_score": "5",
+      "score_justification": "Candidate exceeds basic requirements through advanced data visualization and Python ETL skills (Power BI, Python). Bonus points fully assigned.",
+      "weighted_score": "0.25"
     }
   ],
   "match_analysis": {
     "skills_match": {
       "matched_skills": [
-        "Supplier Invoice Management",
-        "Payment File Preparation",
-        "Supplier Reconciliation",
-        "Accounts Payable Monitoring",
+        "Data analysis",
+        "Dashboard creation",
+        "Statistical analysis",
+        "Python",
+        "SQL",
+        "Power BI",
         "Excel",
-        "SAP (basic use)",
-        "Detail-Oriented",
-        "Organizational",
-        "Resolving discrepancies with vendors"
+        "HR analytics"
       ],
       "missing_skills": [
-        "Processing a high volume of invoices",
-        "Verifying accuracy and proper coding (explicitly coding)",
-        "Preparing payment runs (explicitly)",
-        "Maintaining accurate vendor records (explicitly)",
-        "Assisting with month-end close activities",
-        "Ensuring compliance with company policies and financial regulations"
+        "Named HRIS experience (SAP, Odoo, Workday)",
+        "Explicit advanced Excel operations (Pivot Tables, VLOOKUPs)",
+        "B2 level French"
       ],
       "additional_skills": [
-        "Reliable Under Pressure",
-        "Communicative",
-        "Continuous Improvement",
-        "Banking"
+        "Power BI advanced dashboards",
+        "Python for ETL",
+        "MS SQL Server",
+        "Data Warehousing",
+        "Business Intelligence methodologies"
       ],
-      "match_percentage": "64.29%"
+      "match_percentage": "70%"
     },
     "experience_match": {
-      "required_experience": "2-3 years of experience in an Accounts Payable role",
-      "candidate_experience": "0.58 years",
-      "experience_gap": "Approximately 1.5 to 2.5 years",
-      "match_level": "significantly below"
+      "required_experience": "3+ years of direct HR Analyst/data-centric HR role",
+      "candidate_experience": "1 year (plus related BI/HR analytics internship)",
+      "experience_gap": "2+ years less than required",
+      "match_level": "below"
     },
     "education_match": {
-      "required_education": "Bachelor's degree in Accounting, Finance, or a related field",
-      "candidate_education": "Bachelor's in Business Administration (completed), Master's in Accounting and Financial Analysis (pursuing)",
-      "match_level": "exceeds"
+      "required_education": "Bachelor's or Master's in HR, Business, or related quantitative field",
+      "candidate_education": "Bachelor's degree in General Science Technologies; Engineering degree (Business Intelligence, in progress)",
+      "match_level": "meets"
     }
   },
   "scoring_summary": {
-    "total_weighted_score": "79.1",
-    "normalized_score": "7.91",
+    "total_weighted_score": "10.35",
+    "normalized_score": "5.2",
     "score_breakdown": [
       {
-        "criterion": "Experience",
-        "raw_score": "4.8",
-        "weight": "40%",
-        "weighted_points": "19.2"
+        "criterion": "Relevant Work Experience",
+        "raw_score": "5",
+        "weight": "30",
+        "weighted_points": "1.5"
       },
       {
-        "criterion": "Skills",
-        "raw_score": "10.0",
-        "weight": "30%",
-        "weighted_points": "30.0"
+        "criterion": "Skills and Technical Expertise",
+        "raw_score": "4",
+        "weight": "25",
+        "weighted_points": "1"
       },
       {
-        "criterion": "Education",
-        "raw_score": "10.0",
-        "weight": "20%",
-        "weighted_points": "20.0"
+        "criterion": "Educational Background and Certifications",
+        "raw_score": "2.8",
+        "weight": "15",
+        "weighted_points": "0.42"
       },
       {
-        "criterion": "Soft Skills & Other",
-        "raw_score": "9.9",
-        "weight": "10%",
-        "weighted_points": "9.9"
+        "criterion": "Achievements and Impact",
+        "raw_score": "2.8",
+        "weight": "15",
+        "weighted_points": "0.42"
+      },
+      {
+        "criterion": "Soft Skills and Cultural Fit",
+        "raw_score": "2",
+        "weight": "10",
+        "weighted_points": "0.2"
+      },
+      {
+        "criterion": "Bonus",
+        "raw_score": "1",
+        "weight": "5",
+        "weighted_points": "0.05"
       }
     ],
-    "weights_validation": "Weights sum to 100% (40+30+20+10 = 100)."
+    "weights_validation": "Weights sum to 100%"
   },
   "evaluation_results": {
     "critical_missing_requirements": [
-      "2-3 years of direct Accounts Payable experience",
-      "Explicit experience with high-volume invoice processing",
-      "Assisting with month-end close activities",
-      "Ensuring compliance with company policies and financial regulations"
+      "3+ years direct HR Analyst/data-centric HR experience",
+      "Verifiable HRIS system expertise (SAP, Odoo, Workday)",
+      "B2 level French proficiency",
+      "Advanced Excel formulas/tools (explicit mention)"
     ],
     "key_strengths": [
-      "Strong foundational knowledge in Accounts Payable processes (invoice management, reconciliation)",
-      "Proficiency in SAP and Excel",
-      "Relevant academic background (Master's in Accounting and Financial Analysis in progress)",
-      "Strong soft skills (detail-oriented, organizational)",
-      "Demonstrated practical financial skills through extracurriculars (Treasurer role)"
+      "Strong Power BI and dashboard development experience",
+      "Experience with Python and data warehousing/ETL in HR context",
+      "Communication and collaboration skills",
+      "Foundational HR analytics achievements"
     ],
     "areas_for_improvement": [
-      "Gain more direct professional experience in an Accounts Payable role to meet the required years",
-      "Seek opportunities to handle high-volume transactions and month-end close activities",
-      "Develop explicit experience in ensuring compliance with financial regulations",
-      "Quantify achievements in future roles to enhance resume impact"
+      "Gain more direct HR Analyst experience (target 3+ years)",
+      "Develop advanced Excel operations (Pivot Tables, VLOOKUPs, etc.)",
+      "Gain hands-on experience with leading HRIS platforms",
+      "Improve French proficiency to B2"
     ],
     "unique_value_propositions": [
-      "Currently pursuing a Master's in Accounting and Financial Analysis, indicating strong theoretical knowledge and commitment to the field",
-      "Experience as Treasurer for ENACTUS Club demonstrates practical application of financial and organizational skills beyond typical coursework"
+      "Advanced data visualization and automation with Python and Power BI in HR setting",
+      "Experience designing comprehensive HR dashboards quickly",
+      "Emerging expertise at intersection of business intelligence and HR analytics"
     ],
     "risk_factors": [
-      "Limited professional experience (0.58 years) may require more training and supervision compared to candidates meeting the 2-3 year requirement",
-      "Potential learning curve for high-volume processing and complex month-end close procedures"
+      "Below required experience threshold may affect ability to independently own analysis scope",
+      "No direct HRIS platform experience limits integration with some HR processes",
+      "French proficiency below client requirement level"
     ]
   },
   "final_recommendation": {
     "status": "CONDITIONALLY RECOMMENDED",
     "confidence_level": "medium",
-    "primary_reason": "Candidate possesses strong foundational skills and relevant education but significantly lacks the required years of experience for an Accounts Payable Specialist role.",
+    "primary_reason": "While candidate is strong in HR analytics, data visualization, and technical tools, lacks minimum required years of experience, HRIS system background, and B2 French proficiency.",
     "supporting_factors": [
-      "Excellent match on core AP skills and software proficiency",
-      "Strong and highly relevant educational background (Bachelor's completed, Master's in progress)",
-      "Good soft skills explicitly mentioned and demonstrated through extracurriculars",
-      "Strong AI-alignment factors (verb mirroring, contextual relevance, skills clustering) indicate high ATS readability"
+      "Strong technical and analytical skills with practical HR analytics application",
+      "Rapid growth and learning demonstrated in early career trajectory",
+      "Tangible impact via dashboard and reporting improvements"
     ],
     "conditions_if_applicable": [
-      "If the company is open to hiring a high-potential candidate with less experience who can be mentored and quickly grow into the role",
-      "If the role can be adjusted to a Junior Accounts Payable Specialist position initially"
+      "Willingness to invest in further HRIS and advanced Excel training",
+      "French language coursework/progression to B2",
+      "Assignment to team with strong HR process/HRIS knowledge"
     ],
     "next_steps": [
-      "Conduct an interview to assess practical application of skills, problem-solving abilities, and willingness to learn/grow into the role despite limited experience",
-      "Explore the candidate's understanding of month-end close processes and compliance requirements"
+      "Assess technical skills in Excel and HRIS in interview",
+      "Test French language skills",
+      "Discuss HR process understanding and ability to upscale quickly",
+      "Verify achievements and independence with references"
     ]
   },
   "detailed_feedback": {
-    "for_candidate": "Emna, your resume highlights strong foundational skills in Accounts Payable, including invoice management, reconciliation, and proficiency in SAP and Excel. Your Master's degree in Accounting and Financial Analysis is a significant asset. To strengthen your profile for future Accounts Payable Specialist roles, consider seeking opportunities that explicitly involve high-volume transaction processing, month-end close activities, and ensuring compliance with financial regulations. Quantifying your achievements (e.g., 'processed X invoices per day/week', 'reduced discrepancies by Y%') would also significantly enhance your resume's impact for AI screening systems.",
-    "for_hiring_manager": "Emna is a promising candidate with a strong academic background and direct, albeit limited, experience in core Accounts Payable functions. While she falls short of the 2-3 years of experience, her explicit skills in invoice management, reconciliation, and SAP usage, combined with her current Master's studies, suggest a high potential for rapid learning and growth. The resume scores well on AI-alignment factors due to good verb mirroring and contextual relevance. Consider her for a junior AP role or if there's capacity to mentor a high-potential candidate.",
+    "for_candidate": "You have demonstrated strong growth in HR analytics and data tools (Power BI, Python, SQL). To be highly competitive for more senior HR Analyst roles, focus on gaining deeper hands-on experience with leading HRIS systems (e.g., SAP, Odoo), mastering advanced Excel functionalities, and elevating your French to the required B2 level. Continue developing quantifiable, results-oriented achievements linked to HR business outcomes.",
+    "for_hiring_manager": "Candidate brings strong data analysis/visualization capacity, high technical acumen, and a proven ability to support HR with actionable insights. However, experience is below the strict minimum, and no direct HRIS platform skills present. If technical growth and upskilling are high priorities, and HRIS/French can be trained, this candidate could be a high-upside investment.",
     "interview_focus_areas": [
-      "Deep dive into specific AP processes handled (e.g., full invoice lifecycle, complex reconciliations)",
-      "Problem-solving scenarios related to payment discrepancies or vendor issues",
-      "Understanding of month-end close procedures in an AP context",
-      "Knowledge of financial regulations and compliance",
-      "Motivation for an AP Specialist role despite limited experience and how she plans to bridge the experience gap",
-      "Ability to handle high-volume tasks and prioritize effectively"
+      "Advanced Excel scenario assessment",
+      "HRIS systems familiarity/learning agility",
+      "French proficiency validation",
+      "Ability to handle end-to-end HR analytics projects"
     ],
     "reference_check_priorities": [
-      "Verification of responsibilities and performance in previous AP-related roles",
-      "Confirmation of attention to detail and organizational skills",
-      "Ability to learn quickly and adapt to new systems/processes",
-      "Teamwork and communication skills",
-      "Reliability and ability to work under pressure"
+      "Candidate’s role in independent HR analytics/dashboards",
+      "Proven reliability in data quality and HR reporting",
+      "Communication/collaboration with HR business partners",
+      "Capacity to quickly adapt to unfamiliar HR tools/systems"
     ]
   }
 }

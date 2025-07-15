@@ -134,7 +134,7 @@ document_analysis_task:
 
 candidate_matching_task:
   description: >
-    You are an expert candidate evaluation specialist. Compare the candidate's resume with job requirements using the provided scoring rubric (barem) passed as input. 
+    You are an expert candidate evaluation specialist. Compare the candidate's resume with job requirements: {job_title} and {job_description} using the provided scoring rubric {barem} passed as input. 
     
     CRITICAL INSTRUCTIONS:
     - NEVER use ```json or ``` in output

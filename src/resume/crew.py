@@ -57,11 +57,11 @@ load_dotenv()
 
 # Use Gemini for more reliable structured output
 os.environ["GEMINI_API_KEY"]="AIzaSyD4wr8nrFBM9scvZTAFvEzbpDZtFIR2qHw"
-llm = LLM(
+"""llm = LLM(
     model="gemini/gemini-2.5-flash",
     temperature=0.0,
     api_key=os.getenv("GEMINI_API_KEY"),
-)
+)"""
 
 os.environ['CREWAI_DISABLE_TELEMETRY'] = 'true'
 
@@ -73,12 +73,12 @@ os.environ["AZURE_API_KEY"] = "4Yyy8h5DwLynTdUgvzaDR9MEosUoonomgDFyt0bsXbApsiugW
 os.environ["AZURE_API_BASE"] = "https://youss-mcpff1c2-eastus2.cognitiveservices.azure.com"
 os.environ["AZURE_API_VERSION"] = "2024-12-01-preview"
 
-"""llm = LLM(
+llm = LLM(
     model="azure/gpt-4.1",  # This should match your deployment name
     api_key="4Yyy8h5DwLynTdUgvzaDR9MEosUoonomgDFyt0bsXbApsiugWyPtJQQJ99BGACHYHv6XJ3w3AAAAACOG31ig",
     base_url="https://youss-mcpff1c2-eastus2.cognitiveservices.azure.com",
     api_version="2024-12-01-preview"
-)"""
+)
     
 def ensure_dict_guardrail(result) -> Tuple[bool, Any]:
     """Guardrail to ensure output is a dict, parsing from JSON string if needed."""
@@ -193,4 +193,5 @@ class Resume():
             tasks=self.tasks,
             process=Process.sequential,
             verbose=True,
+            memory=False,  # Disable memory for now
         )
