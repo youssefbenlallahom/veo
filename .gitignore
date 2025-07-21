@@ -1,0 +1,120 @@
+# Environment variables
+.env
+.env.local
+.env.production
+.env.staging
+.env.test
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+
+# OS specific
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+log/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+db/*.sqlite3
+chroma.sqlite3
+
+# Output files
+output/
+temp/
+tmp/
+cache/
+
+# Document files (if they contain sensitive data)
+*.pdf
+*.docx
+*.doc
+
+# Extracted text files (from CV processing) - COMMENTED OUT to allow existing files
+extracted_*.txt
+
+# Analysis reports (if they contain sensitive data) - COMMENTED OUT to allow existing files
+report_*.md
+report.json
+
+# Token usage files - COMMENTED OUT to allow existing files
+token_usage_*.txt
+
+# Analysis configuration files (if they contain sensitive data)
+barem_*.json
+document_analysis_task.json
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Streamlit
+.streamlit/
+
+# CrewAI specific
+.crewai/
+
+# UV lock file (can be included but often ignored)
+# uv.lock
+
+# Backup files
+*.bak
+*.backup

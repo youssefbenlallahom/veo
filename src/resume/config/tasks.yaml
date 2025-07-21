@@ -1,0 +1,78 @@
+document_analysis_task:
+  description: >
+    Analyze the provided resume using PDF tool. Extract and summarize all critical information, including work experience, skills, education, and key achievements.
+    Present the output as a clean, well-structured text summary. Do not use JSON.
+  agent: document_analyzer
+  expected_output: |
+    A clean, well-formatted text summary of the resume's content. Example:
+
+    **Personal Details**
+    - Name: [Full Name]
+    - Email: [Email Address]
+    - Phone: [Phone Number]
+    - LinkedIn: [LinkedIn Profile URL]
+    - Location: [City, Country]
+
+    **Summary**
+    [Candidate's professional summary or objective]
+
+    **Work Experience**
+    - **[Job Title]** at [Company Name] | [Location] | [Start Date] - [End Date]
+      - [Responsibility or achievement 1]
+      - [Responsibility or achievement 2]
+    - **[Previous Job Title]** at [Previous Company Name] | [Location] | [Start Date] - [End Date]
+      - [Responsibility or achievement 1]
+
+    **Education**
+    - **[Degree]** in [Field of Study] - [University Name], [Location] ([Graduation Year])
+      - Relevant Coursework: [List of relevant courses]
+
+    **Skills**
+    - Technical: [List of technical skills, e.g., Python, SQL, SAP]
+    - Languages: [List of languages and proficiency, e.g., English (C1), French (B2)]
+    - Certifications: [List of relevant certifications]
+
+    **Projects**
+    - **[Project Name]** ([Year])
+      - [Brief project description and technologies used]
+
+candidate_matching_task:
+  description: >
+    Apply the scoring matrix with ABSOLUTE consistency. Follow the evidence classification rules exactly.
+    Use the mandatory scoring algorithm without any deviation.
+    
+    CRITICAL: For each skill in {barem}, you MUST:
+    1. Quote the exact evidence from resume
+    2. State which classification it falls under (and why)
+    3. Apply the corresponding score from the matrix
+    4. Show the calculation: (score/5) * weight
+    
+  agent: matching_specialist
+  expected_output: |
+    **DETERMINISTIC SCORING ANALYSIS**
+    
+    **Final Score:** [X.X]/10
+    
+    **DETAILED BREAKDOWN:**
+    
+    ### [Skill Name] (Weight: [X])
+    **Evidence:** "[Exact quote from resume]"
+    **Classification:** [Matrix category] - [Brief justification]
+    **Score:** [X]/5
+    **Calculation:** ([X]/5) * [weight] = [result]
+    
+    ### [Next Skill]...
+    
+    **TOTAL CALCULATION:**
+    Sum of weighted scores: [sum]
+    Final normalized score: [sum]/10 = [final score]
+
+
+report_generation_task:
+  description: >
+    Generate a comprehensive and polished hiring report in markdown format using the analysis from the previous step.
+    The report must be well-structured and easy to read.
+  agent: report_generator
+  expected_output: |
+    A full, professional markdown report that includes the candidate's name, the job title, the final score, the detailed scoring breakdown, and the strengths/gaps analysis.
+    The report should be ready for a hiring manager to review.
