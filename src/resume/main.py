@@ -1,4 +1,7 @@
-#!/usr/bin/env python
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
 import sys
 import warnings
 import os
@@ -12,10 +15,7 @@ from dotenv import load_dotenv
 from crew import Resume
 import sys
 import os
-import sys
-import pysqlite3
 
-sys.modules["sqlite3"] = pysqlite3
     
 load_dotenv()
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
