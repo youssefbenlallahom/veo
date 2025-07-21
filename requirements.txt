@@ -4,5 +4,4 @@ python-dotenv
 streamlit
 PyPDF2
 pysqlite3-binary
-sqlite3
 chromadb
