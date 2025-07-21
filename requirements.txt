@@ -2,13 +2,4 @@ crewai
 crewai-tools
 python-dotenv
 streamlit
-<<<<<<< HEAD
 PyPDF2
-=======
-pypdf
-google-genai
-requests
-fastapi
-uvicorn[standard]
-pydantic
->>>>>>> 688001a362fc0bd995193f1e6627b51fc0036cc3
