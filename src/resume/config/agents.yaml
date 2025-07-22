@@ -27,12 +27,6 @@ matching_specialist:
     - 3/5: Language listed without level
     - 0/5: Not mentioned
     
-    **SOFT SKILLS MATRIX:**
-    - 5/5: Quantified achievement demonstrating the skill ("Led team of X", "Managed Y projects")
-    - 4/5: Described within job context ("Collaborated with team", "Analyzed data")
-    - 3/5: Listed in skills section OR mentioned in description
-    - 0/5: Not mentioned
-    
     **SCORING ALGORITHM (MANDATORY SEQUENCE):**
     1. For each skill in {barem}, search resume for EXACT matches first
     2. If no exact match, search for related terms from predefined synonym list
@@ -71,20 +65,6 @@ matching_specialist:
     - "Market Research" = ["market research", "market analysis", "competitive analysis"]
     - "Sales" = ["sales", "business development", "lead generation", "client acquisition"]
     
-    **Soft Skills:**
-    - "Leadership" = ["leadership", "team lead", "management", "supervision", "mentoring"]
-    - "Communication Skills" = ["communication", "presentation", "public speaking", "interpersonal"]
-    - "Team Collaboration" = ["teamwork", "team collaboration", "collaborative", "cooperation", "cross-functional"]
-    - "Problem Solving" = ["problem solving", "troubleshooting", "critical thinking", "solution-oriented"]
-    - "Analytical Thinking" = ["analytical", "analysis", "analyze", "analytical thinking", "data-driven"]
-    - "Time Management" = ["time management", "deadline management", "prioritization", "multitasking"]
-    - "Adaptability" = ["adaptability", "flexibility", "change management", "learning agility"]
-    - "Attention to Detail" = ["attention to detail", "detail-oriented", "accuracy", "precision", "meticulous"]
-    - "Customer Service" = ["customer service", "client relations", "customer support", "customer experience"]
-    - "Creativity" = ["creativity", "creative thinking", "innovation", "design thinking"]
-    - "Stress Management" = ["stress management", "pressure handling", "resilience", "composure"]
-    - "Planning and Organization" = ["planning", "organization", "organizational skills", "strategic planning"]
-    
     **Language Skills:**
     - "English [Level] Level" = ["English", "English language", "English proficiency"]
     - "French [Level] Level" = ["French", "French language", "French proficiency"]
@@ -112,8 +92,12 @@ matching_specialist:
 report_generator:
   role: Professional Hiring Report Writer
   goal: |
-    Synthesize the analysis from the matching_specialist into a polished, professional, and easy-to-read markdown report.
-    The report must clearly present the final score, the detailed scoring breakdown, and the identified strengths and gaps.
-    The tone should be professional and objective.
+    Synthesize the analysis from the matching_specialist into a comprehensive, professional, and actionable markdown report.
+    The report must include:
+    1. Clear final score and detailed scoring breakdown
+    2. In-depth strengths analysis with specific examples and impact assessment
+    3. Detailed gaps analysis with severity levels and recommendations
+    4. Comprehensive next steps section including targeted interview questions, skill assessment recommendations, and decision framework
+    The tone should be professional, objective, and actionable for hiring managers.
   backstory: |
-    You are an expert communicator specializing in creating executive-level hiring reports. You excel at taking complex scoring data and presenting it in a clear, concise, and visually appealing format. Your reports help hiring managers make informed decisions quickly.
+    You are an expert talent acquisition consultant specializing in creating executive-level hiring reports. You excel at transforming complex scoring data into clear, strategic insights that guide hiring decisions. Your reports not only assess candidates but also provide actionable next steps, interview strategies, and risk mitigation approaches. You understand that hiring managers need both analytical depth and practical guidance to make informed decisions quickly and confidently.

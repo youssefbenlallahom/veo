@@ -1,6 +1,8 @@
-__import__('pysqlite3')
-import sys
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+"""import sys
+import pysqlite3
+
+# Monkey-patch sqlite3 before ANYTHING imports it
+sys.modules["sqlite3"] = pysqlite3"""
 
 import sys
 import warnings
@@ -467,87 +469,93 @@ def display_individual_reports(results_data):
 
 
 def get_key_skills_from_gemini(job_title, job_description, api_key):
-    """Extract key skills from job description using Gemini."""
+    """Extract key skills from job description using Gemini, grouped by Hard and Soft Skills."""
     from google import genai
     import json, re
-    client = genai.Client(api_key=api_key)
-    prompt = f"""
-You are a deterministic skill extraction system. Follow these rules EXACTLY to ensure identical results every time.
+    
+    try:
+        client = genai.Client(api_key=api_key)
+        prompt = f"""
+You are a flexible skill extraction system. Analyze the job description and extract ALL relevant HARD SKILLS only - technical, measurable competencies that can be objectively evaluated.
 
 Job Title: {job_title}
 Job Description: {job_description}
 
-MANDATORY STANDARDIZED SKILL DICTIONARY:
-Use ONLY these exact phrases when extracting skills. Do not deviate from this terminology:
+STANDARDIZED HARD SKILLS DICTIONARY:
+Use ONLY these exact phrases when extracting skills. Focus on technical and measurable competencies:
 
 HARD SKILLS:
-- Education: "Bachelor's Degree" or "Master's Degree" 
-- Languages: "French B2 Level", "English B2 Level", "Spanish B2 Level", etc.
-- Software: "Microsoft Office Suite", "SAP", "Python Programming", "SQL", "Tableau"
-- Technical: "Data Analysis", "Financial Analysis", "Account Reconciliation", "Project Management"
-- Industry-specific: "Supplier Account Management", "Payment Processing", "Banking Operations"
+- Education: "Bachelor's or Master's Degree", "PhD", "Professional Certification", "Technical Diploma", "Industry Certification"
+- Languages: "French B2 Level", "English B2 Level", "Spanish B2 Level", "German B2 Level", "Arabic B2 Level", "Italian B2 Level", "Portuguese B2 Level", "Chinese B2 Level", "Mandarin B2 Level", "Japanese B2 Level"
+- Programming & Development: "Python Programming", "Java Programming", "JavaScript", "C++ Programming", "C# Programming", "PHP Programming", "Ruby Programming", "Swift Programming", "Kotlin Programming", "Go Programming", "Rust Programming", "HTML/CSS", "React", "Angular", "Vue.js", "Node.js", "Django", "Flask", "Spring Framework"
+- Software & Tools: "Microsoft Office Suite", "SAP", "SQL", "Tableau", "Power BI", "Excel Advanced", "AutoCAD", "SolidWorks", "Adobe Creative Suite", "Salesforce", "HubSpot", "QuickBooks", "Oracle", "MATLAB", "R Programming", "WordPress", "Photoshop", "Illustrator", "InDesign", "Figma", "Sketch", "Jira", "Confluence", "Git", "Docker", "Kubernetes"
+- Technical Skills: "Data Analysis", "Business Analysis", "Financial Analysis", "Statistical Analysis", "Project Management", "Risk Management", "Quality Assurance", "Database Management", "Network Administration", "System Administration", "Cloud Computing", "Cybersecurity", "Digital Marketing", "SEO/SEM", "Social Media Marketing", "Content Marketing", "Email Marketing", "Market Research", "Financial Modeling", "Budget Management", "Inventory Management", "Supply Chain Management", "Process Improvement", "Lean Six Sigma", "Agile Methodology", "Scrum", "DevOps", "Machine Learning", "Artificial Intelligence", "Web Development", "Mobile App Development", "UI/UX Design", "Graphic Design", "Video Editing", "3D Modeling", "CAD Design"
+- Industry Skills: "Customer Relationship Management", "Sales Management", "Marketing Strategy", "Human Resources Management", "Recruiting", "Training and Development", "Performance Management", "Compliance Management", "Audit", "Tax Preparation", "Investment Analysis", "Insurance", "Real Estate", "Healthcare Administration", "Legal Research", "Contract Management", "Procurement", "Logistics", "Manufacturing", "Quality Control", "Research and Development", "Clinical Research", "Regulatory Affairs", "Public Relations", "Event Management", "Hospitality Management", "Retail Management", "E-commerce", "Import/Export", "International Trade", "Account Management", "Payment Processing", "Banking Operations"
 
-SOFT SKILLS:
-- Personal: "Detail-Oriented", "Analytical Thinking", "Problem Solving"
-- Management: "Time Management", "Stress Management", "Planning and Organization"
-- Interpersonal: "Team Collaboration", "Communication Skills", "Leadership"
+EXTRACTION RULES:
+1. Read the entire job description thoroughly, including requirements, responsibilities, qualifications, and preferred skills
+2. Extract ONLY hard skills - technical, measurable competencies that can be objectively evaluated
+3. IGNORE soft skills like communication, leadership, teamwork, problem-solving, adaptability, creativity, etc.
+4. Include skills mentioned in different sections (requirements, responsibilities, qualifications, nice-to-have, etc.)
+5. Match each identified skill to the closest term in the standardized dictionary
+6. List skills alphabetically
+7. Extract ALL relevant hard skills - do not limit the number
 
-EXTRACTION ALGORITHM:
-1. Read job description once, completely
-2. Extract skills in this EXACT order:
-   a) Education requirements (if mentioned)
-   b) Language requirements (alphabetical by language)
-   c) Software/technical tools (alphabetical)
-   d) Domain-specific hard skills (alphabetical)
-   e) Soft skills (alphabetical within category)
+ENHANCED MATCHING RULES:
+- "Bachelor's OR Master's/Bachelor's and Master's/Bachelor's to Master's/University degree/College degree" → "Bachelor's or Master's Degree"
+- "Microsoft Office/MS Office/Office Suite/Word Excel PowerPoint" → "Microsoft Office Suite"
+- "Project management/project coordination/project planning" → "Project Management"
+- "Data analysis/data analytics/data science/analytics" → "Data Analysis"
+- "Financial analysis/financial modeling/financial planning" → "Financial Analysis"
+- "Quality assurance/quality control/QA/QC" → "Quality Assurance"
+- "Business analysis/business intelligence/BA" → "Business Analysis"
+- "Customer service/customer support/client management" → "Customer Relationship Management"
+- "Account management/client management/relationship management" → "Account Management"
+- "Programming/coding/software development" → Match to specific language if mentioned, otherwise use "Programming" concept
+- "Database/databases/DB management" → "Database Management"
+- "Cloud/AWS/Azure/Google Cloud" → "Cloud Computing"
+- "Security/cybersecurity/information security" → "Cybersecurity"
 
-3. For each potential skill, check if it appears in the standardized dictionary above
-4. If exact match exists, use the dictionary term
-5. If no exact match, use the closest dictionary equivalent
-6. Extract exactly 10 skills total
-
-STRICT MATCHING RULES:
-- "Bachelor's/Master's" → "Bachelor's Degree"
-- "Microsoft Office" → "Microsoft Office Suite"
-- "Analytical mindset/thinking" → "Analytical Thinking"
-- "Planning/organizational" → "Planning and Organization"
-- "Team/teamwork/collaboration" → "Team Collaboration"
-- "Time and stress management" → "Time Management"
-- "Detail-oriented/meticulous" → "Detail-Oriented"
-- "Account reconciliation/reconciliations" → "Account Reconciliation"
-- "Supplier account analysis/management" → "Supplier Account Management"
-
-FORBIDDEN VARIATIONS:
-- Never use synonyms or alternative phrasings
-- Never combine skills (e.g., "Time and Stress Management")
-- Never change word order
-- Never add descriptive words
-
-OUTPUT FORMAT (exactly 10 skills, no more, no less):
-[
-    "Skill 1",
-    "Skill 2",
-    "Skill 3",
-    "Skill 4",
-    "Skill 5",
-    "Skill 6",
-    "Skill 7",
-    "Skill 8",
-    "Skill 9",
-    "Skill 10"
-]
+OUTPUT FORMAT (JSON with hard skills only):
+{{
+    "hard_skills": [
+        "All identified hard skills listed alphabetically"
+    ]
+}}
 """
-    response = client.models.generate_content(
-        model="gemini-2.0-flash",
-        contents=prompt
-    )
-    # Extract JSON from response
-    match = re.search(r'\[.*\]', response.text, re.DOTALL)
-    if match:
-        skills_json = match.group(0)
-        return json.loads(skills_json)
-    else:
-        raise ValueError("Failed to extract skills JSON from Gemini response")
+        
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=prompt
+        )
+        
+        # Extract JSON from response
+        match = re.search(r'\{.*\}', response.text, re.DOTALL)
+        if match:
+            skills_json = match.group(0)
+            skills_data = json.loads(skills_json)
+            
+            # Ensure we have the expected structure
+            hard_skills = skills_data.get('hard_skills', [])
+            
+            # Remove duplicates and ensure we have lists
+            if not isinstance(hard_skills, list):
+                hard_skills = []
+            
+            # Remove any empty strings or None values
+            hard_skills = [skill for skill in hard_skills if skill and skill.strip()]
+            
+            # Return the structured data (only hard skills)
+            return {
+                'hard_skills': hard_skills
+            }
+        else:
+            raise ValueError("Failed to extract skills JSON from Gemini response")
+            
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Failed to parse skills JSON: {str(e)}")
+    except Exception as e:
+        raise ValueError(f"Error calling Gemini API: {str(e)}")
 
 
 def create_custom_barem(skills_weights):
@@ -599,87 +607,212 @@ def run():
         if st.button("Extract Key Skills from Job Description", disabled=not (job_title and job_description)):
             try:
                 with st.spinner("Extracting key skills from job description..."):
-                    extracted_skills = get_key_skills_from_gemini(job_title, job_description, GEMINI_API_KEY)
-                    st.session_state.extracted_skills = extracted_skills
+                    skills_data = get_key_skills_from_gemini(job_title, job_description, GEMINI_API_KEY)
+                    
+                    # Extract hard skills only
+                    all_skills = skills_data.get("hard_skills", [])
+                    
+                    # Check if any skills were extracted
+                    if not all_skills:
+                        st.error("No technical skills could be extracted from the job description. Please check the job description and try again.")
+                        return
+                    
+                    st.session_state.extracted_skills = all_skills
+                    st.session_state.skills_categories = skills_data  # Store the categorized structure
                     st.session_state.job_title = job_title
                     st.session_state.job_description = job_description
+                    
                     # Initialize weights with equal distribution
-                    equal_weight = round(100 / len(extracted_skills))
-                    st.session_state.skills_weights = {skill: equal_weight for skill in extracted_skills}
+                    equal_weight = round(100 / len(all_skills))
+                    st.session_state.skills_weights = {skill: equal_weight for skill in all_skills}
+                    
                     # Adjust for rounding to ensure total is 100
                     total = sum(st.session_state.skills_weights.values())
-                    if total != 100:
+                    if total != 100 and all_skills:
                         first_skill = list(st.session_state.skills_weights.keys())[0]
                         st.session_state.skills_weights[first_skill] += (100 - total)
+                    
+                    st.success(f"Successfully extracted {len(all_skills)} technical skills!")
                     st.session_state.workflow_step = 'weighting'
                     st.rerun()
             except Exception as e:
                 st.error(f"Error extracting skills: {str(e)}")
+                st.write("Please check your job description and try again. Make sure it contains clear skill requirements.")
 
     # Step 2: Customize skill weights
     elif st.session_state.workflow_step == 'weighting':
-        st.subheader("Customize Skill Weights")
-        st.write("Adjust the importance of each skill (total must equal 100%):")
+        st.subheader("⚖️ Technical Skills Weighting")
+        st.markdown("**Adjust the importance of each technical skill. Total must equal 100%.**")
         
-        # Create columns for better layout
+        # Clean, minimal CSS
+        st.markdown("""
+        <style>
+        .skill-item {
+            background: #f8f9fa;
+            padding: 0.8rem;
+            border-left: 4px solid #007bff;
+            margin: 0.3rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .skills-counter {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            margin: 0.5rem 0;
+            font-weight: 500;
+            border: 1px solid #bbdefb;
+        }
+        .remove-button {
+            background: none;
+            border: 1px solid #dc3545;
+            color: #dc3545;
+            border-radius: 4px;
+            padding: 0.2rem 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .remove-button:hover {
+            background: #dc3545;
+            color: white;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+        
+        # Initialize removed skills tracker
+        if 'removed_skills' not in st.session_state:
+            st.session_state.removed_skills = set()
+        
+        # Create layout
         col1, col2 = st.columns([3, 1])
         
         with col1:
-            # Create sliders for each skill
+            # Get current hard skills excluding removed ones
+            skills_categories = st.session_state.get('skills_categories', {})
+            active_skills = [skill for skill in skills_categories.get("hard_skills", []) 
+                           if skill not in st.session_state.removed_skills]
+            
             new_weights = {}
-            for skill in st.session_state.extracted_skills:
-                new_weights[skill] = st.slider(
-                    f"{skill}",
-                    min_value=0,
-                    max_value=100,
-                    value=st.session_state.skills_weights.get(skill, 0),
-                    step=1,
-                    key=f"weight_{skill}"
-                )
+            
+            # Display skills counter
+            if active_skills:
+                st.markdown(f'<div class="skills-counter">🎯 {len(active_skills)} Technical Skills</div>', unsafe_allow_html=True)
+                st.markdown("")
+                
+                for skill in active_skills:
+                    col_slider, col_remove = st.columns([5, 1])
+                    
+                    with col_slider:
+                        new_weights[skill] = st.slider(
+                            skill,
+                            min_value=0,
+                            max_value=100,
+                            value=st.session_state.skills_weights.get(skill, 0),
+                            step=1,
+                            key=f"weight_{skill}",
+                            help=f"Weight for {skill}"
+                        )
+                    
+                    with col_remove:
+                        if st.button("×", key=f"remove_{skill}", help=f"Remove {skill}"):
+                            st.session_state.removed_skills.add(skill)
+                            if skill in st.session_state.skills_weights:
+                                del st.session_state.skills_weights[skill]
+                            st.rerun()
+            else:
+                st.info("No technical skills available. Please go back and extract skills.")
         
+        # Right sidebar - clean and minimal
         with col2:
-            # Display current total
+            total_active_skills = len(active_skills)
+            total_removed_skills = len(st.session_state.removed_skills)
+            
+            st.markdown("### Summary")
+            if total_removed_skills > 0:
+                st.metric("Active Skills", total_active_skills, delta=f"-{total_removed_skills}")
+            else:
+                st.metric("Active Skills", total_active_skills)
+            
+            # Current total weight
             current_total = sum(new_weights.values())
             if current_total == 100:
-                st.success(f"Total: {current_total}%")
+                st.success(f"✅ {current_total}%")
+            elif current_total < 100:
+                st.warning(f"⚠️ {current_total}%")
             else:
-                st.error(f"Total: {current_total}%")
+                st.error(f"❌ {current_total}%")
             
-            # Reset to equal weights button
-            if st.button("Reset to Equal Weights"):
-                equal_weight = round(100 / len(st.session_state.extracted_skills))
-                for skill in st.session_state.extracted_skills:
-                    st.session_state[f"weight_{skill}"] = equal_weight
-                st.rerun()
+            # Simple progress bar
+            progress_percentage = min(current_total / 100, 1.0)
+            st.progress(progress_percentage)
+            
+            st.markdown("### Controls")
+            
+            # Equal weights
+            if st.button("Equal Weights", help="Distribute equally"):
+                if total_active_skills > 0:
+                    equal_weight = round(100 / total_active_skills)
+                    for skill in new_weights.keys():
+                        st.session_state[f"weight_{skill}"] = equal_weight
+                    # Adjust first skill for rounding
+                    if new_weights:
+                        first_skill = list(new_weights.keys())[0]
+                        adjustment = 100 - (equal_weight * total_active_skills)
+                        st.session_state[f"weight_{first_skill}"] = equal_weight + adjustment
+                    st.rerun()
+            
+            # Auto-normalize
+            if st.button("Normalize", disabled=current_total == 0, help="Auto-adjust to 100%"):
+                if current_total > 0:
+                    normalized_weights = {skill: round((weight / current_total) * 100) for skill, weight in new_weights.items()}
+                    total_normalized = sum(normalized_weights.values())
+                    if total_normalized != 100 and normalized_weights:
+                        first_skill = list(normalized_weights.keys())[0]
+                        normalized_weights[first_skill] += (100 - total_normalized)
+                    
+                    for skill, weight in normalized_weights.items():
+                        st.session_state[f"weight_{skill}"] = weight
+                    st.rerun()
+            
+            # Restore removed skills
+            if st.session_state.removed_skills:
+                st.markdown("### Restore")
+                removed_list = list(st.session_state.removed_skills)
+                skill_to_restore = st.selectbox("", ["Select skill..."] + removed_list, key="restore_selector")
+                
+                if st.button("Restore", disabled=skill_to_restore == "Select skill..."):
+                    if skill_to_restore != "Select skill...":
+                        st.session_state.removed_skills.discard(skill_to_restore)
+                        # Add back with default weight
+                        if total_active_skills > 0:
+                            default_weight = max(1, round(100 / (total_active_skills + 1)))
+                        else:
+                            default_weight = 100
+                        st.session_state.skills_weights[skill_to_restore] = default_weight
+                        st.rerun()
         
         # Update session state
         st.session_state.skills_weights = new_weights
         
-        # Navigation buttons
+        # Navigation
+        st.markdown("---")
         col1, col2, col3 = st.columns(3)
         with col1:
-            if st.button("← Back to Job Input"):
+            if st.button("← Back"):
                 st.session_state.workflow_step = 'input'
                 st.rerun()
         
         with col2:
-            # Auto-normalize button
-            if st.button("Auto-Normalize to 100%") and current_total > 0:
-                normalized_weights = {skill: round((weight / current_total) * 100) for skill, weight in new_weights.items()}
-                # Adjust for rounding errors
-                total_normalized = sum(normalized_weights.values())
-                if total_normalized != 100:
-                    first_skill = list(normalized_weights.keys())[0]
-                    normalized_weights[first_skill] += (100 - total_normalized)
-                
-                # Update sliders
-                for skill, weight in normalized_weights.items():
-                    st.session_state[f"weight_{skill}"] = weight
-                st.session_state.skills_weights = normalized_weights
-                st.rerun()
+            if current_total == 100:
+                st.success("Ready!")
+            else:
+                st.warning("Adjust to 100%")
         
         with col3:
-            if st.button("Proceed to Resume Upload →", disabled=current_total != 100):
+            proceed_disabled = current_total != 100 or total_active_skills == 0
+            if st.button("Continue →", disabled=proceed_disabled):
+                st.session_state.extracted_skills = list(new_weights.keys())
                 st.session_state.workflow_step = 'upload'
                 st.rerun()
 
@@ -688,11 +821,44 @@ def run():
         st.subheader("Upload Resumes for Analysis")
         
         # Display current configuration
-        with st.expander("Current Configuration", expanded=False):
-            st.write(f"**Job Title:** {st.session_state.job_title}")
-            st.write(f"**Skills & Weights:**")
-            for skill, weight in st.session_state.skills_weights.items():
-                st.write(f"• {skill}: {weight}%")
+        with st.expander("📋 Configuration Summary", expanded=False):
+            st.write(f"**🎯 Job Title:** {st.session_state.job_title}")
+            
+            # Get removed skills for display
+            removed_skills = st.session_state.get('removed_skills', set())
+            active_skills_count = len([s for s in st.session_state.extracted_skills if s not in removed_skills])
+            
+            st.write(f"**📊 Active Technical Skills:** {active_skills_count}")
+            if removed_skills:
+                st.write(f"**🗑️ Excluded Skills:** {len(removed_skills)}")
+            
+            st.write(f"**⚖️ Skill Weights:**")
+            
+            skills_categories = st.session_state.get('skills_categories', {})
+            
+            # Display Hard Skills (excluding removed ones)
+            active_hard_skills = [skill for skill in skills_categories.get("hard_skills", []) 
+                                if skill not in removed_skills]
+            if active_hard_skills:
+                for skill in active_hard_skills:
+                    weight = st.session_state.skills_weights.get(skill, 0)
+                    st.write(f"• {skill}: {weight}%")
+            
+            # Show removed skills if any
+            if removed_skills:
+                st.write("**🗑️ Excluded from Analysis:**")
+                for skill in removed_skills:
+                    st.write(f"• ~~{skill}~~")
+            
+            # Total weight validation
+            total_weight = sum(st.session_state.skills_weights.get(skill, 0) 
+                             for skill in st.session_state.skills_weights.keys() 
+                             if skill not in removed_skills)
+            
+            if total_weight == 100:
+                st.success(f"✅ Total: {total_weight}%")
+            else:
+                st.error(f"❌ Total: {total_weight}%")
         
         # File upload
         resume_pdfs = st.file_uploader("Upload your resume PDFs", type=["pdf"], accept_multiple_files=True)

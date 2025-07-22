@@ -70,9 +70,89 @@ candidate_matching_task:
 
 report_generation_task:
   description: >
-    Generate a comprehensive and polished hiring report in markdown format using the analysis from the previous step.
-    The report must be well-structured and easy to read.
+    Generate a comprehensive and actionable hiring report in markdown format using the analysis from the previous step.
+    The report must include detailed strengths analysis, comprehensive gaps assessment, and strategic next steps for the hiring process.
+    Focus on providing actionable insights and specific interview guidance.
   agent: report_generator
   expected_output: |
-    A full, professional markdown report that includes the candidate's name, the job title, the final score, the detailed scoring breakdown, and the strengths/gaps analysis.
-    The report should be ready for a hiring manager to review.
+    # Candidate Evaluation Report
+    
+    **Candidate:** [Candidate Name]
+    **Position:** [Job Title]
+    **Evaluation Date:** [Current Date]
+    **Overall Score:** [X.X]/10
+    
+    ## Executive Summary
+    [2-3 sentence summary of the candidate's overall fit, highlighting key strengths and main concerns]
+    
+    ## Detailed Scoring Breakdown
+    [Include the detailed scoring analysis from matching_specialist]
+    
+    ## ✅ Strengths Analysis
+    
+    ### Strong Technical Competencies
+    - **[Skill Name]** ([Score]/5): [Detailed explanation of evidence found, specific examples from resume, and why this is valuable for the role]
+    - **[Skill Name]** ([Score]/5): [Detailed explanation with context of how this skill was demonstrated]
+    
+    ### Notable Experience Highlights
+    - **[Experience/Achievement]**: [Detailed explanation of why this experience is relevant and valuable]
+    - **[Experience/Achievement]**: [Context and potential impact for the target role]
+    
+    ### Transferable Skills & Potential
+    - [List skills that may not be exact matches but show strong potential for growth]
+    - [Highlight learning agility, adaptability, or foundational knowledge that could be built upon]
+    
+    ## ❌ Critical Gaps Analysis
+    
+    ### High-Priority Missing Skills
+    - **[Skill Name]** (Weight: [X]%): 
+      - **Impact:** [High/Medium/Low] - [Explanation of how this gap affects job performance]
+      - **Mitigation:** [Training potential, timeline, or alternative solutions]
+      - **Risk Level:** [Assessment of risk if candidate is hired without this skill]
+    
+    ### Secondary Skill Gaps
+    - **[Skill Name]** (Weight: [X]%): [Shorter assessment of gap and potential solutions]
+    
+    ### Experience Gaps
+    - [Industry-specific experience missing]
+    - [Role-level experience considerations]
+    - [Team size, project complexity, or domain expertise gaps]
+    
+    ## 📋 Next Steps & Interview Strategy
+    
+    ### Recommended Interview Approach
+    **Interview Type:** [Phone Screen/Technical Interview/Panel Interview/Behavioral Interview]
+    **Duration:** [Recommended time allocation]
+    **Focus Areas:** [Primary areas to explore based on gaps and strengths]
+    
+    ### Technical Assessment Recommendations
+    - **[Skill to Assess]**: [Specific exercise or question type]
+    - **[Skill to Assess]**: [Practical test or scenario-based assessment]
+    - **[Skill to Assess]**: [Portfolio review or code sample analysis]
+    
+    ### Targeted Interview Questions
+    
+    #### Technical Competency Questions
+    - **[High-Priority Skill]**: 
+      - "Can you walk me through a specific project where you used [skill]? What were the challenges and how did you overcome them?"
+      - "How would you approach [specific scenario related to the skill]?"
+    
+    - **[Gap Area to Explore]**:
+      - "How familiar are you with [missing skill]? Have you had any exposure to it?"
+      - "How do you typically approach learning new [technical skill type]?"
+    
+    #### Experience & Situational Questions
+    - "Describe a time when you had to [relevant scenario based on job requirements]"
+    - "How do you handle [specific challenge relevant to the role]?"
+    - "Tell me about your experience with [industry/domain specific context]"
+    
+    #### Learning & Growth Questions
+    - "How do you stay updated with [relevant technology/industry trends]?"
+    - "Describe a time when you had to quickly learn a new skill for a project"
+    - "What areas are you most interested in developing professionally?"
+    
+    ### Reference Check Focus Areas
+    - Verify technical competencies in [specific high-weight skills]
+    - Assess performance in [areas where gaps were identified]
+    - Understand learning agility and adaptation to new technologies/processes
+    
