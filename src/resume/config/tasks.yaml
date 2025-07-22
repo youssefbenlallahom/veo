@@ -71,8 +71,9 @@ candidate_matching_task:
 report_generation_task:
   description: >
     Generate a comprehensive and actionable hiring report in markdown format using the analysis from the previous step.
-    The report must include detailed strengths analysis, comprehensive gaps assessment, and strategic next steps for the hiring process.
-    Focus on providing actionable insights and specific interview guidance.
+    For scores below 5.0/10, provide a rejection recommendation with detailed explanation instead of interview suggestions.
+    For scores 5.0/10 and above, include detailed strengths analysis, comprehensive gaps assessment, and strategic next steps for the hiring process.
+    Focus on providing actionable insights and appropriate guidance based on the candidate's score.
   agent: report_generator
   expected_output: |
     # Candidate Evaluation Report
@@ -117,6 +118,104 @@ report_generation_task:
     - [Industry-specific experience missing]
     - [Role-level experience considerations]
     - [Team size, project complexity, or domain expertise gaps]
+    
+    ## 🚨 Final Recommendation
+    
+    **IF SCORE < 5.0/10:**
+    
+    ### ❌ RECOMMENDATION: DO NOT PROCEED
+    
+    **Decision:** Reject candidate - insufficient skill alignment for role requirements
+    
+    **Key Reasons for Rejection:**
+    - [List the most critical gaps that led to low score]
+    - [Explain why these gaps cannot be reasonably overcome]
+    - [Note any fundamental misalignments with role requirements]
+    
+    **Skill Gap Analysis:**
+    - **Missing Critical Skills:** [X]% of required competencies not demonstrated
+    - **High-Priority Gaps:** [List skills with high weights that scored 0-2/5]
+    - **Training Investment Required:** [Estimate] - exceeds reasonable onboarding timeframe
+    
+    **Alternative Recommendations:**
+    - Consider candidate for [lower-level position] if available
+    - Re-evaluate in [timeframe] after candidate gains experience in [specific areas]
+    - Recommend candidate focus on developing [top 3 priority skills] before reapplying
+    
+    **Feedback for Candidate (if provided):**
+    - "While we appreciate your interest, we're looking for someone with stronger experience in [key areas]"
+    - "We encourage you to gain more experience in [specific skills] and consider reapplying in the future"
+    - "Consider pursuing training/certification in [specific areas] to strengthen your profile"
+    
+    ---
+    
+    **IF SCORE ≥ 5.0/10:**
+    
+    ## 📋 Next Steps & Interview Strategy
+    
+    ### Recommended Interview Approach
+    **Interview Type:** [Phone Screen/Technical Interview/Panel Interview/Behavioral Interview]
+    **Duration:** [Recommended time allocation]
+    **Focus Areas:** [Primary areas to explore based on gaps and strengths]
+    
+    ### Technical Assessment Recommendations
+    - **[Skill to Assess]**: [Specific exercise or question type]
+    - **[Skill to Assess]**: [Practical test or scenario-based assessment]
+    - **[Skill to Assess]**: [Portfolio review or code sample analysis]
+    
+    ### Targeted Interview Questions
+    
+    #### Technical Competency Questions
+    - **[High-Priority Skill]**: 
+      - "Can you walk me through a specific project where you used [skill]? What were the challenges and how did you overcome them?"
+      - "How would you approach [specific scenario related to the skill]?"
+    
+    - **[Gap Area to Explore]**:
+      - "How familiar are you with [missing skill]? Have you had any exposure to it?"
+      - "How do you typically approach learning new [technical skill type]?"
+    
+    #### Experience & Situational Questions
+    - "Describe a time when you had to [relevant scenario based on job requirements]"
+    - "How do you handle [specific challenge relevant to the role]?"
+    - "Tell me about your experience with [industry/domain specific context]"
+    
+    #### Learning & Growth Questions
+    - "How do you stay updated with [relevant technology/industry trends]?"
+    - "Describe a time when you had to quickly learn a new skill for a project"
+    - "What areas are you most interested in developing professionally?"
+    
+    ### Reference Check Focus Areas
+    - Verify technical competencies in [specific high-weight skills]
+    - Assess performance in [areas where gaps were identified]
+    - Understand learning agility and adaptation to new technologies/processes
+    
+    ### Decision Framework
+    
+    #### Strong Hire Indicators
+    - Demonstrates strong foundational skills with potential for growth
+    - Shows learning agility and ability to acquire missing skills quickly
+    - Cultural fit and motivation align with role requirements
+    
+    #### Proceed with Caution If
+    - Multiple high-priority skills are missing (gap > 40% of total weight)
+    - Limited evidence of learning new skills independently
+    - Experience level significantly below role requirements
+    
+    #### Do Not Proceed If
+    - Critical must-have skills are completely absent
+    - No evidence of ability to work at required complexity level
+    - Fundamental misalignment with role requirements
+    
+    ### Timeline & Next Actions
+    1. **Immediate (24-48 hours)**: [Specific next steps based on score]
+    2. **Short-term (1 week)**: [Interview scheduling, assessment preparation]
+    3. **Decision point**: [When to make final hire/no-hire decision]
+    
+    ### Additional Considerations
+    - **Training Investment Required**: [Estimated time/cost for skill development]
+    - **Onboarding Support Needed**: [Specific support areas]
+    - **Team Dynamics**: [How candidate might fit with existing team]
+    - **Growth Potential**: [Long-term development opportunities and trajectory]
     
     ## 📋 Next Steps & Interview Strategy
     

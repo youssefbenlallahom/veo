@@ -17,7 +17,7 @@ load_dotenv()
 
 # Reduced temperature for more consistent results
 """llm = LLM(
-    model="gemini/gemini-2.5-flash",
+    model="gemini/gemini-2.5-pro",
     temperature=0.0,
     stream=False
 )"""
