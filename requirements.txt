@@ -5,3 +5,4 @@ streamlit
 PyPDF2
 pysqlite3-binary
 chromadb
+google-genai
