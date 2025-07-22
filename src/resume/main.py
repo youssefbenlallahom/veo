@@ -1,8 +1,6 @@
-"""import sys
-import pysqlite3
-
-# Monkey-patch sqlite3 before ANYTHING imports it
-sys.modules["sqlite3"] = pysqlite3"""
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 import sys
 import warnings
