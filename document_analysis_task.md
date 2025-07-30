@@ -1,31 +1,55 @@
 **Personal Details**
-- Name: Emna Trabelsi
-- Email: emna.trabelsi@email.com
-- Phone: +216 27 456 321
-- Location: Sousse, Tunisia
+- Name: Alaa Waslati
+- Email: Waslatialaa1995@gmail.com
+- Phone: +216 98146753
+- LinkedIn: www.linkedin.com/in/alaa-waslati-5429231b2
+- Location: cité la ghazela, Ariana
 
 **Summary**
-Motivated finance graduate with internship experience in supplier accounting. Interested in applying my strong organizational and reconciliation skills in a structured finance department. Committed to accuracy and continuous improvement.
+An accomplished individual with a strong background in web development, having strong beliefs in the power of the internet and an intense desire to learn how to improve the web's absolute core functionality, and also to be involved in its future development.
 
 **Work Experience**
-- **Accounting Assistant** at Euronova Industries, Sfax | February 2023 - May 2023
-  - Managed payment request files and verified supporting documentation
-  - Updated supplier banking details in coordination with the compliance team
-  - Helped monitor accounts payable ledgers to ensure proper classification of entries
-  - Participated in weekly team meetings to prioritize payments and follow up on schedules
-- **Finance Intern** at UIB (Union Internationale de Banques) | August 2022 - October 2022
-  - Prepared supplier reconciliation statements under supervision
-  - Helped resolve payment discrepancies with vendors
-  - Supported the team with SAP invoice entry tasks
+- SAP Technical and Functional Support at LANDOR, Khalidia | 07/2022 - Present
+  - SAP BI|BW/4 HANA Technical Support
+  - Development of different flows BI CMC
+  - Data Services Designer
+  - Tableau Software for Buying and Guided Buying
+- Web Developer at United States Agency for International Development/National Institute for Marine Sciences and Technologies | 07/2022 - Present
+  - Developing a Web Site for a USAID funded project using ANGULAR
+  - Deploying the application on a server
+- Web Developer at Private school, Ghazela City | 11/2021 - 06/2022
+  - Developing a Web Site of the school using REACT JS and NODE JS
+- Developer at Tunisie Computer Services, Tunis | 09/2020 - 09/2021
+  - Daily tasks automation using robots developed with NODEJS
+- Trainer (PFE internship) at LANDOR, Ben Arous | 02/2019 - 05/2019
+  - Training on various technical skills
+- Summer training (Data analysis) at Al Zaytona BANK, Ben Arous | 07/2017 - 09/2017
 
 **Education**
-- **Master's in Accounting and Financial Analysis** - Université de Sousse (2022 - Present)
-- **Bachelor's in Business Administration** - IHEC Carthage (2019 - 2022)
+- Fundamental Licence in Computer Sciences - ISI (Institut Supérieur de l'Informatique), Ariana
 
 **Skills**
-- Technical: SAP (basic use), Excel (Pivot Tables, LOOKUP functions), Supplier Invoice Management, Payment File Preparation
-- Languages: French (C1), English (B2)
-- Soft Skills: Detail-Oriented, Reliable Under Pressure, Communicative
+- Technical: 
+  - Programming: ABAP, JavaScript (React JS, Node JS, Angular)
+  - Data Science: Data analysis, Machine Learning (arima, lstm), Data warehouse, Tableau, Power BI
+  - SAP: SAP S/4HANA, SAP BI|BW/4 HANA, SAPUI5, SAP Ariba
+  - Databases: Oracle, SQL, PLSQL, NOSQL (MongoDB, NEO4J)
+  - Cloud Computing
+  - Supervision networks using Nagios
+- Languages: 
+  - Arabic (Mother Language)
+  - English (Good)
+  - French (Good)
+  - Deutsch (Good)
 
-**Additional Experience**
-- **Treasurer for ENACTUS Club** (Volunteer) - budget planning and expense tracking
+**Projects**
+- Development of a web application using React JS for stock management, project management, and user access control.
+- Automation of daily tasks using robots developed with NODEJS.
+- Development of a website for a USAID funded project using ANGULAR.
+- ABAP development for SAP including SHana ABAP, SALV, ALV.
+- Development of Web Apps using SAPUI5 and FIORI.
+- Creating a Job in SAP Data Services.
+- Deployment of the SAP Ariba tool in the group's subsidiaries.
+- Authorization and access management for SAP.
+- Setting up an SD/MM integration flow in SAP SD/MM.
+- Forecasting with Machine Learning Models (arima, lstm).

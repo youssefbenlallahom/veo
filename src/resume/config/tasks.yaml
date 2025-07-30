@@ -41,39 +41,56 @@ candidate_matching_task:
     Apply the scoring matrix with ABSOLUTE consistency. Follow the evidence classification rules exactly.
     Use the mandatory scoring algorithm without any deviation.
     
-    CRITICAL: For each skill in {barem}, you MUST:
+    CRITICAL SCORING ALGORITHM:
+    1. For each skill in {barem}, search resume for exact evidence
+    2. Classify evidence using the 5-point matrix (0-5)
+    3. Calculate weighted contribution: (individual_score/5) * weight
+    4. Sum ALL weighted contributions 
+    5. Final score = sum/10 (this gives you the final X.X/10 score)
+    
+    IMPORTANT: The weights in {barem} are percentages that should sum to 100. The final score will be out of 10.
+    
+    For each skill in {barem}, you MUST:
     1. Quote the exact evidence from resume
-    2. State which classification it falls under (and why)
+    2. State which classification it falls under (0/5, 1/5, 2/5, 3/5, 4/5, or 5/5)
     3. Apply the corresponding score from the matrix
-    4. Show the calculation: (score/5) * weight
+    4. Show the calculation: (score/5) * weight = weighted_points
+    5. At the end, sum all weighted_points and divide by 10 for final score
     
   agent: matching_specialist
   expected_output: |
     **DETERMINISTIC SCORING ANALYSIS**
     
-    **Final Score:** [X.X]/10
-    
     **DETAILED BREAKDOWN:**
     
-    ### [Skill Name] (Weight: [X])
-    **Evidence:** "[Exact quote from resume]"
-    **Classification:** [Matrix category] - [Brief justification]
-    **Score:** [X]/5
-    **Calculation:** ([X]/5) * [weight] = [result]
+    ### [Skill Name] (Weight: [X]%)
+    **Evidence:** "[Exact quote from resume or 'Not found']"
+    **Classification:** [0/5, 1/5, 2/5, 3/5, 4/5, or 5/5] - [Brief justification]
+    **Calculation:** ([score]/5) * [weight] = [weighted_points]
     
-    ### [Next Skill]...
+    ### [Next Skill] (Weight: [X]%)
+    **Evidence:** "[Exact quote from resume or 'Not found']"
+    **Classification:** [0/5, 1/5, 2/5, 3/5, 4/5, or 5/5] - [Brief justification]
+    **Calculation:** ([score]/5) * [weight] = [weighted_points]
+    
+    [Continue for all skills in barem...]
     
     **TOTAL CALCULATION:**
-    Sum of weighted scores: [sum]
-    Final normalized score: [sum]/10 = [final score]
+    Sum of weighted points: [sum of all weighted_points]
+    Final score: [sum]/10 = [X.X]/10
 
 
 report_generation_task:
   description: >
     Generate a comprehensive and actionable hiring report in markdown format using the analysis from the previous step.
+    
+    CRITICAL: The final score from matching_specialist is already in X.X/10 format. Do NOT modify this score.
+    
     For scores below 5.0/10, provide a rejection recommendation with detailed explanation instead of interview suggestions.
     For scores 5.0/10 and above, include detailed strengths analysis, comprehensive gaps assessment, and strategic next steps for the hiring process.
     Focus on providing actionable insights and appropriate guidance based on the candidate's score.
+    
+    The report must include the exact scoring breakdown from matching_specialist without any modifications.
   agent: report_generator
   expected_output: |
     # Candidate Evaluation Report
@@ -87,7 +104,7 @@ report_generation_task:
     [2-3 sentence summary of the candidate's overall fit, highlighting key strengths and main concerns]
     
     ## Detailed Scoring Breakdown
-    [Include the detailed scoring analysis from matching_specialist]
+    [Include the EXACT detailed scoring analysis from matching_specialist - do not modify the calculations or scores]
     
     ## ✅ Strengths Analysis
     
