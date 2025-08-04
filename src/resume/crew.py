@@ -10,8 +10,8 @@ from crewai.llm import LLM
 import os
 from datetime import datetime
 from dotenv import load_dotenv
-from tools.custom_tool import CustomPDFTool
-from report_schema import ReportModel  # Enforce standardized report structure
+from src.resume.tools.custom_tool import CustomPDFTool
+from src.resume.report_schema import ReportModel  # Enforce standardized report structure
 
 load_dotenv()
 
