@@ -797,6 +797,184 @@ def create_custom_barem(skills_weights, categorized_skills=None):
     return barem
 
 
+# --- Additional Database Endpoints ---
+
+@app.delete("/reports/{report_id}")
+def delete_report(report_id: int, db: Session = Depends(get_db)):
+    """Delete a specific report by ID."""
+    report = db.query(CandidateReport).filter(CandidateReport.id == report_id).first()
+    if not report:
+        raise HTTPException(status_code=404, detail="Report not found")
+    
+    db.delete(report)
+    db.commit()
+    return {"message": f"Report {report_id} deleted successfully"}
+
+@app.get("/stats")
+def get_database_stats(db: Session = Depends(get_db)):
+    """Get overall database statistics for dashboard."""
+    from sqlalchemy import func
+    
+    total_reports = db.query(func.count(CandidateReport.id)).scalar()
+    unique_candidates = db.query(func.count(func.distinct(CandidateReport.candidate_name))).scalar()
+    unique_jobs = db.query(func.count(func.distinct(CandidateReport.applied_job_title))).scalar()
+    avg_score = db.query(func.avg(CandidateReport.total_weighted_score)).scalar() or 0
+    
+    # Get top scoring candidates
+    top_candidates = db.query(
+        CandidateReport.candidate_name,
+        func.max(CandidateReport.total_weighted_score).label('highest_score')
+    ).group_by(CandidateReport.candidate_name).order_by(
+        func.max(CandidateReport.total_weighted_score).desc()
+    ).limit(5).all()
+    
+    # Get recent activity
+    recent_reports = db.query(CandidateReport).order_by(
+        CandidateReport.created_at.desc()
+    ).limit(5).all()
+    
+    return {
+        "total_reports": total_reports,
+        "unique_candidates": unique_candidates,
+        "unique_job_positions": unique_jobs,
+        "average_score": round(avg_score, 2),
+        "top_candidates": [
+            {"name": candidate.candidate_name, "score": candidate.highest_score}
+            for candidate in top_candidates
+        ],
+        "recent_activity": [
+            {
+                "id": report.id,
+                "candidate_name": report.candidate_name,
+                "job_title": report.applied_job_title,
+                "score": report.total_weighted_score,
+                "date": report.created_at
+            }
+            for report in recent_reports
+        ]
+    }
+
+@app.get("/job-positions")
+def get_job_positions(db: Session = Depends(get_db)):
+    """Get all unique job positions with candidate counts and average scores."""
+    from sqlalchemy import func
+    
+    job_stats = db.query(
+        CandidateReport.applied_job_title,
+        func.count(CandidateReport.id).label('candidate_count'),
+        func.avg(CandidateReport.total_weighted_score).label('avg_score'),
+        func.max(CandidateReport.total_weighted_score).label('highest_score'),
+        func.min(CandidateReport.total_weighted_score).label('lowest_score')
+    ).group_by(CandidateReport.applied_job_title).order_by(
+        func.count(CandidateReport.id).desc()
+    ).all()
+    
+    return {
+        "job_positions": [
+            {
+                "title": job.applied_job_title,
+                "candidate_count": job.candidate_count,
+                "average_score": round(job.avg_score, 2),
+                "highest_score": job.highest_score,
+                "lowest_score": job.lowest_score
+            }
+            for job in job_stats
+        ]
+    }
+
+@app.get("/candidates/search")
+def search_candidates(
+    name: str = None,
+    min_score: float = None,
+    max_score: float = None,
+    job_title: str = None,
+    limit: int = 50,
+    db: Session = Depends(get_db)
+):
+    """Search candidates with various filters."""
+    query = db.query(CandidateReport)
+    
+    if name:
+        query = query.filter(CandidateReport.candidate_name.ilike(f"%{name}%"))
+    if min_score is not None:
+        query = query.filter(CandidateReport.total_weighted_score >= min_score)
+    if max_score is not None:
+        query = query.filter(CandidateReport.total_weighted_score <= max_score)
+    if job_title:
+        query = query.filter(CandidateReport.applied_job_title.ilike(f"%{job_title}%"))
+    
+    candidates = query.order_by(
+        CandidateReport.total_weighted_score.desc()
+    ).limit(limit).all()
+    
+    return {
+        "candidates": candidates,
+        "count": len(candidates)
+    }
+
+@app.get("/reports/compare")
+def compare_candidates(
+    candidate_ids: str,  # Comma-separated list of report IDs
+    db: Session = Depends(get_db)
+):
+    """Compare multiple candidates side by side."""
+    try:
+        ids = [int(id.strip()) for id in candidate_ids.split(',')]
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid candidate IDs format")
+    
+    reports = db.query(CandidateReport).filter(CandidateReport.id.in_(ids)).all()
+    
+    if not reports:
+        raise HTTPException(status_code=404, detail="No reports found for the provided IDs")
+    
+    return {
+        "comparison": [
+            {
+                "id": report.id,
+                "candidate_name": report.candidate_name,
+                "job_title": report.applied_job_title,
+                "total_score": report.total_weighted_score,
+                "strengths": report.strengths,
+                "gaps": report.gaps,
+                "score_details": report.score_details,
+                "created_at": report.created_at
+            }
+            for report in reports
+        ]
+    }
+
+@app.get("/candidates/top-performers")
+def get_top_performers(
+    limit: int = 10,
+    job_title: str = None,
+    db: Session = Depends(get_db)
+):
+    """Get top performing candidates overall or for a specific job."""
+    query = db.query(CandidateReport)
+    
+    if job_title:
+        query = query.filter(CandidateReport.applied_job_title.ilike(f"%{job_title}%"))
+    
+    top_performers = query.order_by(
+        CandidateReport.total_weighted_score.desc()
+    ).limit(limit).all()
+    
+    return {
+        "top_performers": [
+            {
+                "id": report.id,
+                "candidate_name": report.candidate_name,
+                "job_title": report.applied_job_title,
+                "score": report.total_weighted_score,
+                "strengths": report.strengths[:3] if len(report.strengths) > 3 else report.strengths,  # Top 3 strengths
+                "created_at": report.created_at
+            }
+            for report in top_performers
+        ]
+    }
+
+
 # --- Server Runner ---
 if __name__ == "__main__":
     uvicorn.run(
