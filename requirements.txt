@@ -1,11 +1,12 @@
+PyMuPDF
 crewai
 crewai-tools
 python-dotenv
 streamlit
 PyPDF2
-pysqlite3-binary
 chromadb
 google-genai
 sqlalchemy
 uvicorn
 fastapi
+python-multipart
