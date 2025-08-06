@@ -44,40 +44,24 @@ class Resume():
     
     def __init__(self, pdf_path=None):
         super().__init__()
-        print(f"[DEBUG] Resume class initialized with PDF path: {pdf_path}")
         
         if pdf_path:
             try:
                 self.pdf_tool = CustomPDFTool(pdf_path=pdf_path)
-                print(f"[DEBUG] CustomPDFTool created successfully")
-                
-                test_result = self.pdf_tool._run("extract_all")
-                print(f"[DEBUG] PDF tool test result length: {len(test_result)} characters")
-                
-                if test_result and len(test_result) > 0:
-                    print(f"[DEBUG] PDF content preview: {test_result[:200]}...")
-                else:
-                    print("[DEBUG] Warning: PDF extraction returned empty content")
-                
             except Exception as e:
-                print(f"[DEBUG] Error creating CustomPDFTool: {e}")
                 raise e
         else:
             self.pdf_tool = None
-            print("[DEBUG] No PDF path provided")
 
     @agent
     def document_analyzer(self) -> Agent:
         if self.pdf_tool is None:
             raise ValueError("PDF tool not initialized. Please provide a PDF path.")
         
-        print(f"[DEBUG] Creating document_analyzer agent with PDF tool")
-        
         return Agent(
             config=self.agents_config['document_analyzer'],
-            verbose=True,
+            verbose=False,
             tools=[self.pdf_tool],
-            max_iter=1,
             llm=llm,
         )
 
@@ -106,8 +90,7 @@ class Resume():
     @task
     def document_analysis_task(self) -> Task:
         return Task(
-            config=self.tasks_config['document_analysis_task'],
-            output_file='document_analysis_task.md'
+            config=self.tasks_config['document_analysis_task']
         )
     
     @task
@@ -120,7 +103,8 @@ class Resume():
     def report_generation_task(self) -> Task:
         return Task(
             config=self.tasks_config['report_generation_task'], 
-            output_file='report.md'
+            output_file='report.json',
+            output_json=ReportModel
         )
     
     @crew
@@ -130,6 +114,6 @@ class Resume():
             agents=self.agents,
             tasks=self.tasks,
             process=Process.sequential,
-            verbose=True,
+            verbose=False,
             memory=False
         )

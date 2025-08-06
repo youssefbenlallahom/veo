@@ -209,7 +209,7 @@ def detect_visual_skill_indicators(page):
                         })
         
     except Exception as e:
-        print(f"[DEBUG] Visual skill detection failed: {e}")
+        pass  # Silent error handling
     
     return visual_skills
 
@@ -384,7 +384,7 @@ def detect_text_based_proficiency(page):
                 unique_skills.append(skill_info)
         
     except Exception as e:
-        print(f"[DEBUG] Text-based proficiency detection failed: {e}")
+        pass  # Silent error handling
     
     return unique_skills
 
@@ -441,7 +441,6 @@ def extract_structured_content(page):
         
         return "\n".join(structured_content)
     except Exception as e:
-        print(f"[DEBUG] Structured extraction failed: {e}")
         # Fallback to simple text extraction
         return page.get_text()
 
@@ -486,19 +485,14 @@ class CustomPDFTool(BaseTool):
             if not isinstance(query, str):
                 query = str(query)
             
-            print(f"[DEBUG] PyMuPDF tool received query: '{query}'")
-            
             text_content = ""
             metadata = {}
             
             # Open PDF with PyMuPDF
             doc = fitz.open(self._pdf_file_path)
-            print(f"[DEBUG] Successfully opened PDF with {doc.page_count} pages")
             
             # Extract metadata
             metadata = doc.metadata
-            if metadata:
-                print(f"[DEBUG] PDF metadata: {metadata}")
             
             # Extract text with formatting preservation
             for page_num in range(doc.page_count):
@@ -510,8 +504,6 @@ class CustomPDFTool(BaseTool):
                     if structured_text:
                         text_content += f"\n=== Page {page_num + 1} ===\n{structured_text}\n"
                 except Exception as struct_error:
-                    print(f"[DEBUG] Structured extraction failed on page {page_num + 1}: {struct_error}")
-                    
                     # Fallback to simple text extraction
                     page_text = page.get_text()
                     if page_text:
@@ -531,11 +523,9 @@ class CustomPDFTool(BaseTool):
                                     clean_row = [sanitize_text(str(cell)) if cell else "" for cell in row]
                                     text_content += " | ".join(clean_row) + "\n"
                 except Exception as table_error:
-                    print(f"[DEBUG] Table extraction failed on page {page_num + 1}: {table_error}")
+                    pass  # Silent table extraction failure
             
             doc.close()
-            
-            print(f"[DEBUG] Total extracted text length: {len(text_content)} characters")
             
             if not text_content.strip():
                 return "ERROR: Could not extract any readable text from the PDF. The document may be image-based, corrupted, or password-protected."
@@ -553,7 +543,6 @@ class CustomPDFTool(BaseTool):
             
             if query_lower in ["extract_all", "all", "everything", "complete", "full", "entire", "whole"]:
                 result = f"=== COMPLETE PDF DOCUMENT CONTENT ===\n\n{text_content}\n\n=== END OF DOCUMENT ==="
-                print(f"[DEBUG] Returning complete content ({len(result)} characters)")
                 return result
             else:
                 # Enhanced search with section awareness
@@ -587,16 +576,13 @@ class CustomPDFTool(BaseTool):
                     
                     truncated_msg = "\n\n[Content truncated - showing first 100 relevant lines]" if len(relevant_lines) > 100 else ""
                     result = f"=== RELEVANT CONTENT FOR '{query}' ===\n\n" + '\n'.join(content_lines) + truncated_msg + "\n\n=== END OF RELEVANT CONTENT ==="
-                    print(f"[DEBUG] Returning relevant content ({len(result)} characters)")
                     return result
                 else:
                     # Return structured sample if no matches
                     sample_length = min(8000, len(text_content))  # Larger sample due to better extraction
                     result = f"=== NO EXACT MATCHES FOR '{query}' ===\n\nDocument sample:\n\n{text_content[:sample_length]}{'...\n\n[Document continues]' if len(text_content) > sample_length else ''}\n\n=== END OF SAMPLE ==="
-                    print(f"[DEBUG] No matches found, returning sample ({len(result)} characters)")
                     return result
                     
         except Exception as e:
             error_msg = f"CRITICAL ERROR reading PDF with PyMuPDF: {str(e)}. The PDF may be corrupted, password-protected, or in an unsupported format."
-            print(f"[DEBUG] {error_msg}")
             return error_msg

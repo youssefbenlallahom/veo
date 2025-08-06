@@ -8,9 +8,10 @@ class ScoreDetail(BaseModel):
     weighted_score: float  # Contribution to total (normalized to /10)
 
 class ReportModel(BaseModel):
-    job_title: str = Field(..., description="Job title from the user.")
-    job_description: str = Field(..., description="Job description provided by the user.")
+    applied_job_title: str = Field(..., description="Job title from the user.")
+    applied_job_description: str = Field(..., description="Job description provided by the user.")
     candidate_name: str = Field(..., description="Candidate's full name.")
+    candidate_job_title: Optional[str] = Field(None, description="Candidate's current job title/role.")
     candidate_experience: str = Field(..., description="Total years of experience.")
     candidate_background: str = Field(..., description="Short background or current role.")
     requirements_analysis: List[str] = Field(..., description="List of job requirements based only on user-provided text.")
@@ -20,19 +21,20 @@ class ReportModel(BaseModel):
     total_weighted_score: float = Field(..., description="Total weighted score out of 10.")
     strengths: List[str] = Field(..., description="List of candidate strengths.")
     gaps: List[str] = Field(..., description="List of gaps or missing requirements.")
-    recommendation: str = Field(..., description="Final recommendation (RECOMMENDED/NOT RECOMMENDED).")
-    rationale: str = Field(..., description="Reason for recommendation.")
+    rationale: str = Field(..., description="Analysis rationale and insights.")
     risk: Optional[str] = Field(None, description="Potential risks or caveats.")
     next_steps: Optional[List[str]] = Field(None, description="Recommended next steps if hired.")
 
     def to_markdown(self) -> str:
         """Render the report as a standardized markdown string."""
         md = []
-        md.append(f"# Hiring Report: {self.job_title}")
+        md.append(f"# Hiring Report: {self.applied_job_title}")
         md.append("\n## Job Description (User-Provided)")
-        md.append(self.job_description)
+        md.append(self.applied_job_description)
         md.append("\n## Candidate")
         md.append(f"- **Name:** {self.candidate_name}")
+        if self.candidate_job_title:
+            md.append(f"- **Current Role:** {self.candidate_job_title}")
         md.append(f"- **Experience:** {self.candidate_experience}")
         md.append(f"- **Background:** {self.candidate_background}")
         md.append("\n## Requirements Analysis")

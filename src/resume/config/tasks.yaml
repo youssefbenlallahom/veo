@@ -7,7 +7,7 @@ document_analysis_task:
     A clean, well-formatted text summary of the resume's content. Example:
 
     **Personal Details**
-    - Name: [Full Name]
+    - Name: [Full Name extracted from resume]
     - Email: [Email Address]
     - Phone: [Phone Number]
     - LinkedIn: [LinkedIn Profile URL]
@@ -44,18 +44,29 @@ candidate_matching_task:
     CRITICAL SCORING ALGORITHM:
     1. For each skill in {barem}, search resume for exact evidence
     2. Classify evidence using the 5-point matrix (0-5)
-    3. Calculate weighted contribution: (individual_score/5) * weight
-    4. Sum ALL weighted contributions 
-    5. Final score = sum/10 (this gives you the final X.X/10 score)
+    3. **CONVERT WEIGHT TO DECIMAL**: If weight shows as 20, use 0.20 in calculation
+    4. Calculate weighted contribution: (individual_score/5) * (weight/100)
+    5. Sum ALL weighted contributions to get final score out of 10
     
-    IMPORTANT: The weights in {barem} are percentages that should sum to 100. The final score will be out of 10.
+    WEIGHT CONVERSION EXAMPLES:
+    - Weight shows 30 → Use 0.30 → Calculation: (4/5) * 0.30 = 0.24
+    - Weight shows 25 → Use 0.25 → Calculation: (3/5) * 0.25 = 0.15  
+    - Weight shows 20 → Use 0.20 → Calculation: (5/5) * 0.20 = 0.20
+    
+    SCORING MATRIX:
+    0/5 = No evidence found
+    1/5 = Minimal evidence 
+    2/5 = Basic evidence
+    3/5 = Good evidence
+    4/5 = Strong evidence
+    5/5 = Excellent evidence
     
     For each skill in {barem}, you MUST:
     1. Quote the exact evidence from resume
     2. State which classification it falls under (0/5, 1/5, 2/5, 3/5, 4/5, or 5/5)
     3. Apply the corresponding score from the matrix
-    4. Show the calculation: (score/5) * weight = weighted_points
-    5. At the end, sum all weighted_points and divide by 10 for final score
+    4. Show the calculation: (score/5) * (weight/100) = weighted_points
+    5. At the end, sum all weighted_points for final score out of 10
     
   agent: matching_specialist
   expected_output: |
@@ -66,209 +77,93 @@ candidate_matching_task:
     ### [Skill Name] (Weight: [X]%)
     **Evidence:** "[Exact quote from resume or 'Not found']"
     **Classification:** [0/5, 1/5, 2/5, 3/5, 4/5, or 5/5] - [Brief justification]
-    **Calculation:** ([score]/5) * [weight] = [weighted_points]
+    **Calculation:** ([score]/5) * ([weight]/100) = [weighted_points]
     
     ### [Next Skill] (Weight: [X]%)
     **Evidence:** "[Exact quote from resume or 'Not found']"
     **Classification:** [0/5, 1/5, 2/5, 3/5, 4/5, or 5/5] - [Brief justification]
-    **Calculation:** ([score]/5) * [weight] = [weighted_points]
+    **Calculation:** ([score]/5) * ([weight]/100) = [weighted_points]
     
     [Continue for all skills in barem...]
     
     **TOTAL CALCULATION:**
     Sum of weighted points: [sum of all weighted_points]
-    Final score: [sum]/10 = [X.X]/10
+    Final score: [sum] = [X.X]/10
 
 
 report_generation_task:
   description: >
-    Generate a comprehensive and actionable hiring report in markdown format using the analysis from the previous step.
+    Generate a comprehensive hiring report using the ReportModel Pydantic schema. Extract all relevant information from the document analysis and candidate matching tasks to populate the structured JSON output.
     
-    CRITICAL: The final score from matching_specialist is already in X.X/10 format. Do NOT modify this score.
+    CRITICAL REQUIREMENTS:
+    1. Use ONLY the ReportModel schema fields - do not add extra fields
+    2. Extract candidate name/full name, experience, background, and current job title from document analysis
+    3. Use the exact final score from matching_specialist (X.X/10 format) - do NOT modify this score
+    4. Parse scoring details into ScoreDetail objects with section, raw_score, weight, and weighted_score
+    5. Categorize findings into strengths and gaps lists
+    6. Provide clear analysis and rationale based on the scoring
+    7. Include risk assessment and next steps when applicable
     
-    For scores below 5.0/10, provide a rejection recommendation with detailed explanation instead of interview suggestions.
-    For scores 5.0/10 and above, include detailed strengths analysis, comprehensive gaps assessment, and strategic next steps for the hiring process.
-    Focus on providing actionable insights and appropriate guidance based on the candidate's score.
+    Focus on objective analysis of the candidate's match to the requirements based on their score out of 10.
     
-    The report must include the exact scoring breakdown from matching_specialist without any modifications.
+    The output must be valid JSON that conforms exactly to the ReportModel Pydantic schema.
   agent: report_generator
   expected_output: |
-    # Candidate Evaluation Report
-    
-    **Candidate:** [Candidate Name]
-    **Position:** [Job Title]
-    **Evaluation Date:** [Current Date]
-    **Overall Score:** [X.X]/10
-    
-    ## Executive Summary
-    [2-3 sentence summary of the candidate's overall fit, highlighting key strengths and main concerns]
-    
-    ## Detailed Scoring Breakdown
-    [Include the EXACT detailed scoring analysis from matching_specialist - do not modify the calculations or scores]
-    
-    ## ✅ Strengths Analysis
-    
-    ### Strong Technical Competencies
-    - **[Skill Name]** ([Score]/5): [Detailed explanation of evidence found, specific examples from resume, and why this is valuable for the role]
-    - **[Skill Name]** ([Score]/5): [Detailed explanation with context of how this skill was demonstrated]
-    
-    ### Notable Experience Highlights
-    - **[Experience/Achievement]**: [Detailed explanation of why this experience is relevant and valuable]
-    - **[Experience/Achievement]**: [Context and potential impact for the target role]
-    
-    ### Transferable Skills & Potential
-    - [List skills that may not be exact matches but show strong potential for growth]
-    - [Highlight learning agility, adaptability, or foundational knowledge that could be built upon]
-    
-    ## ❌ Critical Gaps Analysis
-    
-    ### High-Priority Missing Skills
-    - **[Skill Name]** (Weight: [X]%): 
-      - **Impact:** [High/Medium/Low] - [Explanation of how this gap affects job performance]
-      - **Mitigation:** [Training potential, timeline, or alternative solutions]
-      - **Risk Level:** [Assessment of risk if candidate is hired without this skill]
-    
-    ### Secondary Skill Gaps
-    - **[Skill Name]** (Weight: [X]%): [Shorter assessment of gap and potential solutions]
-    
-    ### Experience Gaps
-    - [Industry-specific experience missing]
-    - [Role-level experience considerations]
-    - [Team size, project complexity, or domain expertise gaps]
-    
-    ## 🚨 Final Recommendation
-    
-    **IF SCORE < 5.0/10:**
-    
-    ### ❌ RECOMMENDATION: DO NOT PROCEED
-    
-    **Decision:** Reject candidate - insufficient skill alignment for role requirements
-    
-    **Key Reasons for Rejection:**
-    - [List the most critical gaps that led to low score]
-    - [Explain why these gaps cannot be reasonably overcome]
-    - [Note any fundamental misalignments with role requirements]
-    
-    **Skill Gap Analysis:**
-    - **Missing Critical Skills:** [X]% of required competencies not demonstrated
-    - **High-Priority Gaps:** [List skills with high weights that scored 0-2/5]
-    - **Training Investment Required:** [Estimate] - exceeds reasonable onboarding timeframe
-    
-    **Alternative Recommendations:**
-    - Consider candidate for [lower-level position] if available
-    - Re-evaluate in [timeframe] after candidate gains experience in [specific areas]
-    - Recommend candidate focus on developing [top 3 priority skills] before reapplying
-    
-    **Feedback for Candidate (if provided):**
-    - "While we appreciate your interest, we're looking for someone with stronger experience in [key areas]"
-    - "We encourage you to gain more experience in [specific skills] and consider reapplying in the future"
-    - "Consider pursuing training/certification in [specific areas] to strengthen your profile"
-    
-    ---
-    
-    **IF SCORE ≥ 5.0/10:**
-    
-    ## 📋 Next Steps & Interview Strategy
-    
-    ### Recommended Interview Approach
-    **Interview Type:** [Phone Screen/Technical Interview/Panel Interview/Behavioral Interview]
-    **Duration:** [Recommended time allocation]
-    **Focus Areas:** [Primary areas to explore based on gaps and strengths]
-    
-    ### Technical Assessment Recommendations
-    - **[Skill to Assess]**: [Specific exercise or question type]
-    - **[Skill to Assess]**: [Practical test or scenario-based assessment]
-    - **[Skill to Assess]**: [Portfolio review or code sample analysis]
-    
-    ### Targeted Interview Questions
-    
-    #### Technical Competency Questions
-    - **[High-Priority Skill]**: 
-      - "Can you walk me through a specific project where you used [skill]? What were the challenges and how did you overcome them?"
-      - "How would you approach [specific scenario related to the skill]?"
-    
-    - **[Gap Area to Explore]**:
-      - "How familiar are you with [missing skill]? Have you had any exposure to it?"
-      - "How do you typically approach learning new [technical skill type]?"
-    
-    #### Experience & Situational Questions
-    - "Describe a time when you had to [relevant scenario based on job requirements]"
-    - "How do you handle [specific challenge relevant to the role]?"
-    - "Tell me about your experience with [industry/domain specific context]"
-    
-    #### Learning & Growth Questions
-    - "How do you stay updated with [relevant technology/industry trends]?"
-    - "Describe a time when you had to quickly learn a new skill for a project"
-    - "What areas are you most interested in developing professionally?"
-    
-    ### Reference Check Focus Areas
-    - Verify technical competencies in [specific high-weight skills]
-    - Assess performance in [areas where gaps were identified]
-    - Understand learning agility and adaptation to new technologies/processes
-    
-    ### Decision Framework
-    
-    #### Strong Hire Indicators
-    - Demonstrates strong foundational skills with potential for growth
-    - Shows learning agility and ability to acquire missing skills quickly
-    - Cultural fit and motivation align with role requirements
-    
-    #### Proceed with Caution If
-    - Multiple high-priority skills are missing (gap > 40% of total weight)
-    - Limited evidence of learning new skills independently
-    - Experience level significantly below role requirements
-    
-    #### Do Not Proceed If
-    - Critical must-have skills are completely absent
-    - No evidence of ability to work at required complexity level
-    - Fundamental misalignment with role requirements
-    
-    ### Timeline & Next Actions
-    1. **Immediate (24-48 hours)**: [Specific next steps based on score]
-    2. **Short-term (1 week)**: [Interview scheduling, assessment preparation]
-    3. **Decision point**: [When to make final hire/no-hire decision]
-    
-    ### Additional Considerations
-    - **Training Investment Required**: [Estimated time/cost for skill development]
-    - **Onboarding Support Needed**: [Specific support areas]
-    - **Team Dynamics**: [How candidate might fit with existing team]
-    - **Growth Potential**: [Long-term development opportunities and trajectory]
-    
-    ## 📋 Next Steps & Interview Strategy
-    
-    ### Recommended Interview Approach
-    **Interview Type:** [Phone Screen/Technical Interview/Panel Interview/Behavioral Interview]
-    **Duration:** [Recommended time allocation]
-    **Focus Areas:** [Primary areas to explore based on gaps and strengths]
-    
-    ### Technical Assessment Recommendations
-    - **[Skill to Assess]**: [Specific exercise or question type]
-    - **[Skill to Assess]**: [Practical test or scenario-based assessment]
-    - **[Skill to Assess]**: [Portfolio review or code sample analysis]
-    
-    ### Targeted Interview Questions
-    
-    #### Technical Competency Questions
-    - **[High-Priority Skill]**: 
-      - "Can you walk me through a specific project where you used [skill]? What were the challenges and how did you overcome them?"
-      - "How would you approach [specific scenario related to the skill]?"
-    
-    - **[Gap Area to Explore]**:
-      - "How familiar are you with [missing skill]? Have you had any exposure to it?"
-      - "How do you typically approach learning new [technical skill type]?"
-    
-    #### Experience & Situational Questions
-    - "Describe a time when you had to [relevant scenario based on job requirements]"
-    - "How do you handle [specific challenge relevant to the role]?"
-    - "Tell me about your experience with [industry/domain specific context]"
-    
-    #### Learning & Growth Questions
-    - "How do you stay updated with [relevant technology/industry trends]?"
-    - "Describe a time when you had to quickly learn a new skill for a project"
-    - "What areas are you most interested in developing professionally?"
-    
-    ### Reference Check Focus Areas
-    - Verify technical competencies in [specific high-weight skills]
-    - Assess performance in [areas where gaps were identified]
-    - Understand learning agility and adaptation to new technologies/processes
+    {
+      "applied_job_title": "[Job Title from user input({job_title})]",
+      "applied_job_description": "[Job description provided by user input({job_description})]",
+      "candidate_name": "[Full name]",
+      "candidate_job_title": "[Current job title/role of the candidate]",
+      "candidate_experience": "[Years of experience, e.g., '5 years']",
+      "candidate_background": "[Current role or background summary]",
+      "requirements_analysis": [
+        "[Requirement 1 based on job description]",
+        "[Requirement 2 based on job description]",
+        "[Requirement 3 based on job description]"
+      ],
+      "match_results": {
+        "technical_skills": "[Summary of technical skill matches]",
+        "experience_level": "[Experience level assessment]",
+        "education": "[Education match assessment]",
+        "certifications": "[Certification matches]"
+      },
+      "scoring_weights": {
+        "[Skill/Criteria 1]": 0.25,
+        "[Skill/Criteria 2]": 0.20,
+        "[Skill/Criteria 3]": 0.15,
+        "[Skill/Criteria 4]": 0.40
+      },
+      "score_details": [
+        {
+          "section": "[Skill/Criteria Name]",
+          "raw_score": 4.0,
+          "weight": 25.0,
+          "weighted_score": 2.0
+        },
+        {
+          "section": "[Another Skill/Criteria]",
+          "raw_score": 2.0,
+          "weight": 20.0,
+          "weighted_score": 0.8
+        }
+      ],
+      "total_weighted_score": 6.5,
+      "strengths": [
+        "[Strength 1 - specific skill or experience]",
+        "[Strength 2 - notable achievement or competency]",
+        "[Strength 3 - relevant background or qualification]"
+      ],
+      "gaps": [
+        "[Gap 1 - missing skill or experience]",
+        "[Gap 2 - area needing development]",
+        "[Gap 3 - qualification or certification gap]"
+      ],
+      "rationale": "[Detailed analysis and insights based on score and evaluation]",
+      "risk": "[Optional: Any risks or concerns to consider]",
+      "next_steps": [
+        "[Next step 1 - e.g., Technical interview focus]",
+        "[Next step 2 - e.g., Reference check priorities]",
+        "[Next step 3 - e.g., Skills assessment recommendations]"
+      ]
+    }
     

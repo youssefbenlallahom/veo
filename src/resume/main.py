@@ -11,20 +11,24 @@ import tempfile
 import re
 import asyncio
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from dotenv import load_dotenv
 from src.resume.crew import Resume
 import sys
 import os
 
-from fastapi import FastAPI, UploadFile, File, Form
+from fastapi import FastAPI, UploadFile, File, Form, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import List, Dict, Optional
+from sqlalchemy.orm import Session
+from .database import get_db, CandidateReport
+import uvicorn
 
 load_dotenv()
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
+warnings.filterwarnings("ignore", category=DeprecationWarning, message=".*swigvarlink.*")
 
 app = FastAPI()
 
@@ -53,18 +57,48 @@ class BaremRequest(BaseModel):
 class BaremResponse(BaseModel):
     barem: Dict[str, dict]
 
+class ReportAnalysis(BaseModel):
+    strengths: str
+    gaps: str
+
+class ReportScoring(BaseModel):
+    overall_score: float
+    detailed_breakdown: str
+
+class ReportMetadata(BaseModel):
+    candidate_name: str
+    position_title: str
+    evaluation_date: str
+
+class JsonReport(BaseModel):
+    report_metadata: ReportMetadata
+    scoring: ReportScoring
+    executive_summary: str
+    analysis: ReportAnalysis
+
 class AnalyzeResult(BaseModel):
-    filename: str
-    valid: bool
-    error: str
-    score: float
-    recommendation: str
-    strengths: List[str]
-    gaps: List[str]
-    report_content: str
+    id: int
+    candidate_name: str
+    job_title: str
+    total_weighted_score: float
+    rationale: str
+    full_report_json: Dict  # The complete JSON report
+    created_at: datetime
 
 class AnalyzeResponse(BaseModel):
     results: List[AnalyzeResult]
+
+# --- Database Models ---
+class SavedCandidateReport(BaseModel):
+    id: int
+    candidate_name: str
+    job_title: str
+    total_weighted_score: float
+    rationale: str
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
 
 # --- Endpoints ---
 
@@ -82,12 +116,93 @@ def create_barem(data: BaremRequest):
     barem = create_custom_barem(data.skills_weights, data.categorized_skills)
     return BaremResponse(barem=barem)
 
+# --- Database Endpoints ---
+@app.get("/candidate/{candidate_name}/reports")
+def get_candidate_reports(candidate_name: str, db: Session = Depends(get_db)):
+    """Get all reports for a specific candidate by name."""
+    reports = db.query(CandidateReport).filter(
+        CandidateReport.candidate_name == candidate_name
+    ).order_by(CandidateReport.created_at.desc()).all()
+    
+    if not reports:
+        raise HTTPException(status_code=404, detail=f"No reports found for candidate: {candidate_name}")
+    
+    return {
+        "candidate_name": candidate_name,
+        "total_reports": len(reports),
+        "reports": reports
+    }
+
+@app.get("/candidate/{candidate_name}/latest")
+def get_candidate_latest_report(candidate_name: str, db: Session = Depends(get_db)):
+    """Get the latest report for a specific candidate."""
+    report = db.query(CandidateReport).filter(
+        CandidateReport.candidate_name == candidate_name
+    ).order_by(CandidateReport.created_at.desc()).first()
+    
+    if not report:
+        raise HTTPException(status_code=404, detail=f"No reports found for candidate: {candidate_name}")
+    
+    return report
+
+@app.get("/candidates")
+def get_all_candidates(db: Session = Depends(get_db)):
+    """Get list of all candidates with report counts."""
+    from sqlalchemy import func
+    
+    candidates = db.query(
+        CandidateReport.candidate_name,
+        func.count(CandidateReport.id).label('report_count'),
+        func.max(CandidateReport.created_at).label('latest_report')
+    ).group_by(CandidateReport.candidate_name).all()
+    
+    return {
+        "candidates": [
+            {
+                "name": candidate.candidate_name,
+                "report_count": candidate.report_count,
+                "latest_report": candidate.latest_report
+            }
+            for candidate in candidates
+        ]
+    }
+
+@app.get("/reports")
+def get_all_reports(
+    skip: int = 0,
+    limit: int = 100,
+    candidate_name: str = None,
+    job_title: str = None,
+    db: Session = Depends(get_db)
+):
+    """Get all reports with optional filtering."""
+    query = db.query(CandidateReport)
+    
+    if candidate_name:
+        query = query.filter(CandidateReport.candidate_name.contains(candidate_name))
+    if job_title:
+        query = query.filter(CandidateReport.applied_job_title.contains(job_title))
+    
+    total = query.count()
+    reports = query.offset(skip).limit(limit).order_by(CandidateReport.created_at.desc()).all()
+    
+    return {"reports": reports, "total": total}
+
+@app.get("/reports/{report_id}")
+def get_report(report_id: int, db: Session = Depends(get_db)):
+    """Get a specific report by ID, including the full JSON."""
+    report = db.query(CandidateReport).filter(CandidateReport.id == report_id).first()
+    if not report:
+        raise HTTPException(status_code=404, detail="Report not found")
+    return report
+
 @app.post("/analyze", response_model=AnalyzeResponse)
 async def analyze(
     job_title: str = Form(...),
     job_description: str = Form(...),
     barem: str = Form(...),  # JSON string
-    files: List[UploadFile] = File(...)
+    files: List[UploadFile] = File(...),
+    db: Session = Depends(get_db)  # Add database dependency
 ):
     # Parse barem JSON
     barem_dict = json.loads(barem)
@@ -108,18 +223,117 @@ async def analyze(
                 candidate_name=candidate_name,
                 barem=barem_dict
             )
-            candidate_result = parse_report(report_filename, file.filename)
-            return candidate_result
-        except Exception as e:
+            
+            # Read the JSON report directly (no markdown parsing needed)
+            with open(report_filename, 'r', encoding='utf-8') as json_file:
+                json_report = json.load(json_file)
+
+            # Use only AI-extracted name from resume content
+            final_candidate_name = json_report.get('candidate_name', 'Unknown Candidate')
+            if not final_candidate_name or final_candidate_name.strip() == "":
+                final_candidate_name = 'Unknown Candidate'  # Default if AI couldn't extract name
+
+            # Check if this candidate already has a report for the same job (case-insensitive)
+            existing_report = db.query(CandidateReport).filter(
+                CandidateReport.candidate_name.ilike(final_candidate_name),
+                CandidateReport.applied_job_title.ilike(json_report['applied_job_title'])
+            ).first()
+            
+            if existing_report:
+                # Update existing record for the same candidate and job
+                existing_report.applied_job_description = json_report['applied_job_description']
+                existing_report.candidate_job_title = json_report.get('candidate_job_title')
+                existing_report.candidate_experience = json_report['candidate_experience']
+                existing_report.candidate_background = json_report['candidate_background']
+                existing_report.requirements_analysis = json_report['requirements_analysis']
+                existing_report.match_results = json_report['match_results']
+                existing_report.scoring_weights = json_report['scoring_weights']
+                existing_report.score_details = json_report['score_details']
+                existing_report.total_weighted_score = json_report['total_weighted_score']
+                existing_report.strengths = json_report['strengths']
+                existing_report.gaps = json_report['gaps']
+                existing_report.rationale = json_report['rationale']
+                existing_report.risk = json_report.get('risk')
+                existing_report.next_steps = json_report.get('next_steps')
+                existing_report.created_at = datetime.now(timezone.utc)  # Update timestamp
+                
+                db.commit()
+                db.refresh(existing_report)
+                db_report = existing_report
+            else:
+                # Create new record for new candidate or same candidate applying to different job
+                db_report = CandidateReport(
+                    applied_job_title=json_report['applied_job_title'],
+                    applied_job_description=json_report['applied_job_description'],
+                    candidate_name=final_candidate_name,  # Use the verified candidate name
+                    candidate_job_title=json_report.get('candidate_job_title'),  # Optional field
+                    candidate_experience=json_report['candidate_experience'],
+                    candidate_background=json_report['candidate_background'],
+                    requirements_analysis=json_report['requirements_analysis'],
+                    match_results=json_report['match_results'],
+                    scoring_weights=json_report['scoring_weights'],
+                    score_details=json_report['score_details'],
+                    total_weighted_score=json_report['total_weighted_score'],
+                    strengths=json_report['strengths'],
+                    gaps=json_report['gaps'],
+                    rationale=json_report['rationale'],
+                    risk=json_report.get('risk'),  # Optional field
+                    next_steps=json_report.get('next_steps')  # Optional field
+                )
+                
+                db.add(db_report)
+                db.commit()
+                db.refresh(db_report)
+            
+            # Clean up the temporary JSON report file
+            try:
+                if os.path.exists(report_filename):
+                    os.remove(report_filename)
+            except Exception:
+                pass
+            
+            # Clean up temporary files
+            try:
+                if os.path.exists(resume_path):
+                    os.remove(resume_path)
+            except Exception:
+                pass
+            
             return {
-                "filename": file.filename,
-                "valid": False,
-                "error": str(e),
-                "score": 0,
-                "recommendation": "Error",
-                "strengths": [],
-                "gaps": [],
-                "report_content": ""
+                "id": db_report.id,
+                "candidate_name": final_candidate_name,  # Use AI-extracted name only
+                "job_title": db_report.applied_job_title,
+                "total_weighted_score": db_report.total_weighted_score,
+                "rationale": db_report.rationale,
+                "full_report_json": json_report,  # Return the complete JSON report
+                "created_at": db_report.created_at
+            }
+        except Exception as e:
+            # In case of error, you might want to log it and return an error response
+            return {
+                "id": -1,
+                "candidate_name": 'Unknown Candidate',
+                "job_title": job_title,
+                "total_weighted_score": 0,
+                "rationale": str(e),
+                "full_report_json": {
+                    "applied_job_title": job_title,
+                    "applied_job_description": job_description,
+                    "candidate_name": 'Unknown Candidate',
+                    "candidate_experience": "Unknown",
+                    "candidate_background": "Error occurred during analysis",
+                    "requirements_analysis": [],
+                    "match_results": {},
+                    "scoring_weights": {},
+                    "score_details": [],
+                    "total_weighted_score": 0.0,
+                    "strengths": [],
+                    "gaps": [],
+                    "rationale": str(e),
+                    "risk": None,
+                    "next_steps": None
+                },
+                "created_at": datetime.now(timezone.utc)
             }
     tasks = [analyze_one(file) for file in files]
     analyzed = await asyncio.gather(*tasks)
@@ -198,84 +412,12 @@ def clean_extracted_text(text):
         cleaned_lines.append(line)
     return '\n'.join(cleaned_lines).strip()
 
-def extract_and_save_pdf_text(pdf_path, output_filename=None):
-    """
-    Extract text from PDF and save to a text file.
-    
-    Args:
-        pdf_path (str): Path to the PDF file
-        output_filename (str, optional): Output filename. If None, auto-generated.
-    
-    Returns:
-        str: Path to the saved text file or None if failed
-    """
-    try:
-        from crew import Resume
-        
-        # Create Resume instance
-        resume_crew = Resume(pdf_path=pdf_path)
-        
-        if not hasattr(resume_crew, 'pdf_tool') or resume_crew.pdf_tool is None:
-            print("[ERROR] PDF tool not available")
-            return None
-        
-        # Extract text
-        extracted_data = resume_crew.pdf_tool._run('extract_all')
-        cleaned_data = clean_extracted_text(extracted_data)
-        
-        # Generate filename if not provided
-        if output_filename is None:
-            pdf_basename = os.path.splitext(os.path.basename(pdf_path))[0]
-            sanitized_name = re.sub(r'[^\w\-_\. ]', '_', pdf_basename)
-            output_filename = f'extracted_text_{sanitized_name}_{datetime.now().strftime("%Y%m%d_%H%M%S")}.txt'
-        
-        # Save to file
-        with open(output_filename, 'w', encoding='utf-8') as text_file:
-            text_file.write(f"=== EXTRACTED PDF CONTENT ===\n")
-            text_file.write(f"Source PDF: {pdf_path}\n")
-            text_file.write(f"Extraction Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-            text_file.write(f"Extraction Tool: {'PyMuPDF' if 'fitz' in str(type(resume_crew.pdf_tool)) else 'PyPDF2/pdfplumber'}\n")
-            text_file.write("=" * 50 + "\n\n")
-            text_file.write(cleaned_data)
-        
-        return output_filename
-        
-    except Exception as e:
-        print(f"[ERROR] Failed to extract PDF text: {str(e)}")
-        return None
-
 async def analyze_resume_async(resume_path, job_title, job_description, candidate_name, barem=None):
     """Run analysis asynchronously and save the report with a unique filename."""
     try:
         # Create Resume instance and process
         resume_crew = Resume(pdf_path=resume_path)
-        # Extract raw data from the PDF and save to text file
-        if hasattr(resume_crew, 'pdf_tool') and resume_crew.pdf_tool is not None:
-            try:
-                extracted_data = resume_crew.pdf_tool._run('extract_all')
-                # Clean up table delimiters and excess blank lines
-                cleaned_data = clean_extracted_text(extracted_data)
-                
-                # Save extracted data to text file
-                try:
-                    # Create a sanitized filename for the extracted text
-                    sanitized_name = re.sub(r'[^\w\-_\. ]', '_', candidate_name)
-                    extracted_filename = f'extracted_text_{sanitized_name}_async.txt'
-                    
-                    with open(extracted_filename, 'w', encoding='utf-8') as text_file:
-                        text_file.write(f"=== EXTRACTED PDF CONTENT (ASYNC) ===\n")
-                        text_file.write(f"Candidate: {candidate_name}\n")
-                        text_file.write(f"Extraction Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-                        text_file.write(f"PDF Path: {resume_path}\n")
-                        text_file.write("=" * 50 + "\n\n")
-                        text_file.write(cleaned_data)
-                    
-                    print(f"[DEBUG] Extracted text saved to: {extracted_filename}")
-                except Exception as save_error:
-                    print(f"[DEBUG] Could not save extracted text: {save_error}")
-                    
-            except Exception as e:
-                print(f"[DEBUG] Could not extract raw PDF data: {e}")
+        
         inputs = {
             'pdf': resume_path,
             'job_title': job_title,
@@ -290,14 +432,14 @@ async def analyze_resume_async(resume_path, job_title, job_description, candidat
 
         # Generate a unique report filename
         sanitized_name = re.sub(r'[^\w\-_\. ]', '_', candidate_name)  # Replace invalid characters
-        report_filename = f'report_{sanitized_name}.md'
+        report_filename = f'report_{sanitized_name}.json'
 
         # Ensure the report is renamed after each analysis
-        if os.path.exists('report.md'):
+        if os.path.exists('report.json'):
             # Check if the target file exists and remove it
             if os.path.exists(report_filename):
                 os.remove(report_filename)
-            os.rename('report.md', report_filename)
+            os.rename('report.json', report_filename)
 
         return report_filename
 
@@ -341,7 +483,6 @@ async def analyze_single_resume_with_error_handling(resume_pdf, job_title, job_d
 
             # Parse the generated report
             candidate_result = parse_report(report_filename, resume_pdf.name)
-            print(f"DEBUG: Parsed result for {resume_pdf.name}: score={candidate_result['score']}")
             return candidate_result
 
         except Exception as e:
@@ -392,153 +533,74 @@ async def analyze_all_resumes_async(resume_pdfs, job_title, job_description, bar
     return results
 
 
-def parse_report(report_path, filename):
-    """Parse the report file to extract scores and recommendations."""
-    result = {
-        "filename": filename,
-        "valid": True,
-        "error": "",
-        "score": 0,
-        "recommendation": "Unknown",
-        "strengths": [],
-        "gaps": [],
-        "report_content": ""
+def parse_report_to_json(report_path):
+    """Parse the markdown report into a structured JSON object."""
+    with open(report_path, 'r', encoding='utf-8') as file:
+        content = file.read()
+
+    def extract_section(title, text):
+        pattern = re.compile(f"## {re.escape(title)}\n(.*?)(?=\n## |\Z)", re.DOTALL | re.IGNORECASE)
+        match = pattern.search(text)
+        return match.group(1).strip() if match else ""
+
+    # Metadata
+    candidate_name = (re.search(r"\*\*Candidate:\*\*\s*(.*)", content) or ["", ""])[1].strip()
+    position_title = (re.search(r"\*\*Position:\*\*\s*(.*)", content) or ["", ""])[1].strip()
+    evaluation_date = (re.search(r"\*\*Evaluation Date:\*\*\s*(.*)", content) or ["", ""])[1].strip()
+    
+    # Scoring
+    overall_score_match = re.search(r"\*\*Overall Score:\*\*\s*([\d.]+)/10", content)
+    overall_score = float(overall_score_match.group(1)) if overall_score_match else 0.0
+    
+    detailed_breakdown = extract_section("Detailed Scoring Breakdown", content)
+    
+    # Summary and Analysis
+    executive_summary = extract_section("Executive Summary", content)
+    strengths_analysis = extract_section("✅ Strengths Analysis", content)
+    gaps_analysis = extract_section("❌ Critical Gaps Analysis", content)
+
+    report = {
+        "report_metadata": {
+            "candidate_name": candidate_name,
+            "position_title": position_title,
+            "evaluation_date": evaluation_date
+        },
+        "scoring": {
+            "overall_score": overall_score,
+            "detailed_breakdown": detailed_breakdown
+        },
+        "executive_summary": executive_summary,
+        "analysis": {
+            "strengths": strengths_analysis,
+            "gaps": gaps_analysis
+        }
     }
+    return report
 
-    if not os.path.exists(report_path):
-        result["valid"] = False
-        result["error"] = "Report file not found"
-        return result
-
+def parse_report(report_path, filename):
+    """This function is now replaced by parse_report_to_json. Kept for compatibility if needed elsewhere."""
     try:
-        # Read the report content
-        with open(report_path, 'r', encoding='utf-8') as report_file:
-            report_content = report_file.read()
-
-        # Store full content for display
-        result["report_content"] = report_content
-
-        # Try multiple patterns to extract the score
-        # Pattern 1: Look for "Overall Score: X/10" or "TOTAL WEIGHTED SCORE: X/10"
-        score_match_10 = re.search(
-            r'(?:\*\*Overall Score:\*\*|Overall Score:|TOTAL WEIGHTED SCORE:)\s*\[?([\d\.]+)\s*/\s*10\]?',
-            report_content,
-            re.IGNORECASE
-        )
-        # Pattern 2: Look for "Overall Score: X/100" or "TOTAL WEIGHTED SCORE: X/100"
-        score_match_100 = re.search(
-            r'(?:\*\*Overall Score:\*\*|Overall Score:|TOTAL WEIGHTED SCORE:)\s*\[?([\d\.]+)\s*/\s*100\]?',
-            report_content,
-            re.IGNORECASE
-        )
-        # Pattern 3: Look for "Overall Score: X" or "TOTAL WEIGHTED SCORE: X" without denominator
-        score_match_plain = re.search(
-            r'(?:\*\*Overall Score:\*\*|Overall Score:|TOTAL WEIGHTED SCORE:)\s*\[?([\d\.]+)\]?(?!\s*/)',
-            report_content,
-            re.IGNORECASE
-        )
-        # Pattern 4: Look for "final score for ... is **X/10**" or "final score is **X.X/10**"
-        final_score_match = re.search(
-            r'final score.*?is\s*\*\*([\d\.]+)/10\*\*',
-            report_content,
-            re.IGNORECASE
-        )
-        # Pattern 5: Look for "The final score for ... is **X.X/10**"
-        final_score_match_2 = re.search(
-            r'The final score for.*?is\s*\*\*([\d\.]+)/10\*\*',
-            report_content,
-            re.IGNORECASE
-        )
-        # Pattern 6: Look for any "final score" with **X.X/10** format  
-        final_score_match_3 = re.search(
-            r'final score.*?\*\*([\d\.]+)/10\*\*',
-            report_content,
-            re.IGNORECASE
-        )
-        # Pattern 7: Look for "## Final Score" section with score
-        final_score_section = re.search(
-            r'##\s*Final\s*Score.*?([\d\.]+)/10',
-            report_content,
-            re.IGNORECASE | re.DOTALL
-        )
-        # Pattern 8: Look for score after "Final Score" heading
-        final_score_heading = re.search(
-            r'##\s*Final\s*Score.*?(\d+\.?\d*)',
-            report_content,
-            re.IGNORECASE | re.DOTALL
-        )
-        # Pattern 6: Look for "Key Contributors:" followed by weighted scores that sum up
-        weighted_scores = re.findall(
-            r'\[?([\d\.]+)\]?\s*(?:points|point)\s*\(Source',
-            report_content
-        )
-        
-        print(f"DEBUG: Parsing report for {filename}")
-        print(f"DEBUG: Report content length: {len(report_content)}")
-        print(f"DEBUG: Looking for score patterns...")
-        
-        if score_match_10:
-            result["score"] = float(score_match_10.group(1))
-            print(f"Found score /10: {result['score']}")
-        elif final_score_match:
-            result["score"] = float(final_score_match.group(1))
-            print(f"Found final score: {result['score']}")
-        elif final_score_match_2:
-            result["score"] = float(final_score_match_2.group(1))
-            print(f"Found final score (pattern 2): {result['score']}")
-        elif final_score_match_3:
-            result["score"] = float(final_score_match_3.group(1))
-            print(f"Found final score (pattern 3): {result['score']}")
-        elif final_score_section:
-            result["score"] = float(final_score_section.group(1))
-            print(f"Found final score in section: {result['score']}")
-        elif final_score_heading:
-            result["score"] = float(final_score_heading.group(1))
-            print(f"Found final score after heading: {result['score']}")
-        elif score_match_100:
-            # Convert score from /100 to /10 scale
-            result["score"] = float(score_match_100.group(1)) / 10
-            print(f"Found score /100: {result['score']}")
-        elif score_match_plain:
-            # Assume it's out of 10 if no denominator is specified
-            result["score"] = float(score_match_plain.group(1))
-            print(f"Found plain score: {result['score']}")
-        elif weighted_scores:
-            # Sum up the weighted scores if individual components are found
-            try:
-                total = sum(float(score) for score in weighted_scores)
-                result["score"] = total
-                print(f"Calculated score from components: {result['score']}")
-            except ValueError:
-                pass
-        else:
-            print("DEBUG: No score pattern matched!")
-            print("DEBUG: First 500 characters of report:")
-            print(report_content[:500])
-
-        # Extract recommendation
-        decision_match = re.search(r'\*\*Decision:\*\* ([^\n]+)', report_content)
-        if decision_match:
-            result["recommendation"] = decision_match.group(1).strip()
-
-        # Extract strengths
-        strengths_match = re.search(r'### ✅ Strengths\n([\s\S]+?)### ❌ Gaps', report_content)
-        if strengths_match:
-            strengths = strengths_match.group(1).strip().split('\n')
-            result["strengths"] = [s.strip('- ').strip() for s in strengths if s.strip()]
-
-        # Extract gaps
-        gaps_match = re.search(r'### ❌ Gaps\n([\s\S]+?)## Weighted Score Analysis', report_content)
-        if gaps_match:
-            gaps = gaps_match.group(1).strip().split('\n')
-            result["gaps"] = [g.strip('- ').strip() for g in gaps if g.strip()]
-
-        return result
-
+        json_report = parse_report_to_json(report_path)
+        return {
+            "filename": filename,
+            "valid": True,
+            "error": "",
+            "score": json_report['scoring']['overall_score'],
+            "strengths": [s.strip() for s in json_report['analysis']['strengths'].split('\n') if s.strip()],
+            "gaps": [g.strip() for g in json_report['analysis']['gaps'].split('\n') if g.strip()],
+            "report_content": json.dumps(json_report, indent=2)
+        }
     except Exception as e:
-        result["valid"] = False
-        result["error"] = f"Error parsing report: {str(e)}"
-        return result
+        return {
+            "filename": filename,
+            "valid": False,
+            "error": str(e),
+            "score": 0,
+            "recommendation": "ERROR",
+            "strengths": [],
+            "gaps": [],
+            "report_content": ""
+        }
 
 
 # Remove the entire display_comparison_table and display_individual_reports functions, as they are Streamlit UI and not used in FastAPI
@@ -707,7 +769,7 @@ def create_custom_barem(skills_weights, categorized_skills=None):
     for skill_or_category, weight in skills_weights.items():
         if weight > 0:  # Only include items with positive weights
             if skill_or_category in categorized_skills:
-                # This is a skill category
+                # This is a skill category - keep category intact with full weight
                 category_skills = categorized_skills[skill_or_category]
                 if category_skills:  # Only add if category has skills
                     barem[skill_or_category] = {
@@ -733,3 +795,15 @@ def create_custom_barem(skills_weights, categorized_skills=None):
                 }
     
     return barem
+
+
+# --- Server Runner ---
+if __name__ == "__main__":
+    uvicorn.run(
+        "main:app",
+        host="127.0.0.1",
+        port=8000,
+        reload=True,
+        reload_dirs=["src"],
+        reload_excludes=[".venv", "__pycache__"]
+    )
