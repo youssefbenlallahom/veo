@@ -38,35 +38,108 @@ document_analysis_task:
 
 candidate_matching_task:
   description: >
-    Apply the scoring matrix with ABSOLUTE consistency. Follow the evidence classification rules exactly.
-    Use the mandatory scoring algorithm without any deviation.
+    Apply the scoring matrix with ABSOLUTE mathematical precision. Follow the evidence classification rules exactly.
+    Use the mandatory scoring algorithm without any deviation to achieve a final score out of 10.
     
-    CRITICAL SCORING ALGORITHM:
+    CRITICAL SCORING ALGORITHM (MATHEMATICAL PRECISION REQUIRED):
     1. For each skill in {barem}, search resume for exact evidence
     2. Classify evidence using the 5-point matrix (0-5)
-    3. **CONVERT WEIGHT TO DECIMAL**: If weight shows as 20, use 0.20 in calculation
-    4. Calculate weighted contribution: (individual_score/5) * (weight/100)
-    5. Sum ALL weighted contributions to get final score out of 10
+    3. **DECIMAL CONVERSION**: Convert percentage weights to decimals (20% → 0.20)
+    4. **WEIGHTED CALCULATION**: (individual_score/5) × decimal_weight = weighted_contribution
+    5. **FINAL SCORE**: Sum ALL weighted_contributions = score out of 10
     
-    WEIGHT CONVERSION EXAMPLES:
-    - Weight shows 30 → Use 0.30 → Calculation: (4/5) * 0.30 = 0.24
-    - Weight shows 25 → Use 0.25 → Calculation: (3/5) * 0.25 = 0.15  
-    - Weight shows 20 → Use 0.20 → Calculation: (5/5) * 0.20 = 0.20
+    WEIGHT CONVERSION TABLE (MEMORIZE THIS):
+    | Weight % | Decimal | Example Calculation |
+    |----------|---------|-------------------|
+    | 30% → 0.30 | (4/5) × 0.30 = 0.24 |
+    | 25% → 0.25 | (3/5) × 0.25 = 0.15 |
+    | 20% → 0.20 | (5/5) × 0.20 = 0.20 |
+    | 15% → 0.15 | (2/5) × 0.15 = 0.06 |
+    | 10% → 0.10 | (4/5) × 0.10 = 0.08 |
     
-    SCORING MATRIX:
-    0/5 = No evidence found
-    1/5 = Minimal evidence 
-    2/5 = Basic evidence
-    3/5 = Good evidence
-    4/5 = Strong evidence
-    5/5 = Excellent evidence
+    EVIDENCE CLASSIFICATION MATRIX:
+    - 5/5 = Excellent: Multiple years direct experience + advanced proficiency + recent usage
+    - 4/5 = Strong: Direct experience + good proficiency OR equivalent skills with proof
+    - 3/5 = Good: Some direct experience OR strong equivalent skills
+    - 2/5 = Basic: Limited experience OR distantly related skills
+    - 1/5 = Minimal: Implied knowledge only
+    - 0/5 = None: No evidence whatsoever
     
-    For each skill in {barem}, you MUST:
-    1. Quote the exact evidence from resume
-    2. State which classification it falls under (0/5, 1/5, 2/5, 3/5, 4/5, or 5/5)
-    3. Apply the corresponding score from the matrix
-    4. Show the calculation: (score/5) * (weight/100) = weighted_points
-    5. At the end, sum all weighted_points for final score out of 10
+    EQUIVALENT SKILLS RECOGNITION:
+    - Business Intelligence: Power BI = Tableau = QlikView = Looker (all score equally)
+    - Programming: SQL = T-SQL = PL/SQL (database variations count)  
+    - Languages: "Bilingue" = B2+ level, "Courant" = B2 level
+    - Agile: SCRUM = Kanban = SAFe (all count as Agile Methodology)
+    
+    FEW-SHOT EXAMPLES:
+    
+    **EXAMPLE 1 - Correct Calculation:**
+    Skill: Power BI (Weight: 20%)
+    Evidence: "Managed Power BI projects and dashboards for 3 years at Company X"
+    Classification: 4/5 (Strong evidence)
+    Calculation: (4/5) × 0.20 = 0.16
+    
+    **EXAMPLE 2 - Equivalent Skill Recognition:**
+    Job requires: IBM Cognos
+    Resume shows: "Extensive Power BI and Tableau experience"
+    Classification: 3/5 (Good - equivalent BI tools)
+    Weight: 15%
+    Calculation: (3/5) × 0.15 = 0.09
+    
+    **EXAMPLE 3 - No Evidence:**
+    Skill: Agile Methodology (Weight: 10%)
+    Evidence: No mention of SCRUM, Agile, Kanban anywhere
+    Classification: 0/5 (No evidence)
+    Calculation: (0/5) × 0.10 = 0.00
+    
+    **EXAMPLE 4 - Complete Scoring:**
+    Skills Assessment:
+    - Business Intelligence: 4/5, Weight 25% → (4/5) × 0.25 = 0.20
+    - Programming: 3/5, Weight 20% → (3/5) × 0.20 = 0.12  
+    - Experience: 5/5, Weight 20% → (5/5) × 0.20 = 0.20
+    - Languages: 4/5, Weight 15% → (4/5) × 0.15 = 0.12
+    - Education: 2/5, Weight 20% → (2/5) × 0.20 = 0.08
+    
+    FINAL CALCULATION: 0.20 + 0.12 + 0.20 + 0.12 + 0.08 = 0.72
+    FINAL SCORE: 7.2/10
+    
+    MANDATORY OUTPUT FORMAT:
+    For each skill category, you MUST provide:
+    
+    ```
+    ## DETAILED SCORING BREAKDOWN
+    
+    **[Category Name]** (Weight: X%)
+    - Evidence: "[Exact quote from resume]"
+    - Classification: X/5 - [Excellent/Strong/Good/Basic/Minimal/None]
+    - Calculation: (X/5) × 0.XX = 0.XX
+    
+    ## MATHEMATICAL VERIFICATION
+    Category 1: 0.XX
+    Category 2: 0.XX  
+    Category 3: 0.XX
+    [... all categories]
+    
+    **TOTAL SUM**: 0.XX + 0.XX + 0.XX + ... = X.XX
+    **FINAL SCORE**: X.X/10
+    ```
+    
+    CRITICAL QUALITY CONTROLS:
+    1. **Evidence Validation**: Every score ≥ 2 MUST have supporting quotes
+    2. **Mathematical Check**: Final score MUST equal sum of all weighted contributions
+    3. **Decimal Precision**: Use exactly 2 decimal places in calculations
+    4. **Equivalent Skills**: Recognize transferable skills appropriately
+    5. **Consistency Verification**: Similar evidence patterns should yield similar scores
+    
+    COMMON ERRORS TO AVOID:
+     Using percentage weights directly in calculation (20 instead of 0.20)
+     Forgetting to divide individual scores by 5
+     Not recognizing equivalent skills (penalizing Power BI when job needs Tableau)
+     Mathematical errors in final summation
+     Not providing exact evidence quotes for scores ≥ 2
+    
+    Remember: The final score represents a candidate's overall match percentage converted to a 10-point scale.
+    A score of 7.2/10 means the candidate matches 72% of the job requirements.
     
   agent: matching_specialist
   expected_output: |

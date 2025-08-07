@@ -285,12 +285,8 @@ async def analyze(
                 db.commit()
                 db.refresh(db_report)
             
-            # Clean up the temporary JSON report file
-            try:
-                if os.path.exists(report_filename):
-                    os.remove(report_filename)
-            except Exception:
-                pass
+            # Keep the JSON report file (don't delete it)
+            # The report is now stored in the database and preserved as a file
             
             # Clean up temporary files
             try:
@@ -415,8 +411,8 @@ def clean_extracted_text(text):
 async def analyze_resume_async(resume_path, job_title, job_description, candidate_name, barem=None):
     """Run analysis asynchronously and save the report with a unique filename."""
     try:
-        # Create Resume instance and process
-        resume_crew = Resume(pdf_path=resume_path)
+        # Create Resume instance with candidate name
+        resume_crew = Resume(pdf_path=resume_path, candidate_name=candidate_name)
         
         inputs = {
             'pdf': resume_path,
@@ -430,15 +426,13 @@ async def analyze_resume_async(resume_path, job_title, job_description, candidat
         # Run the analysis asynchronously
         result = await resume_crew.crew().kickoff_async(inputs=inputs)
 
-        # Generate a unique report filename
-        sanitized_name = re.sub(r'[^\w\-_\. ]', '_', candidate_name)  # Replace invalid characters
-        report_filename = f'report_{sanitized_name}.json'
-
-        # Ensure the report is renamed after each analysis
-        if os.path.exists('report.json'):
-            # Check if the target file exists and remove it
-            if os.path.exists(report_filename):
-                os.remove(report_filename)
+        # The report should now be generated with the candidate name in the reports directory
+        safe_name = re.sub(r'[^\w\-_\. ]', '_', candidate_name)
+        report_filename = f'reports/report_{safe_name}.json'
+        
+        # If the old report.json exists, rename it to the proper location
+        if os.path.exists('report.json') and not os.path.exists(report_filename):
+            os.makedirs('reports', exist_ok=True)
             os.rename('report.json', report_filename)
 
         return report_filename
@@ -973,6 +967,69 @@ def get_top_performers(
             for report in top_performers
         ]
     }
+
+@app.get("/reports/{report_id}/download")
+def download_report_json(report_id: int, db: Session = Depends(get_db)):
+    """Download the original JSON report file for a specific report."""
+    from fastapi.responses import FileResponse
+    
+    report = db.query(CandidateReport).filter(CandidateReport.id == report_id).first()
+    if not report:
+        raise HTTPException(status_code=404, detail="Report not found")
+    
+    # Try to find the corresponding JSON file
+    safe_name = re.sub(r'[^\w\-_\. ]', '_', report.candidate_name)
+    json_filename = f"reports/report_{safe_name}.json"
+    
+    if os.path.exists(json_filename):
+        return FileResponse(
+            json_filename,
+            media_type='application/json',
+            filename=f"report_{report.candidate_name}_{report.id}.json"
+        )
+    else:
+        # If file doesn't exist, return the data from database as JSON
+        report_data = {
+            "applied_job_title": report.applied_job_title,
+            "applied_job_description": report.applied_job_description,
+            "candidate_name": report.candidate_name,
+            "candidate_job_title": report.candidate_job_title,
+            "candidate_experience": report.candidate_experience,
+            "candidate_background": report.candidate_background,
+            "requirements_analysis": report.requirements_analysis,
+            "match_results": report.match_results,
+            "scoring_weights": report.scoring_weights,
+            "score_details": report.score_details,
+            "total_weighted_score": report.total_weighted_score,
+            "strengths": report.strengths,
+            "gaps": report.gaps,
+            "rationale": report.rationale,
+            "risk": report.risk,
+            "next_steps": report.next_steps,
+            "created_at": report.created_at.isoformat()
+        }
+        return JSONResponse(content=report_data)
+
+@app.get("/reports/files")
+def list_saved_report_files():
+    """List all saved JSON report files."""
+    reports_dir = "reports"
+    if not os.path.exists(reports_dir):
+        return {"files": []}
+    
+    files = []
+    for filename in os.listdir(reports_dir):
+        if filename.endswith('.json') and filename.startswith('report_'):
+            file_path = os.path.join(reports_dir, filename)
+            stat = os.stat(file_path)
+            files.append({
+                "filename": filename,
+                "size": stat.st_size,
+                "created": datetime.fromtimestamp(stat.st_ctime).isoformat(),
+                "modified": datetime.fromtimestamp(stat.st_mtime).isoformat()
+            })
+    
+    return {"files": sorted(files, key=lambda x: x['modified'], reverse=True)}
 
 
 # --- Server Runner ---

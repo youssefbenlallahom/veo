@@ -8,6 +8,7 @@ from typing import List
 from crewai_tools import *
 from crewai.llm import LLM
 import os
+import re
 from datetime import datetime
 from dotenv import load_dotenv
 from src.resume.tools.custom_tool import CustomPDFTool
@@ -42,8 +43,9 @@ class Resume():
     agents_config = 'config/agents.yaml'
     tasks_config = 'config/tasks.yaml'
     
-    def __init__(self, pdf_path=None):
+    def __init__(self, pdf_path=None, candidate_name=None):
         super().__init__()
+        self.candidate_name = candidate_name or "unknown_candidate"
         
         if pdf_path:
             try:
@@ -101,9 +103,17 @@ class Resume():
     
     @task
     def report_generation_task(self) -> Task:
+        # Create reports directory if it doesn't exist
+        reports_dir = "reports"
+        os.makedirs(reports_dir, exist_ok=True)
+        
+        # Generate filename with candidate name
+        safe_name = re.sub(r'[^\w\-_\. ]', '_', self.candidate_name)
+        filename = f"{reports_dir}/report_{safe_name}.json"
+        
         return Task(
             config=self.tasks_config['report_generation_task'], 
-            output_file='report.json',
+            output_file=filename,
             output_json=ReportModel
         )
     
