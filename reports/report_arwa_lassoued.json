@@ -1,10 +1,10 @@
 {
   "applied_job_title": "HR Data Analyst",
-  "applied_job_description": "Responsibilities:\nData Analysis and Reporting:\n• Collect, analyze, and interpret HR data from various sources such as employee surveys, performance evaluations, turnover rates, and recruitment metrics.\n• Prepare and present reports, dashboards, and visualizations to summarize HR metrics (time-to-hire, cost-per-hire, candidate sourcing channels, and recruitment funnel analytics) and trends for management review and decision-making.\nTrend Identification, forecasting and benchmarking:\n• Identify patterns, trends, and insights within HR data to inform strategic initiatives and improve HR processes.\n• Use historical data and statistical methods to forecast future HR trends, such as workforce demographics, turnover rates, and talent needs.\n• Conduct benchmarking analysis to compare HR metrics and practices against industry standards and competitors.\nHR Metrics Development:\n• Develop and maintain key performance indicators (KPIs) and metrics to measure the effectiveness of HR programs and initiatives.\nProcess Improvement:\n• Identify opportunities for process improvement and efficiency gains within HR operations. Recommend and implement process improvements to streamline HR and recruitment workflows, reduce time-to-fill, enhance candidate experience, and optimize resource allocation.\nChange Management and Strategic Planning:\n• Support HR and recruitment teams through organizational changes, system implementations, and process improvements: conducting change impact assessments, and facilitate stakeholder communication.\n• Provide analytical support to HR leadership in developing strategic workforce plans, talent acquisition strategies, and succession planning initiatives.\nHR Technology Management:\n• Participating in the configuration of our new ATS and supporting business decisions by providing ATS reports and statistics\n• Assist in the evaluation, implementation, and maintenance of HR technology systems and tools, such as HRIS (Human Resources Information Systems) and EPMS (Enterprise Performance Management System).\nRequirements:\n• Minimum 3 years of experience in business analysis, process audit, in a Recruitment environment, HR Development, Strategy, Consulting, HR solutions etc;\n• Recruitment skills necessary to understand business implications and management needs;\n• ATS / HRIS / EPMS knowledge is essential;\n• French & English skills - professional level.",
+  "applied_job_description": "Responsibilities:\nData Analysis and Reporting:\n•\tCollect, analyze, and interpret HR data from various sources such as employee surveys, performance evaluations, turnover rates, and recruitment metrics.\n•\tPrepare and present reports, dashboards, and visualizations to summarize HR metrics (time-to-hire, cost-per-hire, candidate sourcing channels, and recruitment funnel analytics) and trends for management review and decision-making.\nTrend Identification, forecasting and benchmarking:\n•\tIdentify patterns, trends, and insights within HR data to inform strategic initiatives and improve HR processes.\n•\tUse historical data and statistical methods to forecast future HR trends, such as workforce demographics, turnover rates, and talent needs.\n•\tConduct benchmarking analysis to compare HR metrics and practices against industry standards and competitors.\nHR Metrics Development:\n•\tDevelop and maintain key performance indicators (KPIs) and metrics to measure the effectiveness of HR programs and initiatives.\nProcess Improvement:\n•\tIdentify opportunities for process improvement and efficiency gains within HR operations. Recommend and implement process improvements to streamline HR and recruitment workflows, reduce time-to-fill, enhance candidate experience, and optimize resource allocation.\nChange Management and Strategic Planning:\n•\tSupport HR and recruitment teams through organizational changes, system implementations, and process improvements: conducting change impact assessments, and facilitate stakeholder communication.\n•\tProvide analytical support to HR leadership in developing strategic workforce plans, talent acquisition strategies, and succession planning initiatives.\nHR Technology Management:\n•\tParticipating in the configuration of our new ATS and supporting business decisions by providing ATS reports and statistics\n•\tAssist in the evaluation, implementation, and maintenance of HR technology systems and tools, such as HRIS (Human Resources Information Systems) and EPMS (Enterprise Performance Management System).\nRequirements:\n•\tMinimum 3 years of experience in business analysis, process audit, in a Recruitment environment, HR Development, Strategy, Consulting, HR solutions etc;\n•\tRecruitment skills necessary to understand business implications and management needs;\n•\tATS / HRIS / EPMS knowledge is essential;\n•\tFrench & English skills - professional level.",
   "candidate_name": "Arwa LASSOUED",
   "candidate_job_title": "Manager Data Steward – Technology Acceleration Center « TAC – PWC »",
   "candidate_experience": "5 years",
-  "candidate_background": "Highly skilled data professional with experience in data management, analysis, and HR data analysis. Proficient in various data tools and technologies, with a strong background in statistical analysis and business intelligence.",
+  "candidate_background": "Highly skilled data professional with experience in data management, analysis, and HR data analysis. Proficient in various data tools and technologies, with a strong background in statistical analysis and data visualization.",
   "requirements_analysis": [
     "Minimum 3 years of experience in business analysis, process audit, in a Recruitment environment, HR Development, Strategy, Consulting, HR solutions etc;",
     "Recruitment skills necessary to understand business implications and management needs;",
@@ -12,10 +12,10 @@
     "French & English skills - professional level."
   ],
   "match_results": {
-    "technical_skills": "Proficient in various data tools and technologies including PowerBI, QlikView, Workday, and others relevant to HR data analysis.",
-    "experience_level": "More than 3 years of experience in data analysis and HR data analysis, exceeding the minimum requirement.",
-    "education": "Diplôme national d’ingénieur en statistique et analyse d’information, relevant to the role.",
-    "certifications": "Agile Scrum Master – Product Owner and DATAMINING certifications, relevant to the role."
+    "technical_skills": "Proficient in various data tools and technologies including PowerBI, Alteryx, MDM, SAP, SalesForce, Workday, JIRA, QlikView, Talend. Experience with HR-related tools like Workday.",
+    "experience_level": "More than 3 years of experience in relevant fields, including HR data analysis and data management.",
+    "education": "Diplôme national d’ingénieur en statistique et analyse d’information from Ecole Supérieure de la Statistique et de l’Analyse de l’Information (ESSAI), Tunis.",
+    "certifications": "Agile Scrum Master – Product Owner, DATAMINING certification."
   },
   "scoring_weights": {
     "Business Intelligence": 0.27,
@@ -39,15 +39,15 @@
     },
     {
       "section": "Industry-Specific",
-      "raw_score": 3.0,
+      "raw_score": 4.0,
       "weight": 26.0,
-      "weighted_score": 0.156
+      "weighted_score": 0.208
     },
     {
       "section": "English B2 Level",
-      "raw_score": 4.0,
+      "raw_score": 3.0,
       "weight": 10.0,
-      "weighted_score": 0.08
+      "weighted_score": 0.06
     },
     {
       "section": "French B2 Level",
@@ -56,21 +56,21 @@
       "weighted_score": 0.1
     }
   ],
-  "total_weighted_score": 7.68,
+  "total_weighted_score": 8.0,
   "strengths": [
-    "Strong background in data analysis and business intelligence with experience in HR data analysis.",
-    "Proficient in various data tools and technologies relevant to the role.",
-    "Excellent language skills in both English and French."
+    "Strong background in data analysis and HR data analysis.",
+    "Proficient in various data tools and technologies including PowerBI, Alteryx, and Workday.",
+    "Experience in developing and automating HR dashboards and reports.",
+    "Fluent in French and competent in English."
   ],
   "gaps": [
-    "Some experience gap in recruitment environment, though has relevant HR data analysis experience.",
-    "Needs to improve industry-specific knowledge further."
+    "English language skills are competent but not fluent, which might be a minor gap for some roles requiring advanced English proficiency."
   ],
-  "rationale": "The candidate has a strong background in data analysis and business intelligence, with relevant experience in HR data analysis. The total weighted score of 7.68/10 indicates a good match for the role. The candidate's proficiency in various data tools and technologies, along with excellent language skills, are significant strengths.",
-  "risk": "The candidate may require some onboarding to fully align with the specific recruitment environment and industry-specific requirements.",
+  "rationale": "The candidate, Arwa LASSOUED, has a strong background in data analysis and HR data analysis with relevant experience and technical skills. She has developed and automated HR dashboards and reports, and is proficient in tools like PowerBI and Workday. Her fluency in French and competence in English are assets for the role. The only minor gap identified is her English language proficiency being competent rather than fluent.",
+  "risk": "The risk is low as the candidate's skills and experience closely match the job requirements. The minor gap in English proficiency is not considered significant enough to impact overall performance.",
   "next_steps": [
-    "Technical interview to assess deeper technical skills and experience.",
-    "Reference check to verify previous work experience and performance.",
-    "Skills assessment to evaluate proficiency in specific tools like ATS/HRIS/EPMS."
+    "Technical interview focusing on data analysis and HR data analysis capabilities.",
+    "Assessment of English language proficiency to gauge its impact on job performance.",
+    "Reference checks to verify previous experience and achievements."
   ]
 }
