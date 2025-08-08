@@ -30,9 +30,9 @@ os.environ['OTEL_SDK_DISABLED'] = 'true'
 
 llm = LLM(
     model=os.getenv("model"),  # This should match your deployment name
-    api_key=os.getenv("AZURE_API_KEY"),
-    base_url=os.getenv("AZURE_API_BASE"),
-    api_version=os.getenv("AZURE_API_VERSION"),
+    api_key=os.getenv("AZURE_AI_API_KEY"),
+    base_url=os.getenv("AZURE_AI_ENDPOINT"),
+    api_version=os.getenv("AZURE_AI_API_VERSION"),
     temperature=0.0,  # Reduced for more consistent outputs
     stream=False,
 )
@@ -124,6 +124,6 @@ class Resume():
             agents=self.agents,
             tasks=self.tasks,
             process=Process.sequential,
-            verbose=False,
+            verbose=True,
             memory=False
         )

@@ -1,0 +1,77 @@
+{
+  "applied_job_title": "HR Data Analyst",
+  "applied_job_description": "Responsibilities:\nData Analysis and Reporting:\n• Collect, analyze, and interpret HR data from various sources such as employee surveys, performance evaluations, turnover rates, and recruitment metrics.\n• Prepare and present reports, dashboards, and visualizations to summarize HR metrics (time-to-hire, cost-per-hire, candidate sourcing channels, and recruitment funnel analytics) and trends for management review and decision-making.\nTrend Identification, forecasting and benchmarking:\n• Identify patterns, trends, and insights within HR data to inform strategic initiatives and improve HR processes.\n• Use historical data and statistical methods to forecast future HR trends, such as workforce demographics, turnover rates, and talent needs.\n• Conduct benchmarking analysis to compare HR metrics and practices against industry standards and competitors.\nHR Metrics Development:\n• Develop and maintain key performance indicators (KPIs) and metrics to measure the effectiveness of HR programs and initiatives.\nProcess Improvement:\n• Identify opportunities for process improvement and efficiency gains within HR operations. Recommend and implement process improvements to streamline HR and recruitment workflows, reduce time-to-fill, enhance candidate experience, and optimize resource allocation.\nChange Management and Strategic Planning:\n• Support HR and recruitment teams through organizational changes, system implementations, and process improvements: conducting change impact assessments, and facilitate stakeholder communication.\n• Provide analytical support to HR leadership in developing strategic workforce plans, talent acquisition strategies, and succession planning initiatives.\nHR Technology Management:\n• Participating in the configuration of our new ATS and supporting business decisions by providing ATS reports and statistics\n• Assist in the evaluation, implementation, and maintenance of HR technology systems and tools, such as HRIS (Human Resources Information Systems) and EPMS (Enterprise Performance Management System).\nRequirements:\n• Minimum 3 years of experience in business analysis, process audit, in a Recruitment environment, HR Development, Strategy, Consulting, HR solutions etc;\n• Recruitment skills necessary to understand business implications and management needs;\n• ATS / HRIS / EPMS knowledge is essential;\n• French & English skills - professional level.",
+  "candidate_name": "RIM JAMLI",
+  "candidate_job_title": "Business Analyst",
+  "candidate_experience": "7 years",
+  "candidate_background": "Data Analyst with expertise in data analysis, business intelligence, and reporting. Specialized in data modeling, performance optimization, and advanced visualization using Power BI.",
+  "requirements_analysis": [
+    "Minimum 3 years of experience in business analysis, process audit, in a Recruitment environment, HR Development, Strategy, Consulting, HR solutions etc;",
+    "Recruitment skills necessary to understand business implications and management needs;",
+    "ATS / HRIS / EPMS knowledge is essential;",
+    "French & English skills - professional level."
+  ],
+  "match_results": {
+    "technical_skills": "Strong skills in Power BI, Excel, and data analysis. Knowledge of SQL, SSIS, SSAS, and Python. Familiarity with HRIS/EPMS is not explicitly mentioned but has experience with ERP.",
+    "experience_level": "7 years of experience in business analysis and data analysis, which meets the minimum 3 years requirement.",
+    "education": "Master in Data Science and BSc in Computer Science, relevant to the data analysis role.",
+    "certifications": "Project Management Professional, Scrum for Operations and DevOps Fundamentals, Digital Marketing Fundamentals, Six Sigma Yellow Belt, Scrum Fundamentals, Negotiation Associate."
+  },
+  "scoring_weights": {
+    "Business Intelligence": 0.27,
+    "Data & Analytics": 0.27,
+    "Industry-Specific": 0.26,
+    "English B2 Level": 0.1,
+    "French B2 Level": 0.1
+  },
+  "score_details": [
+    {
+      "section": "Business Intelligence",
+      "raw_score": 4.0,
+      "weight": 27.0,
+      "weighted_score": 0.216
+    },
+    {
+      "section": "Data & Analytics",
+      "raw_score": 4.0,
+      "weight": 27.0,
+      "weighted_score": 0.216
+    },
+    {
+      "section": "Industry-Specific",
+      "raw_score": 3.0,
+      "weight": 26.0,
+      "weighted_score": 0.156
+    },
+    {
+      "section": "English B2 Level",
+      "raw_score": 4.0,
+      "weight": 10.0,
+      "weighted_score": 0.08
+    },
+    {
+      "section": "French B2 Level",
+      "raw_score": 5.0,
+      "weight": 10.0,
+      "weighted_score": 0.1
+    }
+  ],
+  "total_weighted_score": 7.68,
+  "strengths": [
+    "Strong skills in data analysis and business intelligence using tools like Power BI.",
+    "Proven ability to analyze complex data and provide strategic insights.",
+    "Fluent in French and professional level in English.",
+    "Relevant experience in business analysis and data-driven decision making."
+  ],
+  "gaps": [
+    "Lack of direct experience in HR or recruitment environment.",
+    "No explicit mention of ATS/HRIS/EPMS knowledge or experience."
+  ],
+  "rationale": "The candidate has a strong background in data analysis and business intelligence, with 7 years of experience. While she lacks direct experience in HR or recruitment, her analytical skills and experience in related fields are significant strengths. The gap in HR-specific experience and ATS/HRIS/EPMS knowledge needs to be considered.",
+  "risk": "The candidate's lack of direct experience in HR or recruitment may require additional training or ramp-up time.",
+  "next_steps": [
+    "Conduct a technical interview to assess her understanding of HR data analysis and her ability to apply her skills to the HR context.",
+    "Evaluate her willingness and ability to learn HR-specific systems and processes.",
+    "Consider a skills assessment or case study related to HR data analysis."
+  ]
+}

@@ -1,10 +1,10 @@
 {
   "applied_job_title": "HR Data Analyst",
   "applied_job_description": "Responsibilities:\nData Analysis and Reporting:\n•\tCollect, analyze, and interpret HR data from various sources such as employee surveys, performance evaluations, turnover rates, and recruitment metrics.\n•\tPrepare and present reports, dashboards, and visualizations to summarize HR metrics (time-to-hire, cost-per-hire, candidate sourcing channels, and recruitment funnel analytics) and trends for management review and decision-making.\nTrend Identification, forecasting and benchmarking:\n•\tIdentify patterns, trends, and insights within HR data to inform strategic initiatives and improve HR processes.\n•\tUse historical data and statistical methods to forecast future HR trends, such as workforce demographics, turnover rates, and talent needs.\n•\tConduct benchmarking analysis to compare HR metrics and practices against industry standards and competitors.\nHR Metrics Development:\n•\tDevelop and maintain key performance indicators (KPIs) and metrics to measure the effectiveness of HR programs and initiatives.\nProcess Improvement:\n•\tIdentify opportunities for process improvement and efficiency gains within HR operations. Recommend and implement process improvements to streamline HR and recruitment workflows, reduce time-to-fill, enhance candidate experience, and optimize resource allocation.\nChange Management and Strategic Planning:\n•\tSupport HR and recruitment teams through organizational changes, system implementations, and process improvements: conducting change impact assessments, and facilitate stakeholder communication.\n•\tProvide analytical support to HR leadership in developing strategic workforce plans, talent acquisition strategies, and succession planning initiatives.\nHR Technology Management:\n•\tParticipating in the configuration of our new ATS and supporting business decisions by providing ATS reports and statistics\n•\tAssist in the evaluation, implementation, and maintenance of HR technology systems and tools, such as HRIS (Human Resources Information Systems) and EPMS (Enterprise Performance Management System).\nRequirements:\n•\tMinimum 3 years of experience in business analysis, process audit, in a Recruitment environment, HR Development, Strategy, Consulting, HR solutions etc;\n•\tRecruitment skills necessary to understand business implications and management needs;\n•\tATS / HRIS / EPMS knowledge is essential;\n•\tFrench & English skills - professional level.",
-  "candidate_name": "Arwa LASSOUED",
-  "candidate_job_title": "Manager Data Steward – Technology Acceleration Center « TAC – PWC »",
-  "candidate_experience": "5 years",
-  "candidate_background": "Highly skilled data professional with experience in data management, analysis, and HR data analysis. Proficient in various data tools and technologies, with a strong background in statistical analysis and business intelligence.",
+  "candidate_name": "Mehdi Ferchichi",
+  "candidate_job_title": "Consultant Business Intelligence Analyst",
+  "candidate_experience": "2 years",
+  "candidate_background": "Business Intelligence, Data Analysis",
   "requirements_analysis": [
     "Minimum 3 years of experience in business analysis, process audit, in a Recruitment environment, HR Development, Strategy, Consulting, HR solutions etc;",
     "Recruitment skills necessary to understand business implications and management needs;",
@@ -12,10 +12,10 @@
     "French & English skills - professional level."
   ],
   "match_results": {
-    "technical_skills": "Proficient in various data tools and technologies including PowerBI, Alteryx, MDM, SAP, SalesForce, PMDM, Workday, JIRA, QlikView, CS-Time, Talend, EVIEWS, SAGE COMMERCIAL, Odoo",
-    "experience_level": "More than 3 years of experience in data analysis and HR data analysis",
-    "education": "Diplôme national d’ingénieur en statistique et analyse d’information from Ecole Supérieure de la Statistique et de l’Analyse de l’Information (ESSAI), Tunis",
-    "certifications": "Agile Scrum Master – Product Owner, DATAMINING"
+    "technical_skills": "The candidate has experience with BI tools like Power BI and Metabase, and has worked with various data sources. However, there's no direct mention of ATS/HRIS/EPMS knowledge.",
+    "experience_level": "The candidate has 2 years of experience, which is less than the required 3 years for the role.",
+    "education": "The candidate has a Master's degree in Business Analytics, which is relevant to the role.",
+    "certifications": "The candidate holds certifications like Scrum Master PSM II and Talend Open Studio for Big Data, which are relevant to the industry."
   },
   "scoring_weights": {
     "Business Intelligence": 0.27,
@@ -33,21 +33,21 @@
     },
     {
       "section": "Data & Analytics",
-      "raw_score": 4.0,
+      "raw_score": 3.0,
       "weight": 27.0,
-      "weighted_score": 0.216
+      "weighted_score": 0.162
     },
     {
       "section": "Industry-Specific",
-      "raw_score": 4.0,
+      "raw_score": 0.83,
       "weight": 26.0,
-      "weighted_score": 0.208
+      "weighted_score": 0.04316
     },
     {
       "section": "English B2 Level",
-      "raw_score": 4.0,
+      "raw_score": 5.0,
       "weight": 10.0,
-      "weighted_score": 0.08
+      "weighted_score": 0.1
     },
     {
       "section": "French B2 Level",
@@ -56,22 +56,22 @@
       "weighted_score": 0.1
     }
   ],
-  "total_weighted_score": 8.2,
+  "total_weighted_score": 6.2,
   "strengths": [
-    "Strong background in data analysis and HR data analysis",
-    "Proficient in various data tools and technologies",
-    "Excellent French language skills",
-    "Strong business intelligence and data analytics capabilities"
+    "Strong background in Business Intelligence with experience in Power BI and Metabase.",
+    "Proficient in data analysis and has worked with various data sources.",
+    "Fluent in both English and French at a professional level."
   ],
   "gaps": [
-    "Could improve on ATS/EPMS specific knowledge",
-    "Some experience in recruitment environment would be beneficial"
+    "Lack of direct experience in HR data analysis and recruitment environment.",
+    "Limited experience (2 years) compared to the required 3 years.",
+    "No specific mention of ATS/HRIS/EPMS knowledge or experience."
   ],
-  "rationale": "The candidate, Arwa LASSOUED, has a strong background in data analysis and HR data analysis with significant experience in managing data stewardship and developing HR dashboards. She is proficient in various data tools and technologies and has excellent French language skills. While she has a strong overall score of 8.2/10, there are minor gaps in ATS/EPMS specific knowledge and experience in a recruitment environment.",
-  "risk": "Low risk as the candidate's skills and experience closely match the job requirements",
+  "rationale": "The candidate has a strong background in Business Intelligence and data analysis, with relevant certifications and education. However, there's a significant gap in industry-specific experience, particularly in HR data analysis and recruitment environments. The candidate's experience is also less than the required 3 years. Despite these gaps, the candidate's technical skills and language proficiency are strong assets.",
+  "risk": "The candidate's lack of direct experience in HR data analysis and limited overall experience may pose a risk in fully meeting the job requirements.",
   "next_steps": [
-    "Technical interview focusing on ATS/EPMS knowledge and recruitment experience",
-    "Reference check for previous roles",
-    "Skills assessment for data analysis and HR metrics development"
+    "Conduct a technical interview to assess the candidate's ability to adapt their BI skills to HR data analysis.",
+    "Evaluate the candidate's understanding of HR processes and recruitment environments.",
+    "Consider a skills assessment to gauge the candidate's ability to learn and apply ATS/HRIS/EPMS systems."
   ]
 }

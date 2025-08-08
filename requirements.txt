@@ -10,3 +10,5 @@ sqlalchemy
 uvicorn
 fastapi
 python-multipart
+azure-ai-inference
+azure-core
