@@ -1,10 +1,10 @@
 {
   "applied_job_title": "HR Data Analyst",
   "applied_job_description": "Responsibilities:\nData Analysis and Reporting:\n•\tCollect, analyze, and interpret HR data from various sources such as employee surveys, performance evaluations, turnover rates, and recruitment metrics.\n•\tPrepare and present reports, dashboards, and visualizations to summarize HR metrics (time-to-hire, cost-per-hire, candidate sourcing channels, and recruitment funnel analytics) and trends for management review and decision-making.\nTrend Identification, forecasting and benchmarking:\n•\tIdentify patterns, trends, and insights within HR data to inform strategic initiatives and improve HR processes.\n•\tUse historical data and statistical methods to forecast future HR trends, such as workforce demographics, turnover rates, and talent needs.\n•\tConduct benchmarking analysis to compare HR metrics and practices against industry standards and competitors.\nHR Metrics Development:\n•\tDevelop and maintain key performance indicators (KPIs) and metrics to measure the effectiveness of HR programs and initiatives.\nProcess Improvement:\n•\tIdentify opportunities for process improvement and efficiency gains within HR operations. Recommend and implement process improvements to streamline HR and recruitment workflows, reduce time-to-fill, enhance candidate experience, and optimize resource allocation.\nChange Management and Strategic Planning:\n•\tSupport HR and recruitment teams through organizational changes, system implementations, and process improvements: conducting change impact assessments, and facilitate stakeholder communication.\n•\tProvide analytical support to HR leadership in developing strategic workforce plans, talent acquisition strategies, and succession planning initiatives.\nHR Technology Management:\n•\tParticipating in the configuration of our new ATS and supporting business decisions by providing ATS reports and statistics\n•\tAssist in the evaluation, implementation, and maintenance of HR technology systems and tools, such as HRIS (Human Resources Information Systems) and EPMS (Enterprise Performance Management System).\nRequirements:\n•\tMinimum 3 years of experience in business analysis, process audit, in a Recruitment environment, HR Development, Strategy, Consulting, HR solutions etc;\n•\tRecruitment skills necessary to understand business implications and management needs;\n•\tATS / HRIS / EPMS knowledge is essential;\n•\tFrench & English skills - professional level.",
-  "candidate_name": "Baha Khemiri",
-  "candidate_job_title": "HR Compliance & Audit Data Specialist",
-  "candidate_experience": "3 years",
-  "candidate_background": "Dedicated HR Compliance and Audit Data Specialist with a strong background in People Operations and Data Management. Comprehensive understanding of human resources processes, compliance regulations, and a meticulous approach to data analysis and reporting.",
+  "candidate_name": "Ghassen Bouzayen",
+  "candidate_job_title": "Head of Payroll and Personnel Administration",
+  "candidate_experience": "12 years",
+  "candidate_background": "Highly experienced HR professional with a background in payroll and personnel administration, having worked in various roles across different companies in the automobile industry and other sectors. Proficient in HR software implementation, data analysis, and reporting.",
   "requirements_analysis": [
     "Minimum 3 years of experience in business analysis, process audit, in a Recruitment environment, HR Development, Strategy, Consulting, HR solutions etc;",
     "Recruitment skills necessary to understand business implications and management needs;",
@@ -12,10 +12,10 @@
     "French & English skills - professional level."
   ],
   "match_results": {
-    "technical_skills": "Proficient in Workday, Oracle HCM, Microsoft Office. Experience with HR data management and analysis.",
-    "experience_level": "3 years of relevant experience in HR compliance, audit data management, and people operations.",
-    "education": "Master's Degree in English for Communication and Bachelor's Degree in English Language, Literature, and Civilization.",
-    "certifications": "Google Garage Digital Marketing Certification, SEO fundamentals (PluralSight), Marketing in a digital world Certification (Coursera), Social Marketing (Coursera), Microsoft Office Specialist Certification (Microsoft)"
+    "technical_skills": "Proficient in HR software implementation, data analysis, and reporting. Experienced with SAP, Power Bi, and other HR-related tools.",
+    "experience_level": "More than 3 years of experience in HR roles, including payroll and personnel administration.",
+    "education": "Fundamental License in Tax Management, Master M1 in Accounting, Senior Technician in International Trade.",
+    "certifications": "First Aid, English B2, ISO 9001, ISO 14001, ISO 45001, ISO 27001, Communication Skills, Conflict management, Leadership."
   },
   "scoring_weights": {
     "Business Intelligence": 0.27,
@@ -27,21 +27,21 @@
   "score_details": [
     {
       "section": "Business Intelligence",
-      "raw_score": 2.0,
+      "raw_score": 4.0,
       "weight": 27.0,
-      "weighted_score": 0.11
+      "weighted_score": 0.216
     },
     {
       "section": "Data & Analytics",
       "raw_score": 4.0,
       "weight": 27.0,
-      "weighted_score": 0.22
+      "weighted_score": 0.216
     },
     {
       "section": "Industry-Specific",
       "raw_score": 4.0,
       "weight": 26.0,
-      "weighted_score": 0.21
+      "weighted_score": 0.208
     },
     {
       "section": "English B2 Level",
@@ -51,27 +51,27 @@
     },
     {
       "section": "French B2 Level",
-      "raw_score": 4.0,
+      "raw_score": 5.0,
       "weight": 10.0,
-      "weighted_score": 0.08
+      "weighted_score": 0.1
     }
   ],
-  "total_weighted_score": 7.2,
+  "total_weighted_score": 8.4,
   "strengths": [
-    "Strong background in HR data management and analysis with experience in Workday and Oracle HCM.",
-    "Excellent English language skills with a Master's Degree in English for Communication.",
-    "Proficient in Microsoft Office and has experience with data analysis and reporting.",
-    "Strong French language skills."
+    "Strong experience in HR data analysis and reporting.",
+    "Proficient in HR software implementation and management.",
+    "Excellent language skills in both English and French.",
+    "Strong background in payroll and personnel administration."
   ],
   "gaps": [
-    "Limited experience in business intelligence tools and techniques.",
-    "Needs improvement in ATS configuration and management."
+    "Could benefit from more direct experience in recruitment environment.",
+    "Further development in ATS/EPMS specific to the job role."
   ],
-  "rationale": "The candidate, Baha Khemiri, has a strong background in HR data management and analysis, with relevant experience in Workday and Oracle HCM. The candidate's English language skills are excellent, and they have a good command of French. However, there is a need for improvement in business intelligence tools and ATS configuration.",
-  "risk": "The candidate's limited experience in business intelligence and ATS configuration may require additional training or support.",
+  "rationale": "The candidate has a strong background in HR data analysis, reporting, and HR software implementation. The total weighted score of 8.4/10 indicates a very good match for the HR Data Analyst role. The candidate's experience in developing HR dashboards, analyzing HR data, and proficiency in tools like Power Bi are significant strengths. However, there are minor gaps in direct recruitment environment experience and specific ATS/EPMS knowledge.",
+  "risk": "Low risk due to the candidate's strong overall profile and relevant experience.",
   "next_steps": [
-    "Technical interview focusing on data analysis and HR technology systems.",
-    "Assessment of the candidate's experience with ATS and HRIS systems.",
-    "Reference checks to verify the candidate's previous experience and skills."
+    "Technical interview focusing on data analysis and HR software implementation.",
+    "Assessment of the candidate's experience with ATS/EPMS systems.",
+    "Reference checks to verify previous experience and performance."
   ]
 }
