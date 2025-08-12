@@ -73,6 +73,7 @@ output/
 temp/
 tmp/
 cache/
+reports/
 
 # Document files (if they contain sensitive data)
 *.pdf
