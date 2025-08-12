@@ -27,13 +27,15 @@ load_dotenv()
 def extract_skills_from_pdf(
     pdf_path: Optional[str] = None,
     job_description: Optional[str] = None,
+    job_title: Optional[str] = None,
 ) -> Dict[str, List[str]]:
     """
     Extract technical skills from either a PDF resume or a raw job description string using Azure AI.
 
     Args:
         pdf_path: Optional path to the PDF resume file.
-        job_description: Optional raw text of a job description.
+    job_description: Optional raw text of a job description.
+    job_title: Optional job title context to improve extraction when job_description is provided.
 
     Notes:
         - Provide exactly one of pdf_path or job_description.
@@ -80,6 +82,10 @@ def extract_skills_from_pdf(
         )
 
         # Step 3: Create skill extraction prompt
+        context_block = f"RESUME OR JOB DESCRIPTION TEXT:\n{input_text}"
+        if job_title:
+            context_block = f"JOB TITLE: {job_title}\n\n" + context_block
+
         prompt = f"""You are an expert HR assistant that extracts technical skills from resumes or job descriptions and groups them into standardized categories.
 
 SKILL CATEGORIES TO USE:
@@ -101,8 +107,7 @@ INSTRUCTIONS:
 4. Do NOT include soft skills, certifications, or languages.
 5. Use exact category names from the list above.
 
-RESUME OR JOB DESCRIPTION TEXT:
-{input_text}
+{context_block}
 
 Return ONLY valid JSON in this format:
 {{

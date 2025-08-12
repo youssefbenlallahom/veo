@@ -47,9 +47,14 @@ app.add_middleware(
 @app.post("/extract-skills-from-cv")
 async def extract_skills_from_cv(
     file: UploadFile | None = File(None),
-    job_description: str | None = Form(None)
+    job_description: str | None = Form(None),
+    job_title: str | None = Form(None)
 ):
-    """Extract technical skills from either an uploaded PDF resume (CV) or a raw job description string and save to extracted_skills table."""
+    """Extract technical skills from either an uploaded PDF resume (CV) or a raw job description string.
+
+    - PDF uploads: save into extracted_skills table (existing behavior).
+    - Job descriptions: save into job_required_skills table with job_title and required_skills_json.
+    """
     import sqlite3
     temp_pdf_path = None
     try:
@@ -73,39 +78,56 @@ async def extract_skills_from_cv(
             jd_text = (job_description or "").strip()
             if not jd_text:
                 raise ValueError("Provided job_description is empty.")
-            result = extract_skills_from_pdf(job_description=jd_text)
-            # Derive a name placeholder for DB row
-            candidate_name = f"job_description_{datetime.now().strftime('%Y%m%d%H%M%S')}"
-            cv_filename = None
+            jt = (job_title or "").strip()
+            if not jt:
+                raise ValueError("job_title is required when submitting a job_description.")
+            result = extract_skills_from_pdf(job_description=jd_text, job_title=jt)
 
-        # Prepare data for DB
-        skills_json = json.dumps(result)
         # Save to SQLite database (candidate_reports.db in project root)
         db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'candidate_reports.db')
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
-        # Create table if not exists
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS extracted_skills (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                candidate_name TEXT,
-                cv_filename TEXT,
-                skills_json TEXT
-            )
-        ''')
-        # Check if candidate already exists (only for PDF uploads where name is stable)
-        should_check_dup = file is not None
-        exists = None
-        if should_check_dup:
+
+        if file is not None:
+            # Prepare data for DB (PDF flow)
+            skills_json = json.dumps(result)
+            # Create table if not exists
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS extracted_skills (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    candidate_name TEXT,
+                    cv_filename TEXT,
+                    skills_json TEXT,
+                    created_at TEXT
+                )
+            ''')
+            # Check if candidate already exists (only for PDF uploads where name is stable)
             cursor.execute('SELECT id FROM extracted_skills WHERE candidate_name = ?', (candidate_name,))
             exists = cursor.fetchone()
-        if not exists:
-            # Insert row
+            if not exists:
+                # Insert row
+                cursor.execute(
+                    'INSERT INTO extracted_skills (candidate_name, cv_filename, skills_json, created_at) VALUES (?, ?, ?, ?)',
+                    (candidate_name, cv_filename, skills_json, datetime.now(timezone.utc).isoformat())
+                )
+                conn.commit()
+        else:
+            # JD flow: save into new job_required_skills table
+            required_skills_json = json.dumps(result)
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS job_required_skills (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    job_title TEXT NOT NULL,
+                    required_skills_json TEXT NOT NULL,
+                    created_at TEXT
+                )
+            ''')
             cursor.execute(
-                'INSERT INTO extracted_skills (candidate_name, cv_filename, skills_json) VALUES (?, ?, ?)',
-                (candidate_name, cv_filename, skills_json)
+                'INSERT INTO job_required_skills (job_title, required_skills_json, created_at) VALUES (?, ?, ?)',
+                (jt, required_skills_json, datetime.now(timezone.utc).isoformat())
             )
             conn.commit()
+
         conn.close()
 
         return JSONResponse(content=result)
