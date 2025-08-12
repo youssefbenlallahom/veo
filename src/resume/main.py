@@ -91,40 +91,38 @@ async def extract_skills_from_cv(
         if file is not None:
             # Prepare data for DB (PDF flow)
             skills_json = json.dumps(result)
-            # Create table if not exists
+            # Create table if not exists (without created_at)
             cursor.execute('''
                 CREATE TABLE IF NOT EXISTS extracted_skills (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     candidate_name TEXT,
                     cv_filename TEXT,
-                    skills_json TEXT,
-                    created_at TEXT
+                    skills_json TEXT
                 )
             ''')
             # Check if candidate already exists (only for PDF uploads where name is stable)
             cursor.execute('SELECT id FROM extracted_skills WHERE candidate_name = ?', (candidate_name,))
             exists = cursor.fetchone()
             if not exists:
-                # Insert row
+                # Insert row (without created_at)
                 cursor.execute(
-                    'INSERT INTO extracted_skills (candidate_name, cv_filename, skills_json, created_at) VALUES (?, ?, ?, ?)',
-                    (candidate_name, cv_filename, skills_json, datetime.now(timezone.utc).isoformat())
+                    'INSERT INTO extracted_skills (candidate_name, cv_filename, skills_json) VALUES (?, ?, ?)',
+                    (candidate_name, cv_filename, skills_json)
                 )
                 conn.commit()
         else:
-            # JD flow: save into new job_required_skills table
+            # JD flow: save into new job_required_skills table (without created_at)
             required_skills_json = json.dumps(result)
             cursor.execute('''
                 CREATE TABLE IF NOT EXISTS job_required_skills (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     job_title TEXT NOT NULL,
-                    required_skills_json TEXT NOT NULL,
-                    created_at TEXT
+                    required_skills_json TEXT NOT NULL
                 )
             ''')
             cursor.execute(
-                'INSERT INTO job_required_skills (job_title, required_skills_json, created_at) VALUES (?, ?, ?)',
-                (jt, required_skills_json, datetime.now(timezone.utc).isoformat())
+                'INSERT INTO job_required_skills (job_title, required_skills_json) VALUES (?, ?)',
+                (jt, required_skills_json)
             )
             conn.commit()
 
