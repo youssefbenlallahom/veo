@@ -14,6 +14,7 @@ import json
 from datetime import datetime, timezone
 from dotenv import load_dotenv
 from src.resume.crew import Resume
+from src.resume.skill_extraction import extract_skills_from_pdf  # <-- Import the skill extraction function
 import sys
 import os
 
@@ -42,6 +43,86 @@ app.add_middleware(
 )
 
 # --- Pydantic Models ---
+
+@app.post("/extract-skills-from-cv")
+async def extract_skills_from_cv(file: UploadFile = File(...)):
+    """Extract technical skills from an uploaded PDF resume (CV) and save to extracted_skills table."""
+    import sqlite3
+    try:
+        # Save uploaded file to a temporary location
+        contents = await file.read()
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp_file:
+            tmp_file.write(contents)
+            temp_pdf_path = tmp_file.name
+        # Run extraction
+        result = extract_skills_from_pdf(temp_pdf_path)
+        # Prepare data for DB
+        candidate_name = os.path.splitext(file.filename)[0]
+        cv_filename = file.filename
+        skills_json = json.dumps(result)
+        # Save to SQLite database (candidate_reports.db in project root)
+        db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'candidate_reports.db')
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        # Create table if not exists
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS extracted_skills (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                candidate_name TEXT,
+                cv_filename TEXT,
+                skills_json TEXT
+            )
+        ''')
+        # Check if candidate already exists
+        cursor.execute('SELECT id FROM extracted_skills WHERE candidate_name = ?', (candidate_name,))
+        exists = cursor.fetchone()
+        if not exists:
+            # Insert row only if candidate does not exist
+            cursor.execute(
+                'INSERT INTO extracted_skills (candidate_name, cv_filename, skills_json) VALUES (?, ?, ?)',
+                (candidate_name, cv_filename, skills_json)
+            )
+            conn.commit()
+        conn.close()
+        # Clean up temp file
+        os.remove(temp_pdf_path)
+        return JSONResponse(content=result)
+    except Exception as e:
+        return JSONResponse(content={"Error": [str(e)]}, status_code=500)
+    
+# --- Display Extracted Skills Endpoint ---
+@app.get("/display_skills")
+def display_skills():
+    """Return all candidates and their skills from extracted_skills table."""
+    import sqlite3
+    db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'candidate_reports.db')
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS extracted_skills (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            candidate_name TEXT,
+            cv_filename TEXT,
+            skills_json TEXT
+        )
+    ''')
+    cursor.execute('SELECT candidate_name, cv_filename, skills_json FROM extracted_skills')
+    rows = cursor.fetchall()
+    conn.close()
+    # Prepare response
+    result = []
+    for row in rows:
+        candidate_name, cv_filename, skills_json = row
+        try:
+            skills = json.loads(skills_json)
+        except Exception:
+            skills = skills_json
+        result.append({
+            "candidate_name": candidate_name,
+            "cv_filename": cv_filename,
+            "skills": skills
+        })
+    return JSONResponse(content={"candidates": result})
 class ExtractSkillsRequest(BaseModel):
     job_title: str
     job_description: str
