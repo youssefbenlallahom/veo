@@ -63,7 +63,7 @@ def extract_skills_from_pdf(pdf_path: str) -> Dict[str, List[str]]:
         )
         
         # Step 3: Create skill extraction prompt
-        prompt = f"""You are an expert HR assistant that extracts technical skills from resumes and groups them into standardized categories.
+        prompt = f"""You are an expert HR assistant that extracts technical skills from resumes or job_descriptions and group them into standardized categories.
 
 SKILL CATEGORIES TO USE:
 - Business Intelligence: Power BI, Tableau, QlikView, Looker, etc.
