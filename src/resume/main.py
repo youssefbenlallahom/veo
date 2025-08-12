@@ -45,20 +45,40 @@ app.add_middleware(
 # --- Pydantic Models ---
 
 @app.post("/extract-skills-from-cv")
-async def extract_skills_from_cv(file: UploadFile = File(...)):
-    """Extract technical skills from an uploaded PDF resume (CV) and save to extracted_skills table."""
+async def extract_skills_from_cv(
+    file: UploadFile | None = File(None),
+    job_description: str | None = Form(None)
+):
+    """Extract technical skills from either an uploaded PDF resume (CV) or a raw job description string and save to extracted_skills table."""
     import sqlite3
+    temp_pdf_path = None
     try:
-        # Save uploaded file to a temporary location
-        contents = await file.read()
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp_file:
-            tmp_file.write(contents)
-            temp_pdf_path = tmp_file.name
-        # Run extraction
-        result = extract_skills_from_pdf(temp_pdf_path)
+        # Validate inputs: exactly one of file or job_description
+        if (file is None and not job_description) or (file is not None and job_description):
+            raise ValueError("Provide exactly one input: either a PDF file or a job_description string.")
+
+        # Prepare input and metadata
+        if file is not None:
+            # Save uploaded file to a temporary location
+            contents = await file.read()
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp_file:
+                tmp_file.write(contents)
+                temp_pdf_path = tmp_file.name
+            # Run extraction from PDF
+            result = extract_skills_from_pdf(pdf_path=temp_pdf_path)
+            candidate_name = os.path.splitext(file.filename)[0]
+            cv_filename = file.filename
+        else:
+            # Run extraction from job description text
+            jd_text = (job_description or "").strip()
+            if not jd_text:
+                raise ValueError("Provided job_description is empty.")
+            result = extract_skills_from_pdf(job_description=jd_text)
+            # Derive a name placeholder for DB row
+            candidate_name = f"job_description_{datetime.now().strftime('%Y%m%d%H%M%S')}"
+            cv_filename = None
+
         # Prepare data for DB
-        candidate_name = os.path.splitext(file.filename)[0]
-        cv_filename = file.filename
         skills_json = json.dumps(result)
         # Save to SQLite database (candidate_reports.db in project root)
         db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'candidate_reports.db')
@@ -73,22 +93,31 @@ async def extract_skills_from_cv(file: UploadFile = File(...)):
                 skills_json TEXT
             )
         ''')
-        # Check if candidate already exists
-        cursor.execute('SELECT id FROM extracted_skills WHERE candidate_name = ?', (candidate_name,))
-        exists = cursor.fetchone()
+        # Check if candidate already exists (only for PDF uploads where name is stable)
+        should_check_dup = file is not None
+        exists = None
+        if should_check_dup:
+            cursor.execute('SELECT id FROM extracted_skills WHERE candidate_name = ?', (candidate_name,))
+            exists = cursor.fetchone()
         if not exists:
-            # Insert row only if candidate does not exist
+            # Insert row
             cursor.execute(
                 'INSERT INTO extracted_skills (candidate_name, cv_filename, skills_json) VALUES (?, ?, ?)',
                 (candidate_name, cv_filename, skills_json)
             )
             conn.commit()
         conn.close()
-        # Clean up temp file
-        os.remove(temp_pdf_path)
+
         return JSONResponse(content=result)
     except Exception as e:
         return JSONResponse(content={"Error": [str(e)]}, status_code=500)
+    finally:
+        # Clean up temp file if created
+        try:
+            if temp_pdf_path and os.path.exists(temp_pdf_path):
+                os.remove(temp_pdf_path)
+        except Exception:
+            pass
     
 # --- Display Extracted Skills Endpoint ---
 @app.get("/display_skills")
