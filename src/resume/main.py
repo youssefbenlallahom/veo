@@ -43,6 +43,123 @@ app.add_middleware(
 )
 
 # --- Pydantic Models ---
+class SkillMatchRequest(BaseModel):
+    candidate_skills: dict
+    job_skills: dict
+
+class SkillMatchResponse(BaseModel):
+    match_percentage: float
+    is_match: bool
+    error: Optional[str] = None
+
+@app.post("/analyze-skill-match", response_model=SkillMatchResponse)
+def api_analyze_skill_match(data: SkillMatchRequest):
+    """
+    API endpoint to analyze skill match between candidate and job using Azure AI LLM.
+    """
+    print("/analyze-skill-match called with:")
+    print("Candidate Skills:", json.dumps(data.candidate_skills, indent=2))
+    print("Job Skills:", json.dumps(data.job_skills, indent=2))
+    result = analyze_skill_match(data.candidate_skills, data.job_skills)
+    if "Error" in result:
+        return SkillMatchResponse(match_percentage=0.0, is_match=False, error=result["Error"])
+    return SkillMatchResponse(
+        match_percentage=result.get("match_percentage", 0.0),
+        is_match=result.get("is_match", False)
+    )
+def analyze_skill_match(candidate_skills: dict, job_skills: dict) -> dict:
+    """
+    Deterministic skill matching using embeddings for semantic similarity.
+    The LLM is used only for reasoning/explanation, not for percentage calculation.
+    """
+    import os
+    import json
+    from openai import AzureOpenAI
+    from crewai.llm import LLM
+
+    # --- Step 1: Flatten skills ---
+    def flatten_skills(skills_dict):
+        skills = []
+        for v in skills_dict.values():
+            if isinstance(v, list):
+                skills.extend(v)
+        return sorted(set([s.strip() for s in skills if s and isinstance(s, str)]))
+
+    flat_candidate_skills = flatten_skills(candidate_skills)
+    flat_job_skills = flatten_skills(job_skills)
+
+    # --- Step 2: Create Azure OpenAI embedding client ---
+    api_key = os.getenv("AZURE_AI_API_KEY")
+    base_url = os.getenv("AZURE_AI_ENDPOINT")
+    api_version = os.getenv("AZURE_AI_API_VERSION")
+    model = os.getenv("AZURE_EMBEDDING_MODEL", "text-embedding-ada-002")  # default if not set
+
+    if not api_key or not base_url:
+        return {"error": "Missing Azure AI credentials"}
+
+    client = AzureOpenAI(
+        api_key=api_key,
+        azure_endpoint=base_url,
+        api_version=api_version
+    )
+
+    # --- Step 3: Compute similarity scores ---
+    from numpy import dot
+    from numpy.linalg import norm
+
+    def cosine_similarity(vec1, vec2):
+        return dot(vec1, vec2) / (norm(vec1) * norm(vec2))
+
+    def get_embedding(text):
+        return client.embeddings.create(input=text, model=model).data[0].embedding
+
+    job_embeddings = {skill: get_embedding(skill) for skill in flat_job_skills}
+    candidate_embeddings = {skill: get_embedding(skill) for skill in flat_candidate_skills}
+
+    matched_count = 0
+    matched_skills = []
+
+    for job_skill, job_vec in job_embeddings.items():
+        best_match = max(
+            (cosine_similarity(job_vec, cand_vec), cand_skill)
+            for cand_skill, cand_vec in candidate_embeddings.items()
+        )
+        if best_match[0] >= 0.80:  # similarity threshold
+            matched_count += 1
+            matched_skills.append((job_skill, best_match[1], round(best_match[0], 2)))
+
+    # --- Step 4: Calculate deterministic match percentage ---
+    match_percentage = (matched_count / len(flat_job_skills)) * 100 if flat_job_skills else 0
+    is_match = match_percentage >= 50
+
+    # --- Step 5: (Optional) Ask LLM for reasoning ---
+    reasoning = ""
+    try:
+        llm = LLM(
+            model=os.getenv("model"),
+            api_key=api_key,
+            base_url=base_url,
+            api_version=api_version,
+            temperature=0.0,
+            stream=False,
+        )
+        reasoning_prompt = (
+            f"You are an HR assistant. Based on the following matched skills, explain why the candidate {'is' if is_match else 'is not'} a good fit.\n"
+            f"Matched skills (job → candidate, similarity): {matched_skills}\n"
+            f"Match percentage: {match_percentage:.1f}%"
+        )
+        reasoning = llm.call([{"role": "user", "content": reasoning_prompt}]).strip()
+    except Exception as e:
+        reasoning = f"Reasoning not available: {e}"
+
+    return {
+        "match_percentage": round(match_percentage, 1),
+        "is_match": is_match,
+        "matched_skills": matched_skills,
+        "reasoning": reasoning,
+        "error": None
+    }
+
 
 @app.post("/extract-skills-from-cv")
 async def extract_skills_from_cv(
@@ -120,11 +237,15 @@ async def extract_skills_from_cv(
                     required_skills_json TEXT NOT NULL
                 )
             ''')
-            cursor.execute(
-                'INSERT INTO job_required_skills (job_title, required_skills_json) VALUES (?, ?)',
-                (jt, required_skills_json)
-            )
-            conn.commit()
+            # Check if job_title already exists
+            cursor.execute('SELECT id FROM job_required_skills WHERE job_title = ?', (jt,))
+            job_exists = cursor.fetchone()
+            if not job_exists:
+                cursor.execute(
+                    'INSERT INTO job_required_skills (job_title, required_skills_json) VALUES (?, ?)',
+                    (jt, required_skills_json)
+                )
+                conn.commit()
 
         conn.close()
 
