@@ -69,15 +69,13 @@ def api_analyze_skill_match(data: SkillMatchRequest):
     )
 def analyze_skill_match(candidate_skills: dict, job_skills: dict) -> dict:
     """
-    Deterministic skill matching using embeddings for semantic similarity.
-    The LLM is used only for reasoning/explanation, not for percentage calculation.
+    Use Azure AI LLM to analyze if candidate skills match at least 50% of job skills.
+    Returns a dict with match_percentage and is_match (True/False).
     """
     import os
-    import json
-    from openai import AzureOpenAI
     from crewai.llm import LLM
-
-    # --- Step 1: Flatten skills ---
+    import json
+    # Flatten candidate and job skills for direct comparison
     def flatten_skills(skills_dict):
         skills = []
         for v in skills_dict.values():
@@ -88,78 +86,44 @@ def analyze_skill_match(candidate_skills: dict, job_skills: dict) -> dict:
     flat_candidate_skills = flatten_skills(candidate_skills)
     flat_job_skills = flatten_skills(job_skills)
 
-    # --- Step 2: Create Azure OpenAI embedding client ---
+    model = os.getenv("model")
     api_key = os.getenv("AZURE_AI_API_KEY")
     base_url = os.getenv("AZURE_AI_ENDPOINT")
     api_version = os.getenv("AZURE_AI_API_VERSION")
-    model = os.getenv("AZURE_EMBEDDING_MODEL", "text-embedding-ada-002")  # default if not set
-
-    if not api_key or not base_url:
-        return {"error": "Missing Azure AI credentials"}
-
-    client = AzureOpenAI(
+    if not model or not api_key or not base_url:
+        return {"Error": "Azure AI credentials not found. Set model, AZURE_AI_API_KEY, AZURE_AI_ENDPOINT, and AZURE_AI_API_VERSION in .env file"}
+    llm = LLM(
+        model=model,
         api_key=api_key,
-        azure_endpoint=base_url,
-        api_version=api_version
+        base_url=base_url,
+        api_version=api_version,
+        temperature=0.0,
+        stream=False,
     )
-
-    # --- Step 3: Compute similarity scores ---
-    from numpy import dot
-    from numpy.linalg import norm
-
-    def cosine_similarity(vec1, vec2):
-        return dot(vec1, vec2) / (norm(vec1) * norm(vec2))
-
-    def get_embedding(text):
-        return client.embeddings.create(input=text, model=model).data[0].embedding
-
-    job_embeddings = {skill: get_embedding(skill) for skill in flat_job_skills}
-    candidate_embeddings = {skill: get_embedding(skill) for skill in flat_candidate_skills}
-
-    matched_count = 0
-    matched_skills = []
-
-    for job_skill, job_vec in job_embeddings.items():
-        best_match = max(
-            (cosine_similarity(job_vec, cand_vec), cand_skill)
-            for cand_skill, cand_vec in candidate_embeddings.items()
-        )
-        if best_match[0] >= 0.80:  # similarity threshold
-            matched_count += 1
-            matched_skills.append((job_skill, best_match[1], round(best_match[0], 2)))
-
-    # --- Step 4: Calculate deterministic match percentage ---
-    match_percentage = (matched_count / len(flat_job_skills)) * 100 if flat_job_skills else 0
-    is_match = match_percentage >= 50
-
-    # --- Step 5: (Optional) Ask LLM for reasoning ---
-    reasoning = ""
+    prompt = (
+        "You are an expert HR assistant. Given two lists of skills, one for a candidate and one for a job, analyze the match.\n"
+        f"Candidate Skills List:\n{json.dumps(flat_candidate_skills, indent=2)}\n"
+        f"Job Skills List:\n{json.dumps(flat_job_skills, indent=2)}\n"
+        "Instructions:\n"
+        "1. For each job skill, check if the candidate has that skill, considering synonyms, related skills, and partial matches.\n"
+        "2. Consider skills as matched if they are semantically similar, even if the names are not identical.\n"
+        "3. Calculate the percentage of job skills matched by the candidate.\n"
+        "4. If the candidate matches at least 50% of the job skills, return is_match: true. Otherwise, is_match: false.\n"
+        "5. Return ONLY valid JSON in this format (do not use Python formatting):\n"
+        "{\n  \"match_percentage\": 0.0,\n  \"is_match\": true\n}\n"
+    )
+    response = llm.call([{"role": "user", "content": prompt}])
+    response_text = response.strip()
+    import re
+    json_match = re.search(r'\{.*?\}', response_text, re.DOTALL)
+    if not json_match:
+        return {"Error": f"No JSON found in response: {response_text[:200]}..."}
+    json_text = json_match.group(0)
     try:
-        llm = LLM(
-            model=os.getenv("model"),
-            api_key=api_key,
-            base_url=base_url,
-            api_version=api_version,
-            temperature=0.0,
-            stream=False,
-        )
-        reasoning_prompt = (
-            f"You are an HR assistant. Based on the following matched skills, explain why the candidate {'is' if is_match else 'is not'} a good fit.\n"
-            f"Matched skills (job → candidate, similarity): {matched_skills}\n"
-            f"Match percentage: {match_percentage:.1f}%"
-        )
-        reasoning = llm.call([{"role": "user", "content": reasoning_prompt}]).strip()
+        result = json.loads(json_text)
     except Exception as e:
-        reasoning = f"Reasoning not available: {e}"
-
-    return {
-        "match_percentage": round(match_percentage, 1),
-        "is_match": is_match,
-        "matched_skills": matched_skills,
-        "reasoning": reasoning,
-        "error": None
-    }
-
+        return {"Error": f"JSON parsing failed: {str(e)}. Response: {response_text[:200]}..."}
+    return result
 
 @app.post("/extract-skills-from-cv")
 async def extract_skills_from_cv(
