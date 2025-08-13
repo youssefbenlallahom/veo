@@ -67,14 +67,17 @@ def api_analyze_skill_match(data: SkillMatchRequest):
         match_percentage=result.get("match_percentage", 0.0),
         is_match=result.get("is_match", False)
     )
+
 def analyze_skill_match(candidate_skills: dict, job_skills: dict) -> dict:
     """
-    Use Azure AI LLM to analyze if candidate skills match at least 50% of job skills.
-    Returns a dict with match_percentage and is_match (True/False).
+    Use Azure AI LLM to decide if a candidate's skills are enough for potential success in a job.
+    Includes transferable skills and obvious overlaps (SQL ↔ PL/SQL, AWS ↔ AWS, etc.).
     """
     import os
     from crewai.llm import LLM
     import json
+    import re
+
     # Flatten candidate and job skills for direct comparison
     def flatten_skills(skills_dict):
         skills = []
@@ -90,8 +93,10 @@ def analyze_skill_match(candidate_skills: dict, job_skills: dict) -> dict:
     api_key = os.getenv("AZURE_AI_API_KEY")
     base_url = os.getenv("AZURE_AI_ENDPOINT")
     api_version = os.getenv("AZURE_AI_API_VERSION")
+
     if not model or not api_key or not base_url:
-        return {"Error": "Azure AI credentials not found. Set model, AZURE_AI_API_KEY, AZURE_AI_ENDPOINT, and AZURE_AI_API_VERSION in .env file"}
+        return {"Error": "Azure AI credentials not found."}
+
     llm = LLM(
         model=model,
         api_key=api_key,
@@ -100,30 +105,39 @@ def analyze_skill_match(candidate_skills: dict, job_skills: dict) -> dict:
         temperature=0.0,
         stream=False,
     )
+
     prompt = (
-        "You are an expert HR assistant. Given two lists of skills, one for a candidate and one for a job, analyze the match.\n"
+        "You are an expert HR assistant for a talent sourcing system.\n"
+        "Given two lists of skills — one for a candidate and one for a job — determine if the candidate could realistically perform well in this job.\n"
+        "Important:\n"
+        "1. The candidate does NOT need to have all job-required skills exactly.\n"
+        "2. Consider transferable skills, related technologies, and relevant industry experience.\n"
+        "3. Recognize obvious overlaps (e.g., SQL ↔ PL/SQL/SQL Server/MySQL, BI tools ↔ dashboards/reporting).\n"
+        "4. Be generous in recognizing potential — if the candidate could succeed with minimal upskilling, count it as a match.\n"
+        "5. Count each job skill as matched if the candidate has it exactly, has a synonym, or a directly related skill.\n"
+        "6. Calculate match_percentage = (matched job skills / total job skills) * 100.\n"
+        "7. If match_percentage >= 40, set is_match to true (since this is for recommendations).\n"
+        "8. Return ONLY valid JSON in this format:\n"
+        "{\n  \"match_percentage\": 0.0,\n  \"is_match\": true\n}\n"
         f"Candidate Skills List:\n{json.dumps(flat_candidate_skills, indent=2)}\n"
         f"Job Skills List:\n{json.dumps(flat_job_skills, indent=2)}\n"
-        "Instructions:\n"
-        "1. For each job skill, check if the candidate has that skill, considering synonyms, related skills, and partial matches.\n"
-        "2. Consider skills as matched if they are semantically similar, even if the names are not identical.\n"
-        "3. Calculate the percentage of job skills matched by the candidate.\n"
-        "4. If the candidate matches at least 50% of the job skills, return is_match: true. Otherwise, is_match: false.\n"
-        "5. Return ONLY valid JSON in this format (do not use Python formatting):\n"
-        "{\n  \"match_percentage\": 0.0,\n  \"is_match\": true\n}\n"
     )
+
     response = llm.call([{"role": "user", "content": prompt}])
     response_text = response.strip()
-    import re
+
     json_match = re.search(r'\{.*?\}', response_text, re.DOTALL)
     if not json_match:
         return {"Error": f"No JSON found in response: {response_text[:200]}..."}
+
     json_text = json_match.group(0)
     try:
         result = json.loads(json_text)
     except Exception as e:
         return {"Error": f"JSON parsing failed: {str(e)}. Response: {response_text[:200]}..."}
+
     return result
+
 
 @app.post("/extract-skills-from-cv")
 async def extract_skills_from_cv(
