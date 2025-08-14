@@ -52,42 +52,46 @@ class SkillMatchResponse(BaseModel):
     is_match: bool
     error: Optional[str] = None
 
-@app.post("/analyze-skill-match", response_model=SkillMatchResponse)
-def api_analyze_skill_match(data: SkillMatchRequest):
+
+# New request/response models
+from pydantic import BaseModel
+from typing import List, Dict, Optional
+
+class CandidateInput(BaseModel):
+    name: str
+    skills: Dict[str, List[str]]
+
+class MultiSkillMatchRequest(BaseModel):
+    candidates: List[CandidateInput]
+    job_skills: Dict[str, List[str]]
+
+class MultiSkillMatchResponse(BaseModel):
+    matched_candidates: List[str]
+    errors: Optional[Dict[str, str]] = None
+
+@app.post("/analyze-skill-match-multi", response_model=MultiSkillMatchResponse)
+def api_analyze_skill_match_multi(data: MultiSkillMatchRequest):
     """
-    API endpoint to analyze skill match between candidate and job using Azure AI LLM.
+    API endpoint to analyze skill match for multiple candidates against a job using Azure AI LLM.
     """
-    print("/analyze-skill-match called with:")
-    print("Candidate Skills:", json.dumps(data.candidate_skills, indent=2))
+    print("/analyze-skill-match-multi called with:")
+    print("Candidates:", [c.name for c in data.candidates])
     print("Job Skills:", json.dumps(data.job_skills, indent=2))
-    result = analyze_skill_match(data.candidate_skills, data.job_skills)
-    if "Error" in result:
-        return SkillMatchResponse(match_percentage=0.0, is_match=False, error=result["Error"])
-    return SkillMatchResponse(
-        match_percentage=result.get("match_percentage", 0.0),
-        is_match=result.get("is_match", False)
-    )
+    matched = []
+    errors = {}
+    for candidate in data.candidates:
+        result = analyze_skill_match(candidate.skills, data.job_skills)
+        if "Error" in result:
+            errors[candidate.name] = result["Error"]
+        elif result.get("is_match", False):
+            matched.append(candidate.name)
+    return MultiSkillMatchResponse(matched_candidates=matched, errors=errors if errors else None)
+
 
 def analyze_skill_match(candidate_skills: dict, job_skills: dict) -> dict:
-    """
-    Use Azure AI LLM to decide if a candidate's skills are enough for potential success in a job.
-    Includes transferable skills and obvious overlaps (SQL ↔ PL/SQL, AWS ↔ AWS, etc.).
-    """
     import os
-    from crewai.llm import LLM
     import json
-    import re
-
-    # Flatten candidate and job skills for direct comparison
-    def flatten_skills(skills_dict):
-        skills = []
-        for v in skills_dict.values():
-            if isinstance(v, list):
-                skills.extend(v)
-        return sorted(set([s.strip() for s in skills if s and isinstance(s, str)]))
-
-    flat_candidate_skills = flatten_skills(candidate_skills)
-    flat_job_skills = flatten_skills(job_skills)
+    from crewai.llm import LLM
 
     model = os.getenv("model")
     api_key = os.getenv("AZURE_AI_API_KEY")
@@ -104,39 +108,46 @@ def analyze_skill_match(candidate_skills: dict, job_skills: dict) -> dict:
         api_version=api_version,
         temperature=0.0,
         stream=False,
+        format="json"
     )
 
-    prompt = (
-        "You are an expert HR assistant for a talent sourcing system.\n"
-        "Given two lists of skills — one for a candidate and one for a job — determine if the candidate could realistically perform well in this job.\n"
-        "Important:\n"
-        "1. The candidate does NOT need to have all job-required skills exactly.\n"
-        "2. Consider transferable skills, related technologies, and relevant industry experience.\n"
-        "3. Recognize obvious overlaps (e.g., SQL ↔ PL/SQL/SQL Server/MySQL, BI tools ↔ dashboards/reporting).\n"
-        "4. Be generous in recognizing potential — if the candidate could succeed with minimal upskilling, count it as a match.\n"
-        "5. Count each job skill as matched if the candidate has it exactly, has a synonym, or a directly related skill.\n"
-        "6. Calculate match_percentage = (matched job skills / total job skills) * 100.\n"
-        "7. If match_percentage >= 40, set is_match to true (since this is for recommendations).\n"
-        "8. Return ONLY valid JSON in this format:\n"
-        "{\n  \"match_percentage\": 0.0,\n  \"is_match\": true\n}\n"
-        f"Candidate Skills List:\n{json.dumps(flat_candidate_skills, indent=2)}\n"
-        f"Job Skills List:\n{json.dumps(flat_job_skills, indent=2)}\n"
+    # ----------------------
+    # System prompt: mention synonyms explicitly
+    # ----------------------
+    system_prompt = (
+        "You are an expert HR assistant. Compare a candidate's skills to a job's required skills. "
+        "Count as matches both exact skills and recognized synonyms or closely related technologies. "
+        "For example:\n"
+        "- 'Power BI' or 'Microsoft Power BI' should match 'Dashboards' and 'Visualizations'.\n"
+        "- 'SQL', 'PostgreSQL', 'SQL Server', 'MySQL', or 'SQLite' are considered equivalent.\n"
+        "- 'Excel' or 'Microsoft Excel' counts as 'Reporting'.\n"
+        "Do NOT count unrelated or inferred skills beyond these synonyms. "
+        "Compute match_percentage based on total job skills matched by exact skills or synonyms. "
+        "If match_percentage >= 50, set is_match = true. "
+        "Return ONLY valid JSON with these fields: match_percentage, is_match, matched_skills, missing_skills. "
+        "Do not include explanations, guesses, or extra text."
     )
 
-    response = llm.call([{"role": "user", "content": prompt}])
-    response_text = response.strip()
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {
+            "role": "user",
+            "content": json.dumps({
+                "candidate_skills": candidate_skills,
+                "job_skills": job_skills
+            })
+        }
+    ]
 
-    json_match = re.search(r'\{.*?\}', response_text, re.DOTALL)
-    if not json_match:
-        return {"Error": f"No JSON found in response: {response_text[:200]}..."}
-
-    json_text = json_match.group(0)
     try:
-        result = json.loads(json_text)
+        response = llm.call(messages)
+        print("LLM raw response:", response)
+        return json.loads(response)
+    except json.JSONDecodeError:
+        return {"Error": "Invalid JSON returned by LLM", "raw_response": response}
     except Exception as e:
-        return {"Error": f"JSON parsing failed: {str(e)}. Response: {response_text[:200]}..."}
+        return {"Error": str(e)}
 
-    return result
 
 
 @app.post("/extract-skills-from-cv")
