@@ -44,12 +44,21 @@ app.add_middleware(
 
 # --- Pydantic Models ---
 class SkillMatchRequest(BaseModel):
-    candidate_skills: dict
-    job_skills: dict
+    candidate_skills: dict  # Dict[str, List[str]] ideally; accepts list too and normalizes
+    job_skills: dict        # Dict[str, List[str]] ideally; accepts list too and normalizes
+    synonyms: Optional[Dict[str, List[str]]] = None  # {"canonical": ["alias1", "alias2"]}
+    include_fuzzy: bool = True
+    fuzzy_threshold: int = 85
+    debug: bool = False
 
 class SkillMatchResponse(BaseModel):
     match_percentage: float
     is_match: bool
+    matched_skills: Dict[str, List[str]]
+    missing_skills: Dict[str, List[str]]
+    extra_skills: Dict[str, List[str]]
+    matched_count: int
+    total_required: int
     error: Optional[str] = None
 
 
@@ -86,6 +95,167 @@ def api_analyze_skill_match_multi(data: MultiSkillMatchRequest):
         elif result.get("is_match", False):
             matched.append(candidate.name)
     return MultiSkillMatchResponse(matched_candidates=matched, errors=errors if errors else None)
+
+
+# --- Deterministic Skill Matching (no LLM) ---
+def _normalize_skill(s: str) -> str:
+    return (s or "").strip().lower()
+
+
+def _build_reverse_synonyms(synonyms: Optional[Dict[str, List[str]]]) -> Dict[str, str]:
+    """Build alias -> canonical map from {canonical: [aliases]} input."""
+    reverse: Dict[str, str] = {}
+    if not synonyms:
+        return reverse
+    for canonical, alias_list in synonyms.items():
+        can_norm = _normalize_skill(canonical)
+        reverse[can_norm] = can_norm
+        if isinstance(alias_list, list):
+            for alias in alias_list:
+                reverse[_normalize_skill(alias)] = can_norm
+    return reverse
+
+
+def _canonicalize(skill: str, reverse_syn: Dict[str, str]) -> str:
+    norm = _normalize_skill(skill)
+    return reverse_syn.get(norm, norm)
+
+
+def _ensure_category_dict(x) -> Dict[str, List[str]]:
+    # Accept both {category: [skills]} or [skills]
+    if isinstance(x, dict):
+        return {k: (v if isinstance(v, list) else [v]) for k, v in x.items()}
+    if isinstance(x, list):
+        return {"General": x}
+    return {}
+
+
+@app.post("/skill-match", response_model=SkillMatchResponse)
+def skill_match(data: SkillMatchRequest):
+    try:
+        from rapidfuzz import process, fuzz
+    except Exception as e:
+        return SkillMatchResponse(
+            match_percentage=0.0,
+            is_match=False,
+            matched_skills={},
+            missing_skills={},
+            extra_skills={},
+            matched_count=0,
+            total_required=0,
+            error=f"rapidfuzz not available: {str(e)}"
+        )
+
+    # Normalize inputs
+    cand_by_cat = _ensure_category_dict(data.candidate_skills)
+    job_by_cat = _ensure_category_dict(data.job_skills)
+    reverse_syn = _build_reverse_synonyms(data.synonyms)
+
+    if data.debug:
+        try:
+            print("[skill-match] debug=on")
+            print("[skill-match] synonyms (canonical -> aliases):", json.dumps(data.synonyms or {}, indent=2))
+            print("[skill-match] reverse synonym map size:", len(reverse_syn))
+            print("[skill-match] raw candidate_skills:", json.dumps(cand_by_cat, indent=2))
+            print("[skill-match] raw job_skills:", json.dumps(job_by_cat, indent=2))
+        except Exception:
+            pass
+
+    # Canonicalize skills
+    def canonize_list(skills: List[str]) -> List[str]:
+        out = []
+        for s in skills or []:
+            if not s:
+                continue
+            c = _canonicalize(s, reverse_syn)
+            if c:
+                out.append(c)
+        return out
+
+    cand_by_cat_canon: Dict[str, List[str]] = {
+        cat: sorted(set(canonize_list(skills))) for cat, skills in cand_by_cat.items()
+    }
+    job_by_cat_canon: Dict[str, List[str]] = {
+        cat: sorted(set(canonize_list(skills))) for cat, skills in job_by_cat.items()
+    }
+
+    if data.debug:
+        try:
+            print("[skill-match] canonical candidate_skills:", json.dumps(cand_by_cat_canon, indent=2))
+            print("[skill-match] canonical job_skills:", json.dumps(job_by_cat_canon, indent=2))
+        except Exception:
+            pass
+
+    # Build global candidate set for cross-category matching
+    all_cand_skills = sorted({s for lst in cand_by_cat_canon.values() for s in lst})
+
+    matched: Dict[str, List[str]] = {}
+    missing: Dict[str, List[str]] = {}
+    extra: Dict[str, List[str]] = {cat: list(skills) for cat, skills in cand_by_cat_canon.items()}
+
+    matched_count = 0
+    total_required = sum(len(v) for v in job_by_cat_canon.values())
+
+    for cat, req_skills in job_by_cat_canon.items():
+        matched[cat] = []
+        missing[cat] = []
+        for req in req_skills:
+            # Exact/canonical match first
+            if req in all_cand_skills:
+                matched[cat].append(req)
+                matched_count += 1
+                # Remove from extra if present in any category
+                for ecat, eskills in extra.items():
+                    if req in eskills:
+                        eskills.remove(req)
+                continue
+
+            # Fuzzy match if enabled
+            if data.include_fuzzy and all_cand_skills:
+                best = process.extractOne(req, all_cand_skills, scorer=fuzz.token_set_ratio)
+                if data.debug and best:
+                    try:
+                        print(f"[skill-match] fuzzy check: req='{req}' -> best='{best[0]}' score={best[1]}")
+                    except Exception:
+                        pass
+                if best and best[1] >= data.fuzzy_threshold:
+                    best_skill = best[0]
+                    matched[cat].append(best_skill)
+                    matched_count += 1
+                    for ecat, eskills in extra.items():
+                        if best_skill in eskills:
+                            eskills.remove(best_skill)
+                    continue
+
+            # Otherwise it's missing
+            missing[cat].append(req)
+
+    # Clean empty categories for readability
+    matched = {k: v for k, v in matched.items() if v}
+    missing = {k: v for k, v in missing.items() if v}
+    extra = {k: v for k, v in extra.items() if v}
+
+    pct = (matched_count / total_required * 100.0) if total_required else 0.0
+
+    if data.debug:
+        try:
+            print("[skill-match] summary:")
+            print("  matched_count:", matched_count, " total_required:", total_required, " pct:", round(pct, 2))
+            print("  matched_skills:", json.dumps(matched, indent=2))
+            print("  missing_skills:", json.dumps(missing, indent=2))
+            print("  extra_skills:", json.dumps(extra, indent=2))
+        except Exception:
+            pass
+    return SkillMatchResponse(
+        match_percentage=round(pct, 2),
+        is_match=pct >= 50.0,
+        matched_skills=matched,
+        missing_skills=missing,
+        extra_skills=extra,
+        matched_count=matched_count,
+        total_required=total_required,
+        error=None,
+    )
 
 
 def analyze_skill_match(candidate_skills: dict, job_skills: dict) -> dict:
