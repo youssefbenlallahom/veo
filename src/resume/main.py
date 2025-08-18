@@ -48,7 +48,7 @@ class SkillMatchRequest(BaseModel):
     job_skills: dict        # Dict[str, List[str]] ideally; accepts list too and normalizes
     synonyms: Optional[Dict[str, List[str]]] = None  # {"canonical": ["alias1", "alias2"]}
     include_fuzzy: bool = True
-    fuzzy_threshold: int = 85
+    fuzzy_threshold: int = 75
     debug: bool = False
 
 class SkillMatchResponse(BaseModel):
@@ -510,6 +510,26 @@ class SavedCandidateReport(BaseModel):
     class Config:
         from_attributes = True
 
+# Recommendation toggle models
+class ToggleRecommendRequest(BaseModel):
+    value: bool = True
+
+class BulkRecommendRequest(BaseModel):
+    candidate_names: List[str]
+    value: bool = True
+    job_title: Optional[str] = None
+
+class LLMRecommendRequest(BaseModel):
+    target_job_title: str
+    job_description: Optional[str] = None  # if provided, extract job skills on the fly
+    candidate_names: Optional[List[str]] = None  # if omitted, consider all from extracted_skills
+    rationale: bool = True  # include rationale in response
+
+class LLMRecommendResponse(BaseModel):
+    recommended_ids: List[int]
+    updated: int
+    details: Optional[List[Dict]] = None
+
 # --- Endpoints ---
 
 @app.post("/extract-skills", response_model=ExtractSkillsResponse)
@@ -583,6 +603,7 @@ def get_all_reports(
     limit: int = 100,
     candidate_name: str = None,
     job_title: str = None,
+    is_recommended: Optional[bool] = None,
     db: Session = Depends(get_db)
 ):
     """Get all reports with optional filtering."""
@@ -592,6 +613,8 @@ def get_all_reports(
         query = query.filter(CandidateReport.candidate_name.contains(candidate_name))
     if job_title:
         query = query.filter(CandidateReport.applied_job_title.contains(job_title))
+    if is_recommended is not None:
+        query = query.filter(CandidateReport.is_recommended == is_recommended)
     
     total = query.count()
     reports = query.offset(skip).limit(limit).order_by(CandidateReport.created_at.desc()).all()
@@ -1292,6 +1315,7 @@ def search_candidates(
     min_score: float = None,
     max_score: float = None,
     job_title: str = None,
+    recommended: Optional[bool] = None,
     limit: int = 50,
     db: Session = Depends(get_db)
 ):
@@ -1306,6 +1330,8 @@ def search_candidates(
         query = query.filter(CandidateReport.total_weighted_score <= max_score)
     if job_title:
         query = query.filter(CandidateReport.applied_job_title.ilike(f"%{job_title}%"))
+    if recommended is not None:
+        query = query.filter(CandidateReport.is_recommended == recommended)
     
     candidates = query.order_by(
         CandidateReport.total_weighted_score.desc()
@@ -1315,6 +1341,205 @@ def search_candidates(
         "candidates": candidates,
         "count": len(candidates)
     }
+
+# --- Recommendation Endpoints ---
+@app.patch("/reports/{report_id}/recommend")
+def set_report_recommendation(report_id: int, data: ToggleRecommendRequest, db: Session = Depends(get_db)):
+    """Toggle recommendation status for a specific report."""
+    report = db.query(CandidateReport).filter(CandidateReport.id == report_id).first()
+    if not report:
+        raise HTTPException(status_code=404, detail="Report not found")
+    report.is_recommended = data.value
+    db.commit()
+    db.refresh(report)
+    return {"id": report.id, "is_recommended": report.is_recommended}
+
+@app.post("/candidates/recommend")
+def bulk_recommend(data: BulkRecommendRequest, db: Session = Depends(get_db)):
+    """Bulk set recommendation flag by candidate names, optionally filtered by job_title.
+    This is useful after running matching logic elsewhere and wanting to persist the status.
+    """
+    if not data.candidate_names:
+        raise HTTPException(status_code=400, detail="candidate_names must not be empty")
+    query = db.query(CandidateReport).filter(CandidateReport.candidate_name.in_(data.candidate_names))
+    if data.job_title:
+        query = query.filter(CandidateReport.applied_job_title.ilike(f"%{data.job_title}%"))
+    reports = query.all()
+    for r in reports:
+        r.is_recommended = data.value
+    db.commit()
+    return {"updated": len(reports), "value": data.value}
+
+@app.get("/candidates/recommended")
+def list_recommended(limit: int = 50, job_title: Optional[str] = None, db: Session = Depends(get_db)):
+    query = db.query(CandidateReport).filter(CandidateReport.is_recommended == True)
+    if job_title:
+        query = query.filter(CandidateReport.applied_job_title.ilike(f"%{job_title}%"))
+    reports = query.order_by(CandidateReport.created_at.desc()).limit(limit).all()
+    return {"reports": reports, "count": len(reports)}
+
+# --- LLM-based Recommendation ---
+@app.post("/recommendations/llm", response_model=LLMRecommendResponse)
+def llm_recommend(data: LLMRecommendRequest, db: Session = Depends(get_db)):
+    """Use an LLM (temperature=0) to compare candidate skills vs job skills and persist recommendations.
+
+    - Job skills source: provided job_description (extract on the fly) OR saved job_required_skills by target_job_title.
+    - Candidate skills source: extracted_skills table (per candidate_name).
+    - For each candidate, the LLM receives both skill sets and returns {accept, reason, matched_skills, missing_skills}.
+    - If accept=true, mark is_recommended=True on that candidate's other job reports.
+    """
+    from crewai.llm import LLM
+    import sqlite3
+
+    model = os.getenv("model")
+    api_key = os.getenv("AZURE_AI_API_KEY")
+    base_url = os.getenv("AZURE_AI_ENDPOINT")
+    api_version = os.getenv("AZURE_AI_API_VERSION")
+    if not model or not api_key or not base_url:
+        raise HTTPException(status_code=500, detail="Azure AI credentials not configured")
+
+    # Resolve DB path for raw SQLite tables
+    db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'candidate_reports.db')
+
+    # 1) Build job_skills
+    if data.job_description and data.job_description.strip():
+        job_skills = extract_skills_from_pdf(job_description=data.job_description.strip(), job_title=data.target_job_title)
+        if not isinstance(job_skills, dict) or "Error" in job_skills:
+            raise HTTPException(status_code=400, detail=f"Failed to extract skills from job_description: {job_skills}")
+    else:
+        # Load from job_required_skills table
+        try:
+            conn = sqlite3.connect(db_path)
+            cur = conn.cursor()
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS job_required_skills (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    job_title TEXT NOT NULL,
+                    required_skills_json TEXT NOT NULL
+                )
+            """)
+            cur.execute("SELECT required_skills_json FROM job_required_skills WHERE job_title = ?", (data.target_job_title,))
+            row = cur.fetchone()
+        finally:
+            conn.close()
+        if not row:
+            raise HTTPException(status_code=404, detail=f"No required skills found for job_title: {data.target_job_title}")
+        try:
+            job_skills = json.loads(row[0])
+        except Exception:
+            raise HTTPException(status_code=500, detail="Invalid required_skills_json format in DB")
+
+    # 2) Build candidate list and candidate_skills per candidate
+    try:
+        conn = sqlite3.connect(db_path)
+        cur = conn.cursor()
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS extracted_skills (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                candidate_name TEXT,
+                cv_filename TEXT,
+                skills_json TEXT
+            )
+        """)
+        if data.candidate_names and len(data.candidate_names) > 0:
+            # Parameterize IN clause safely
+            placeholders = ",".join(["?"] * len(data.candidate_names))
+            cur.execute(f"SELECT candidate_name, skills_json FROM extracted_skills WHERE candidate_name IN ({placeholders})", tuple(data.candidate_names))
+        else:
+            cur.execute("SELECT DISTINCT candidate_name, skills_json FROM extracted_skills")
+        candidate_rows = cur.fetchall()
+    finally:
+        conn.close()
+
+    if not candidate_rows:
+        return LLMRecommendResponse(recommended_ids=[], updated=0, details=[])
+
+    llm = LLM(
+        model=model,
+        api_key=api_key,
+        base_url=base_url,
+        api_version=api_version,
+        temperature=0.0,
+        stream=False,
+        format="json",
+    )
+
+    system_prompt = (
+        "You are an HR recommender. Compare a candidate's skills to required job skills and decide recommendation.\n"
+        "- Input provides: job_skills (categories->skills) and candidate_skills (categories->skills).\n"
+        "- Count matches if skills are identical or commonly recognized synonyms; use domain knowledge deterministically.\n"
+        "- DO NOT infer unrelated skills.\n"
+        "- Respond JSON only with: {\"accept\": true|false, \"matched_skills\": {cat:[skills]}, \"missing_skills\": {cat:[skills]}, \"reason\": string<=240}.\n"
+        "- accept=true only if candidate sufficiently covers the important job skills; otherwise false."
+    )
+
+    recommended_ids: List[int] = []
+    details: List[Dict] = []
+
+    # Pre-serialize job_skills once
+    job_skills_payload = job_skills
+
+    # Map candidate->reports for persistence
+    from collections import defaultdict
+    reports_by_candidate: Dict[str, List[CandidateReport]] = defaultdict(list)
+    for r in db.query(CandidateReport).all():
+        reports_by_candidate[r.candidate_name].append(r)
+
+    for candidate_name, skills_json in candidate_rows:
+        try:
+            candidate_skills = json.loads(skills_json)
+        except Exception:
+            candidate_skills = {"General": skills_json} if isinstance(skills_json, str) else {}
+
+        user_payload = {
+            "target_job_title": data.target_job_title,
+            "job_skills": job_skills_payload,
+            "candidate_name": candidate_name,
+            "candidate_skills": candidate_skills,
+        }
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": json.dumps(user_payload)},
+        ]
+        try:
+            raw = llm.call(messages)
+            obj = json.loads(raw)
+            accept = bool(obj.get("accept"))
+            reason = obj.get("reason", "")
+            matched = obj.get("matched_skills", {})
+            missing = obj.get("missing_skills", {})
+        except Exception as e:
+            accept = False
+            reason = f"LLM error: {str(e)}"
+            matched = {}
+            missing = {}
+
+        if accept:
+            # Persist: mark all other reports for this candidate as recommended
+            for rep in reports_by_candidate.get(candidate_name, []):
+                if not getattr(rep, 'is_recommended', False):
+                    rep.is_recommended = True
+            db.commit()
+
+        if data.rationale:
+            details.append({
+                "candidate_name": candidate_name,
+                "accepted": accept,
+                "reason": reason,
+                "matched_skills": matched,
+                "missing_skills": missing,
+            })
+
+        # Track an example report id for response bookkeeping if needed
+        reps = reports_by_candidate.get(candidate_name, [])
+        if reps:
+            recommended_ids.append(reps[0].id)
+
+    return LLMRecommendResponse(
+        recommended_ids=recommended_ids,
+        updated=len([d for d in details if d.get("accepted")]),
+        details=details if data.rationale else None,
+    )
 
 @app.get("/reports/compare")
 def compare_candidates(
