@@ -56,6 +56,7 @@ class CandidateInput(BaseModel):
 class MultiSkillMatchRequest(BaseModel):
     candidates: List[CandidateInput]
     job_skills: Dict[str, List[str]]
+    threshold: Optional[int] = 40  # Add threshold parameter with default 40
 
 class MultiSkillMatchResponse(BaseModel):
     matched_candidates: List[str]
@@ -69,17 +70,56 @@ def api_analyze_skill_match_multi(data: MultiSkillMatchRequest):
     print("/analyze-skill-match-multi called with:")
     print("Candidates:", [c.name for c in data.candidates])
     print("Job Skills:", json.dumps(data.job_skills, indent=2))
+    print("Threshold:", data.threshold)
     matched = []
     errors = {}
     for candidate in data.candidates:
-        result = analyze_skill_match(candidate.skills, data.job_skills)
+        result = analyze_skill_match(candidate.skills, data.job_skills, threshold=data.threshold)
         if "Error" in result:
             errors[candidate.name] = result["Error"]
         elif result.get("is_match", False):
             matched.append(candidate.name)
-    return MultiSkillMatchResponse(matched_candidates=matched, errors=errors if errors else None)
+    
+    # Print the final API response
+    response = MultiSkillMatchResponse(matched_candidates=matched, errors=errors if errors else None)
+    print("=== API RESPONSE ===")
+    print("Matched candidates:", matched)
+    if errors:
+        print("Errors:", errors)
+    print("=== END API RESPONSE ===")
+    
+    return response
 
 
+def _extract_json_fallback(response_text: str) -> dict:
+    """Fallback JSON extraction for malformed LLM responses."""
+    import re
+    
+    # Try to find JSON-like content between braces
+    json_match = re.search(r'\{.*\}', response_text, re.DOTALL)
+    if not json_match:
+        return None
+    
+    json_str = json_match.group(0)
+    
+    try:
+        return json.loads(json_str)
+    except json.JSONDecodeError:
+        # Try to fix common JSON issues
+        try:
+            # Remove trailing commas
+            fixed_json = re.sub(r',(\s*[}\]])', r'\1', json_str)
+            # Fix unquoted keys
+            fixed_json = re.sub(r'(\w+):', r'"\1":', fixed_json)
+            return json.loads(fixed_json)
+        except json.JSONDecodeError:
+            # Last resort: create a minimal valid response
+            return {
+                "match_percentage": 0,
+                "is_match": False,
+                "matched_skills": [],
+                "missing_skills": []
+            }
 
 
 def analyze_skill_match(candidate_skills: dict, job_skills: dict, threshold: int = 50, debug: bool = False) -> dict:
@@ -139,30 +179,70 @@ def analyze_skill_match(candidate_skills: dict, job_skills: dict, threshold: int
             print("  candidate_skills:", json.dumps(candidate_skills))
             print("  job_skills:", json.dumps(job_skills))
             print("  threshold:", threshold)
-        response = llm.call(messages)
-        if debug:
-            print("[skill-match-llm] raw response:", response)
-        return json.loads(response)
+        
+        # Retry logic for LLM calls
+        max_retries = 2
+        for attempt in range(max_retries):
+            try:
+                response = llm.call(messages)
+                if debug:
+                    print(f"[skill-match-llm] raw response (attempt {attempt + 1}):", response)
+                
+                # Try to parse JSON
+                result = json.loads(response)
+                break  # Success, exit retry loop
+                
+            except json.JSONDecodeError as e:
+                if attempt < max_retries - 1:
+                    print(f"[skill-match-llm] JSON decode error on attempt {attempt + 1}, retrying...")
+                    continue
+                else:
+                    # Last attempt failed, try to extract JSON from response
+                    print(f"[skill-match-llm] All attempts failed, trying fallback parsing...")
+                    result = _extract_json_fallback(response)
+                    if result is None:
+                        return {"Error": f"Invalid JSON returned by LLM after {max_retries} attempts", "raw_response": response}
+        
+        # Verify and fix LLM's math - count total job skills and matched skills
+        total_job_skills = sum(len(skills) for skills in job_skills.values())
+        
+        # Count matched skills (handle both list and dict formats)
+        matched_skills = result.get("matched_skills", [])
+        if isinstance(matched_skills, dict):
+            matched_count = sum(len(skills) for skills in matched_skills.values())
+        elif isinstance(matched_skills, list):
+            matched_count = len(matched_skills)
+        else:
+            matched_count = 0
+        
+        # Recalculate correct percentage
+        correct_percentage = round((matched_count / total_job_skills) * 100, 2) if total_job_skills > 0 else 0
+        
+        # Update the result with correct values
+        result["match_percentage"] = correct_percentage
+        result["is_match"] = correct_percentage >= threshold
+        
+        # Add verification info
+        result["_verification"] = {
+            "total_job_skills": total_job_skills,
+            "matched_skills_count": matched_count,
+            "llm_original_percentage": result.get("match_percentage", 0),
+            "corrected_percentage": correct_percentage
+        }
+        
+        # Print the analyze_skill_match function output
+        print("=== analyze_skill_match OUTPUT ===")
+        print(json.dumps(result, indent=2))
+        print("=== END OUTPUT ===")
+        
+        return result
     except json.JSONDecodeError:
         return {"Error": "Invalid JSON returned by LLM", "raw_response": response}
     except Exception as e:
         return {"Error": str(e)}
 
 
-# --- LLM-based single candidate match endpoint ---
-class LLMSkillMatchRequest(BaseModel):
-    candidate_skills: dict  # Dict[str, List[str]] or list (will be normalized)
-    job_skills: dict        # Dict[str, List[str]] or list (will be normalized)
-    threshold: Optional[int] = 50
-    debug: bool = False
 
-
-class LLMSkillMatchResponse(BaseModel):
-    match_percentage: float
-    is_match: bool
-    matched_skills: Dict[str, List[str]]
-    missing_skills: Dict[str, List[str]]
-    error: Optional[str] = None
 
 
 def _ensure_category_dict_llm(x) -> Dict[str, List[str]]:
@@ -197,33 +277,6 @@ def _ensure_category_dict_llm(x) -> Dict[str, List[str]]:
     if isinstance(x, list):
         return {"General": [s for s in x if isinstance(s, str) and s.strip()]}
     return {}
-
-
-@app.post("/skill-match-llm", response_model=LLMSkillMatchResponse)
-def skill_match_llm(data: LLMSkillMatchRequest):
-    cand = _ensure_category_dict_llm(data.candidate_skills)
-    job = _ensure_category_dict_llm(data.job_skills)
-    # Delegate to LLM function
-    result = analyze_skill_match(cand, job, threshold=data.threshold or 50, debug=data.debug)
-    if "Error" in result:
-        # Propagate error; do not fallback to deterministic matcher
-        raise HTTPException(status_code=502, detail=result["Error"])
-    # Ensure expected keys are present
-    matched_skills = _ensure_category_dict_llm(result.get("matched_skills", {}))
-    missing_skills = _ensure_category_dict_llm(result.get("missing_skills", {}))
-    # Guard: some models may return flat lists; coerce to dicts
-    if not isinstance(matched_skills, dict):
-        matched_skills = {"General": matched_skills if isinstance(matched_skills, list) else []}
-    if not isinstance(missing_skills, dict):
-        missing_skills = {"General": missing_skills if isinstance(missing_skills, list) else []}
-    return LLMSkillMatchResponse(
-        match_percentage=float(result.get("match_percentage", 0)),
-        is_match=bool(result.get("is_match", False)),
-        matched_skills=matched_skills,
-        missing_skills=missing_skills,
-        error=None,
-    )
-
 
 
 @app.post("/extract-skills-from-cv")
