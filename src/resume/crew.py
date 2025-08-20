@@ -13,7 +13,15 @@ from datetime import datetime
 from dotenv import load_dotenv
 from src.resume.tools.custom_tool import CustomPDFTool
 from src.resume.report_schema import ReportModel  # Enforce standardized report structure
+import ssl
+import urllib3
+import os
 
+# Disable SSL verification (for corporate networks)
+ssl._create_default_https_context = ssl._create_unverified_context
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+os.environ['SSL_VERIFY'] = 'false'
+os.environ['PYTHONHTTPSVERIFY'] = '0'
 load_dotenv()
 
 # Reduced temperature for more consistent results
@@ -36,6 +44,7 @@ llm = LLM(
     temperature=0.0,  # Reduced for more consistent outputs
     stream=False,
 )
+
 @CrewBase
 class Resume():
     """Resume crew"""

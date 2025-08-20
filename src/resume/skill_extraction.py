@@ -1,10 +1,6 @@
 """
-Skill extraction module for resumes or job descriptions with robust fallbacks.
-
-Order of strategies:
-1) Azure AI via crewai.llm (if configured and reachable)
-2) Google Gemini via google-genai (if API key present)
-3) Deterministic keyword-based extraction (always available)
+Azure AI-powered skill extraction module for resume analysis.
+Simple skill extraction that returns technical skills grouped by categories.
 """
 
 import os
@@ -66,48 +62,31 @@ def extract_skills_from_pdf(
             if not input_text or "ERROR" in input_text:
                 return {"Error": [f"Failed to extract text from PDF: {pdf_path}"]}
 
-        # Try Azure first if configured
-        azure_model = os.getenv("model")
-        azure_key = os.getenv("AZURE_AI_API_KEY")
-        azure_base = os.getenv("AZURE_AI_ENDPOINT")
-        azure_api_version = os.getenv("AZURE_AI_API_VERSION")
+        # Step 2: Initialize LLM client
+        model = os.getenv("model")
+        api_key = os.getenv("AZURE_AI_API_KEY")
+        base_url = os.getenv("AZURE_AI_ENDPOINT")
+        api_version = os.getenv("AZURE_AI_API_VERSION")
 
-        if azure_model and azure_key and azure_base:
-            try:
-                return _extract_with_azure(input_text, job_title, azure_model, azure_key, azure_base, azure_api_version)
-            except Exception as e:
-                print(f"[extract_skills] Azure extraction failed, falling back. Reason: {e}")
+        if not model or not api_key or not base_url:
+            return {"Error": ["Azure AI credentials not found. Set model, AZURE_AI_API_KEY, AZURE_AI_ENDPOINT, and AZURE_AI_API_VERSION in .env file"]}
 
-        # Try Gemini if API key present
-        gemini_key = os.getenv("GEMINI_API_KEY")
-        if gemini_key:
-            try:
-                return _extract_with_gemini(input_text, job_title, gemini_key)
-            except Exception as e:
-                print(f"[extract_skills] Gemini extraction failed, falling back. Reason: {e}")
+        # Configure LLM with Azure AI
+        llm = LLM(
+            model=model,
+            api_key=api_key,
+            base_url=base_url,
+            api_version=api_version,
+            temperature=0.0,
+            stream=False,
+        )
 
-        # Fallback: deterministic keyword-based extraction
-        return _extract_with_keywords(input_text)
-    except Exception as e:
-        return {"Error": [f"Skill extraction failed: {str(e)}"]}
+        # Step 3: Create skill extraction prompt
+        context_block = f"RESUME OR JOB DESCRIPTION TEXT:\n{input_text}"
+        if job_title:
+            context_block = f"JOB TITLE: {job_title}\n\n" + context_block
 
-
-def _extract_with_azure(input_text: str, job_title: Optional[str], model: str, api_key: str, base_url: str, api_version: Optional[str]) -> Dict[str, List[str]]:
-    # Configure LLM with Azure AI
-    llm = LLM(
-        model=model,
-        api_key=api_key,
-        base_url=base_url,
-        api_version=api_version,
-        temperature=0.0,
-        stream=False,
-    )
-
-    context_block = f"RESUME OR JOB DESCRIPTION TEXT:\n{input_text}"
-    if job_title:
-        context_block = f"JOB TITLE: {job_title}\n\n" + context_block
-
-    prompt = f"""You are an expert HR assistant that extracts technical skills from resumes or job descriptions and groups them into standardized categories.
+        prompt = f"""You are an expert HR assistant that extracts technical skills from resumes or job descriptions and groups them into standardized categories.
 
 SKILL CATEGORIES TO USE:
 - Business Intelligence: Power BI, Tableau, QlikView, Looker, etc.
@@ -137,176 +116,59 @@ Return ONLY valid JSON in this format:
   "Database & Data": ["MySQL", "PostgreSQL"]
 }}"""
 
-    full_prompt = f"""You are an expert resume/job description skill extraction assistant. Extract only technical skills and group them by categories.
+        # Step 4: Call LLM for skill extraction
+        full_prompt = f"""You are an expert resume/job description skill extraction assistant. Extract only technical skills and group them by categories.
 
 {prompt}"""
 
-    response = llm.call([{"role": "user", "content": full_prompt}])
-    response_text = response.strip()
+        response = llm.call([{"role": "user", "content": full_prompt}])
 
-    json_match = re.search(r'\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}', response_text, re.DOTALL)
-    if not json_match:
-        json_match = re.search(r'\{.*?\}', response_text, re.DOTALL)
-    if not json_match:
-        raise ValueError(f"No JSON found in Azure response: {response_text[:200]}...")
+        # Step 5: Parse response
+        response_text = response.strip()
 
-    json_text = json_match.group(0).strip()
-    last_brace = json_text.rfind('}')
-    if last_brace != -1:
-        json_text = json_text[:last_brace + 1]
+        # Extract JSON from response - improved parsing
+        json_match = re.search(r'\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}', response_text, re.DOTALL)
+        if not json_match:
+            json_match = re.search(r'\{.*?\}', response_text, re.DOTALL)
 
-    try:
-        skills_data = json.loads(json_text)
-    except json.JSONDecodeError as e:
-        start = response_text.find('{')
-        end = response_text.rfind('}')
-        if start != -1 and end != -1 and end > start:
-            skills_data = json.loads(response_text[start:end+1])
-        else:
-            raise ValueError(f"JSON parsing failed: {str(e)}")
+        if not json_match:
+            return {"Error": [f"No JSON found in response: {response_text[:200]}..."]}
 
-    return _clean_skills_dict(skills_data)
+        json_text = json_match.group(0).strip()
+        last_brace = json_text.rfind('}')
+        if last_brace != -1:
+            json_text = json_text[:last_brace + 1]
 
+        try:
+            skills_data = json.loads(json_text)
+        except json.JSONDecodeError as e:
+            start = response_text.find('{')
+            end = response_text.rfind('}')
+            if start != -1 and end != -1 and end > start:
+                json_text = response_text[start:end+1]
+                try:
+                    skills_data = json.loads(json_text)
+                except json.JSONDecodeError:
+                    return {"Error": [f"JSON parsing failed: {str(e)}. Response: {response_text[:200]}..."]}
+            else:
+                return {"Error": [f"No valid JSON found in response: {response_text[:200]}..."]}
 
-def _extract_with_gemini(input_text: str, job_title: Optional[str], api_key: str) -> Dict[str, List[str]]:
-    from google import genai
+        cleaned_skills: Dict[str, List[str]] = {}
+        if isinstance(skills_data, dict):
+            for category, skills_list in skills_data.items():
+                if isinstance(skills_list, list) and skills_list:
+                    clean_skills: List[str] = []
+                    for skill in skills_list:
+                        if isinstance(skill, str):
+                            skill_clean = skill.strip()
+                            if skill_clean and skill_clean not in clean_skills:
+                                clean_skills.append(skill_clean)
+                    if clean_skills:
+                        cleaned_skills[str(category)] = clean_skills
 
-    client = genai.Client(api_key=api_key)
-    jt = job_title or ""
-    prompt = f"""
-You are an AI that extracts ONLY technical skills and groups them under canonical categories.
-
-Categories:
-- Business Intelligence, Programming Languages, Database & Data, Web Development,
-- Cloud & DevOps, Machine Learning & AI, Mobile Development, Design & UX,
-- Analytics & Reporting, Security
-
-Text Title: {jt}
-Text:
-{input_text}
-
-Return strict JSON: keys are category names above, values are arrays of skills. No extra text.
-"""
-    resp = client.models.generate_content(model="gemini-2.5-pro", contents=prompt)
-    m = re.search(r'\{.*\}', resp.text, re.DOTALL)
-    if not m:
-        raise ValueError("No JSON in Gemini response")
-    skills_data = json.loads(m.group(0))
-    return _clean_skills_dict(skills_data)
-
-
-def _extract_with_keywords(text: str) -> Dict[str, List[str]]:
-    """Deterministic keyword-based extractor as a safety net."""
-    t = text.lower()
-    kb: Dict[str, Dict[str, List[str]]] = {
-        "Business Intelligence": {
-            "Power BI": ["power bi", "microsoft power bi"],
-            "Tableau": ["tableau"],
-            "QlikView": ["qlik", "qlikview"],
-            "Looker": ["looker"],
-        },
-        "Programming Languages": {
-            "Python": ["python"],
-            "Java": ["java"],
-            "JavaScript": ["javascript", "js"],
-            "TypeScript": ["typescript", "ts"],
-            "C++": ["c++"],
-            "SQL": ["sql", "postgresql", "mysql", "sqlite", "sql server"],
-        },
-        "Database & Data": {
-            "MySQL": ["mysql"],
-            "PostgreSQL": ["postgresql", "postgres"],
-            "MongoDB": ["mongodb"],
-            "Data Analysis": ["data analysis", "data analytics"],
-            "ETL": ["etl"],
-            "Data Modeling": ["data modeling", "data modelling"],
-        },
-        "Web Development": {
-            "HTML": ["html"],
-            "CSS": ["css"],
-            "React": ["react"],
-            "Angular": ["angular"],
-            "Node.js": ["node.js", "nodejs", "node"],
-            "Vue": ["vue", "vue.js", "nuxt"],
-            "Next.js": ["next.js", "nextjs"],
-        },
-        "Cloud & DevOps": {
-            "AWS": ["aws", "amazon web services"],
-            "Azure": ["azure"],
-            "GCP": ["gcp", "google cloud"],
-            "Docker": ["docker"],
-            "Kubernetes": ["kubernetes", "k8s"],
-            "CI/CD": ["ci/cd", "cicd"],
-            "Git": ["git"],
-            "Terraform": ["terraform"],
-        },
-        "Machine Learning & AI": {
-            "TensorFlow": ["tensorflow"],
-            "PyTorch": ["pytorch"],
-            "scikit-learn": ["scikit-learn", "sklearn"],
-            "Machine Learning": ["machine learning", "ml"],
-            "AI": ["artificial intelligence", "ai"],
-        },
-        "Mobile Development": {
-            "iOS": ["ios"],
-            "Android": ["android"],
-            "React Native": ["react native"],
-            "Flutter": ["flutter"],
-            "Swift": ["swift"],
-            "Kotlin": ["kotlin"],
-        },
-        "Design & UX": {
-            "Figma": ["figma"],
-            "Adobe XD": ["adobe xd"],
-            "Photoshop": ["photoshop"],
-            "Illustrator": ["illustrator"],
-            "UI/UX Design": ["ui/ux", "ux", "ui"],
-        },
-        "Analytics & Reporting": {
-            "Excel Advanced": ["excel", "excel advanced", "power query", "power pivot"],
-            "Google Analytics": ["google analytics"],
-            "Dashboards": ["dashboard", "dashboards"],
-            "Reporting": ["reporting", "reports"],
-        },
-        "Security": {
-            "Cybersecurity": ["cybersecurity", "information security"],
-            "Penetration Testing": ["penetration testing", "pentest", "pen testing"],
-            "SIEM": ["siem"],
-            "SOC": ["soc"],
-            "Splunk": ["splunk"],
-        },
-    }
-
-    result: Dict[str, List[str]] = {}
-    for category, skills in kb.items():
-        found: List[str] = []
-        for canonical, variants in skills.items():
-            for v in variants:
-                if v in t:
-                    found.append(canonical)
-                    break
-        if found:
-            # dedupe preserve order
-            seen = set()
-            clean = [s for s in found if not (s in seen or seen.add(s))]
-            result[category] = clean
-    return result
-
-
-def _clean_skills_dict(skills_data) -> Dict[str, List[str]]:
-    cleaned_skills: Dict[str, List[str]] = {}
-    if isinstance(skills_data, dict):
-        for category, skills_list in skills_data.items():
-            if isinstance(skills_list, list) and skills_list:
-                clean_skills: List[str] = []
-                for skill in skills_list:
-                    if isinstance(skill, str):
-                        skill_clean = skill.strip()
-                        if skill_clean and skill_clean not in clean_skills:
-                            clean_skills.append(skill_clean)
-                if clean_skills:
-                    cleaned_skills[str(category)] = clean_skills
-    return cleaned_skills
+        return cleaned_skills
+    except Exception as e:
+        return {"Error": [f"Skill extraction failed: {str(e)}"]}
 
 
 # Example usage
