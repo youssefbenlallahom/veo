@@ -482,8 +482,8 @@ class BulkRecommendRequest(BaseModel):
 
 @app.post("/extract-skills", response_model=ExtractSkillsResponse)
 def extract_skills(data: ExtractSkillsRequest):
-    api_key = os.environ.get("GEMINI_API_KEY")
-    skills_data = get_key_skills_from_gemini(data.job_title, data.job_description, api_key)
+    # Use Azure AI for skill extraction
+    skills_data = get_key_skills_from_azure_ai(data.job_title, data.job_description)
     return ExtractSkillsResponse(
         hard_skills=skills_data["hard_skills"],
         categorized_skills=skills_data["categorized_skills"]
@@ -981,13 +981,31 @@ def parse_report(report_path, filename):
 # Remove the entire display_comparison_table and display_individual_reports functions, as they are Streamlit UI and not used in FastAPI
 
 
-def get_key_skills_from_gemini(job_title, job_description, api_key):
-    """Extract key skills from job description using Gemini, grouped by Hard and Soft Skills."""
-    from google import genai
-    import json, re
+def get_key_skills_from_azure_ai(job_title, job_description):
+    """Extract key skills from job description using Azure AI LLM, grouped by Hard and Soft Skills."""
+    from crewai.llm import LLM
+    import json, re, os
     
     try:
-        client = genai.Client(api_key=api_key)
+        # Use Azure AI configuration
+        model = os.getenv("model")
+        azure_api_key = os.getenv("AZURE_AI_API_KEY")
+        base_url = os.getenv("AZURE_AI_ENDPOINT")
+        api_version = os.getenv("AZURE_AI_API_VERSION")
+        
+        if not model or not azure_api_key or not base_url:
+            raise ValueError("Azure AI credentials not configured")
+        
+        llm = LLM(
+            model=model,
+            api_key=azure_api_key,
+            base_url=base_url,
+            api_version=api_version,
+            temperature=0.0,
+            stream=False,
+            format="json"
+        )
+        
         prompt = f"""
 ### Role
 You are an AI skill extraction specialist designed to help HR teams automatically categorize technical skills from job descriptions into standardized groups.
@@ -1077,15 +1095,15 @@ Skip empty categories
 Sort skills alphabetically within categories
 """
 
-
+        messages = [
+            {"role": "system", "content": "You are an expert skill extraction AI. Extract and categorize skills from job descriptions into structured JSON format."},
+            {"role": "user", "content": prompt}
+        ]
         
-        response = client.models.generate_content(
-            model="gemini-2.5-pro",
-            contents=prompt
-        )
+        response = llm.call(messages)
         
         # Extract JSON from response
-        match = re.search(r'\{.*\}', response.text, re.DOTALL)
+        match = re.search(r'\{.*\}', response, re.DOTALL)
         if match:
             skills_json = match.group(0)
             skills_data = json.loads(skills_json)
@@ -1126,12 +1144,12 @@ Sort skills alphabetically within categories
                 'categorized_skills': categorized_skills
             }
         else:
-            raise ValueError("Failed to extract skills JSON from Gemini response")
+            raise ValueError("Failed to extract skills JSON from Azure AI response")
             
     except json.JSONDecodeError as e:
         raise ValueError(f"Failed to parse skills JSON: {str(e)}")
     except Exception as e:
-        raise ValueError(f"Error calling Gemini API: {str(e)}")
+        raise ValueError(f"Error calling Azure AI API: {str(e)}")
 
 
 def create_custom_barem(skills_weights, categorized_skills=None):
