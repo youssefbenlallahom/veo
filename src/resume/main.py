@@ -352,16 +352,24 @@ async def extract_skills_from_cv(
                 CREATE TABLE IF NOT EXISTS job_required_skills (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     job_title TEXT NOT NULL,
-                    required_skills_json TEXT NOT NULL
+                    required_skills_json TEXT NOT NULL,
+                    barem_json TEXT
                 )
             ''')
             # Check if job_title already exists
-            cursor.execute('SELECT id FROM job_required_skills WHERE job_title = ?', (jt,))
+            cursor.execute('SELECT id, barem_json FROM job_required_skills WHERE job_title = ?', (jt,))
             job_exists = cursor.fetchone()
             if not job_exists:
                 cursor.execute(
-                    'INSERT INTO job_required_skills (job_title, required_skills_json) VALUES (?, ?)',
-                    (jt, required_skills_json)
+                    'INSERT INTO job_required_skills (job_title, required_skills_json, barem_json) VALUES (?, ?, ?)',
+                    (jt, required_skills_json, None)
+                )
+                conn.commit()
+            else:
+                # Update existing record with new skills, preserve existing barem
+                cursor.execute(
+                    'UPDATE job_required_skills SET required_skills_json = ? WHERE job_title = ?',
+                    (required_skills_json, jt)
                 )
                 conn.commit()
 
@@ -411,6 +419,43 @@ def display_skills():
             "skills": skills
         })
     return JSONResponse(content={"candidates": result})
+
+@app.get("/job-barem/{job_title}")
+def get_job_barem(job_title: str):
+    """Get assessment criteria (barem) for a specific job title."""
+    import sqlite3
+    
+    db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'candidate_reports.db')
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS job_required_skills (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            job_title TEXT NOT NULL,
+            required_skills_json TEXT NOT NULL,
+            barem_json TEXT
+        )
+    ''')
+    cursor.execute('SELECT required_skills_json, barem_json FROM job_required_skills WHERE job_title = ?', (job_title,))
+    row = cursor.fetchone()
+    conn.close()
+    
+    if not row:
+        raise HTTPException(status_code=404, detail=f"No data found for job title: {job_title}")
+    
+    required_skills_json, barem_json = row
+    
+    try:
+        required_skills = json.loads(required_skills_json) if required_skills_json else {}
+        barem = json.loads(barem_json) if barem_json else {}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error parsing JSON data: {str(e)}")
+    
+    return {
+        "job_title": job_title,
+        "barem": barem
+    }
+
 class ExtractSkillsRequest(BaseModel):
     job_title: str
     job_description: str
@@ -420,6 +465,7 @@ class ExtractSkillsResponse(BaseModel):
     categorized_skills: Dict[str, List[str]]
 
 class BaremRequest(BaseModel):
+    job_title: str
     skills_weights: Dict[str, int]
     categorized_skills: Optional[Dict[str, List[str]]] = None
 
@@ -491,7 +537,69 @@ def extract_skills(data: ExtractSkillsRequest):
 
 @app.post("/barem", response_model=BaremResponse)
 def create_barem(data: BaremRequest):
+    import sqlite3
+    
+    print("=== BAREM API CALLED ===")
+    print(f"Job Title: {data.job_title}")
+    print(f"Skills Weights: {data.skills_weights}")
+    print(f"Categorized Skills: {data.categorized_skills}")
+    
     barem = create_custom_barem(data.skills_weights, data.categorized_skills)
+    
+    print("=== GENERATED BAREM ===")
+    print(json.dumps(barem, indent=2))
+    
+    # Save barem to database
+    db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'candidate_reports.db')
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    
+    try:
+        # Ensure table exists with barem_json column
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS job_required_skills (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                job_title TEXT NOT NULL,
+                required_skills_json TEXT NOT NULL,
+                barem_json TEXT
+            )
+        ''')
+        
+        # Check if job already exists
+        cursor.execute('SELECT id, required_skills_json, barem_json FROM job_required_skills WHERE job_title = ?', (data.job_title,))
+        existing_job = cursor.fetchone()
+        
+        barem_json = json.dumps(barem)
+        
+        print("=== DATABASE OPERATION ===")
+        if existing_job:
+            print(f"UPDATING existing job: ID={existing_job[0]}")
+            print(f"Previous barem: {existing_job[2]}")
+            # Update existing record with barem
+            cursor.execute(
+                'UPDATE job_required_skills SET barem_json = ? WHERE job_title = ?',
+                (barem_json, data.job_title)
+            )
+            print(f"✅ UPDATED barem for job: {data.job_title}")
+        else:
+            print(f"CREATING new job record: {data.job_title}")
+            # Create new record with empty skills (barem can be created before skills extraction)
+            cursor.execute(
+                'INSERT INTO job_required_skills (job_title, required_skills_json, barem_json) VALUES (?, ?, ?)',
+                (data.job_title, json.dumps({}), barem_json)
+            )
+            print(f"✅ CREATED new job with barem: {data.job_title}")
+        
+        print("=== SAVED TO DATABASE ===")
+        print(f"Job Title: {data.job_title}")
+        print(f"Barem JSON Length: {len(barem_json)} characters")
+        print(f"Barem Keys: {list(barem.keys())}")
+        print("=== END BAREM SAVE ===")
+        
+        conn.commit()
+    finally:
+        conn.close()
+    
     return BaremResponse(barem=barem)
 
 # --- Database Endpoints ---
