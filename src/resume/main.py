@@ -601,6 +601,54 @@ def get_job_skills(job_title: str):
         "required_skills": required_skills
     }
 
+@app.get("/job-recommended-candidates/{job_title}")
+def get_job_recommended_candidates(job_title: str):
+    """Return the list of recommended candidates for a specific job title.
+
+    Reads the recommended_candidates column from job_required_skills.
+    """
+    import sqlite3
+
+    db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'candidate_reports.db')
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    # Ensure table exists
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS job_required_skills (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            job_title TEXT NOT NULL,
+            required_skills_json TEXT NOT NULL,
+            barem_json TEXT
+        )
+    ''')
+
+    # Ensure the column exists (no-op if already added elsewhere)
+    cursor.execute("PRAGMA table_info(job_required_skills)")
+    cols = {row[1] for row in cursor.fetchall()}
+    if 'recommended_candidates' not in cols:
+        cursor.execute("ALTER TABLE job_required_skills ADD COLUMN recommended_candidates TEXT")
+
+    cursor.execute('SELECT recommended_candidates FROM job_required_skills WHERE job_title = ?', (job_title,))
+    row = cursor.fetchone()
+    conn.close()
+
+    if not row:
+        raise HTTPException(status_code=404, detail=f"No data found for job title: {job_title}")
+
+    rec_json = row[0]
+    try:
+        recommended = json.loads(rec_json) if rec_json else []
+        if not isinstance(recommended, list):
+            recommended = []
+    except Exception:
+        recommended = []
+
+    return {
+        "job_title": job_title,
+        "recommended_candidates": recommended
+    }
+
 class ExtractSkillsRequest(BaseModel):
     job_title: str
     job_description: str
