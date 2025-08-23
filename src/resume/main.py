@@ -70,24 +70,18 @@ def api_analyze_skill_match_multi(data: MultiSkillMatchRequest):
     print("Candidates:", [c.name for c in data.candidates])
     print("Job Skills:", json.dumps(data.job_skills, indent=2))
     print("Threshold:", data.threshold)
-    matched = []
+    # Initialize accumulators
+    matched = []  # only for newly analyzed candidates
     errors = {}
-    for candidate in data.candidates:
-        result = analyze_skill_match(candidate.skills, data.job_skills, threshold=data.threshold)
-        if "Error" in result:
-            errors[candidate.name] = result["Error"]
-        elif result.get("is_match", False):
-            matched.append(candidate.name)
-    
-    # Persist analyzed and recommended candidates in SQLite under job_required_skills
+
+    # Read previous analysis state to avoid re-analyzing
     try:
         import sqlite3
-        # Resolve DB path (same DB used elsewhere in this project)
         db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'candidate_reports.db')
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
 
-        # Ensure base table exists (keeps compatibility with other APIs)
+        # Ensure base table exists
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS job_required_skills (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -105,26 +99,55 @@ def api_analyze_skill_match_multi(data: MultiSkillMatchRequest):
         if 'recommended_candidates' not in existing_cols:
             cursor.execute("ALTER TABLE job_required_skills ADD COLUMN recommended_candidates TEXT")
 
-        analyzed_names = json.dumps([c.name for c in data.candidates])
-        recommended_names = json.dumps(matched)
-
-        # Upsert by job_title
-        cursor.execute('SELECT id FROM job_required_skills WHERE job_title = ?', (data.job_title,))
+        # Fetch existing row for this job
+        cursor.execute('SELECT id, analyzed_candidates, recommended_candidates FROM job_required_skills WHERE job_title = ?', (data.job_title,))
         row = cursor.fetchone()
+
+        existing_analyzed: list[str] = []
+        existing_recommended: list[str] = []
+        if row:
+            try:
+                existing_analyzed = json.loads(row[1]) if row[1] else []
+            except Exception:
+                existing_analyzed = []
+            try:
+                existing_recommended = json.loads(row[2]) if row[2] else []
+            except Exception:
+                existing_recommended = []
+
+        # Determine which candidates are new (not previously analyzed)
+        already_analyzed_set = set(existing_analyzed)
+        new_candidates = [c for c in data.candidates if c.name not in already_analyzed_set]
+
+        # Analyze only new candidates
+        for candidate in new_candidates:
+            result = analyze_skill_match(candidate.skills, data.job_skills, threshold=data.threshold)
+            if "Error" in result:
+                errors[candidate.name] = result["Error"]
+            elif result.get("is_match", False):
+                matched.append(candidate.name)
+
+        # Update columns:
+        # - add non-matching newly analyzed names to analyzed_candidates
+        # - add matching newly analyzed names to recommended_candidates
+        new_non_matching = [c.name for c in new_candidates if c.name not in matched and c.name not in errors]
+
+        updated_analyzed = list(dict.fromkeys(existing_analyzed + new_non_matching))
+        updated_recommended = list(dict.fromkeys(existing_recommended + matched))
+
         if row:
             cursor.execute(
                 'UPDATE job_required_skills SET analyzed_candidates = ?, recommended_candidates = ? WHERE job_title = ?',
-                (analyzed_names, recommended_names, data.job_title)
+                (json.dumps(updated_analyzed), json.dumps(updated_recommended), data.job_title)
             )
         else:
             cursor.execute(
                 'INSERT INTO job_required_skills (job_title, required_skills_json, barem_json, analyzed_candidates, recommended_candidates) VALUES (?, ?, ?, ?, ?)',
-                (data.job_title, json.dumps(data.job_skills), None, analyzed_names, recommended_names)
+                (data.job_title, json.dumps(data.job_skills), None, json.dumps(updated_analyzed), json.dumps(updated_recommended))
             )
         conn.commit()
     except Exception as e:
-        # Log but don't fail the endpoint if DB write has an issue
-        print(f"[WARN] Failed to persist analyzed/recommended candidates: {e}")
+        print(f"[WARN] Failed DB read/update for analyzed/recommended candidates: {e}")
     finally:
         try:
             conn.close()
@@ -350,6 +373,25 @@ async def extract_skills_from_cv(
 
         # Prepare input and metadata
         if file is not None:
+            # Check if this candidate's skills were already extracted
+            candidate_name = os.path.splitext(file.filename)[0]
+            db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'candidate_reports.db')
+            pre_conn = sqlite3.connect(db_path)
+            pre_cur = pre_conn.cursor()
+            pre_cur.execute('''
+                CREATE TABLE IF NOT EXISTS extracted_skills (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    candidate_name TEXT,
+                    cv_filename TEXT,
+                    skills_json TEXT
+                )
+            ''')
+            pre_cur.execute('SELECT skills_json FROM extracted_skills WHERE candidate_name = ?', (candidate_name,))
+            cached = pre_cur.fetchone()
+            pre_conn.close()
+            if cached and cached[0]:
+                # Skip re-extraction; do not return stored result
+                return JSONResponse(content={"already_extracted": True})
             # Save uploaded file to a temporary location
             contents = await file.read()
             with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp_file:
@@ -357,7 +399,6 @@ async def extract_skills_from_cv(
                 temp_pdf_path = tmp_file.name
             # Run extraction from PDF
             result = extract_skills_from_pdf(pdf_path=temp_pdf_path)
-            candidate_name = os.path.splitext(file.filename)[0]
             cv_filename = file.filename
         else:
             # Run extraction from job description text
@@ -367,6 +408,24 @@ async def extract_skills_from_cv(
             jt = (job_title or "").strip()
             if not jt:
                 raise ValueError("job_title is required when submitting a job_description.")
+            # Check if this job's required skills were already extracted
+            db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'candidate_reports.db')
+            pre_conn = sqlite3.connect(db_path)
+            pre_cur = pre_conn.cursor()
+            pre_cur.execute('''
+                CREATE TABLE IF NOT EXISTS job_required_skills (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    job_title TEXT NOT NULL,
+                    required_skills_json TEXT NOT NULL,
+                    barem_json TEXT
+                )
+            ''')
+            pre_cur.execute('SELECT required_skills_json FROM job_required_skills WHERE job_title = ?', (jt,))
+            job_row = pre_cur.fetchone()
+            pre_conn.close()
+            if job_row and job_row[0]:
+                # If we already have extracted skills for this job, skip re-extraction
+                return JSONResponse(content={"already_extracted": True})
             result = extract_skills_from_pdf(job_description=jd_text, job_title=jt)
 
         # Save to SQLite database (candidate_reports.db in project root)
