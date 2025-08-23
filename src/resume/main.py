@@ -1,7 +1,3 @@
-"""__import__('pysqlite3')
-import sys
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')"""
-
 import sys
 import warnings
 import os
@@ -54,6 +50,8 @@ class CandidateInput(BaseModel):
     skills: Dict[str, List[str]]
 
 class MultiSkillMatchRequest(BaseModel):
+    # Job title is required to save analyzed/recommended candidates per job
+    job_title: str
     candidates: List[CandidateInput]
     job_skills: Dict[str, List[str]]
     threshold: Optional[int] = 40  # Add threshold parameter with default 40
@@ -68,6 +66,7 @@ def api_analyze_skill_match_multi(data: MultiSkillMatchRequest):
     API endpoint to analyze skill match for multiple candidates against a job using Azure AI LLM.
     """
     print("/analyze-skill-match-multi called with:")
+    print("Job Title:", data.job_title)
     print("Candidates:", [c.name for c in data.candidates])
     print("Job Skills:", json.dumps(data.job_skills, indent=2))
     print("Threshold:", data.threshold)
@@ -80,6 +79,58 @@ def api_analyze_skill_match_multi(data: MultiSkillMatchRequest):
         elif result.get("is_match", False):
             matched.append(candidate.name)
     
+    # Persist analyzed and recommended candidates in SQLite under job_required_skills
+    try:
+        import sqlite3
+        # Resolve DB path (same DB used elsewhere in this project)
+        db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'candidate_reports.db')
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+
+        # Ensure base table exists (keeps compatibility with other APIs)
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS job_required_skills (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                job_title TEXT NOT NULL,
+                required_skills_json TEXT NOT NULL,
+                barem_json TEXT
+            )
+        ''')
+
+        # Ensure new columns exist (SQLite lacks IF NOT EXISTS on ADD COLUMN)
+        cursor.execute("PRAGMA table_info(job_required_skills)")
+        existing_cols = {row[1] for row in cursor.fetchall()}
+        if 'analyzed_candidates' not in existing_cols:
+            cursor.execute("ALTER TABLE job_required_skills ADD COLUMN analyzed_candidates TEXT")
+        if 'recommended_candidates' not in existing_cols:
+            cursor.execute("ALTER TABLE job_required_skills ADD COLUMN recommended_candidates TEXT")
+
+        analyzed_names = json.dumps([c.name for c in data.candidates])
+        recommended_names = json.dumps(matched)
+
+        # Upsert by job_title
+        cursor.execute('SELECT id FROM job_required_skills WHERE job_title = ?', (data.job_title,))
+        row = cursor.fetchone()
+        if row:
+            cursor.execute(
+                'UPDATE job_required_skills SET analyzed_candidates = ?, recommended_candidates = ? WHERE job_title = ?',
+                (analyzed_names, recommended_names, data.job_title)
+            )
+        else:
+            cursor.execute(
+                'INSERT INTO job_required_skills (job_title, required_skills_json, barem_json, analyzed_candidates, recommended_candidates) VALUES (?, ?, ?, ?, ?)',
+                (data.job_title, json.dumps(data.job_skills), None, analyzed_names, recommended_names)
+            )
+        conn.commit()
+    except Exception as e:
+        # Log but don't fail the endpoint if DB write has an issue
+        print(f"[WARN] Failed to persist analyzed/recommended candidates: {e}")
+    finally:
+        try:
+            conn.close()
+        except Exception:
+            pass
+
     # Print the final API response
     response = MultiSkillMatchResponse(matched_candidates=matched, errors=errors if errors else None)
     print("=== API RESPONSE ===")
@@ -454,6 +505,41 @@ def get_job_barem(job_title: str):
     return {
         "job_title": job_title,
         "barem": barem
+    }
+
+@app.get("/job-skills/{job_title}")
+def get_job_skills(job_title: str):
+    """Get required skills for a specific job title."""
+    import sqlite3
+
+    db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'candidate_reports.db')
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS job_required_skills (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            job_title TEXT NOT NULL,
+            required_skills_json TEXT NOT NULL,
+            barem_json TEXT
+        )
+    ''')
+    cursor.execute('SELECT required_skills_json FROM job_required_skills WHERE job_title = ?', (job_title,))
+    row = cursor.fetchone()
+    conn.close()
+
+    if not row:
+        raise HTTPException(status_code=404, detail=f"No data found for job title: {job_title}")
+
+    required_skills_json = row[0]
+
+    try:
+        required_skills = json.loads(required_skills_json) if required_skills_json else {}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error parsing JSON data: {str(e)}")
+
+    return {
+        "job_title": job_title,
+        "required_skills": required_skills
     }
 
 class ExtractSkillsRequest(BaseModel):
